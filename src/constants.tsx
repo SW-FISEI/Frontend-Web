@@ -40,13 +40,14 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     ],
   },
   {
-    title: 'Infraestructura tecnológica',
-    path: '/admin/infraestructura-tecnologica',
+    title: 'Gestión equipos',
+    path: '/admin/gestion-equipos',
     icon: <Icon icon="lucide:server-cog" width="24" height="24"  />,
     submenu: true,
     subMenuItems: [
-      { title: 'Máquinas',icon:<Icon icon="lucide:monitor-smartphone" width="24" height="24"  />, path: '/admin/infraestructura-tecnologica/maquinas' },
-      { title: 'Software', icon: <Icon icon="lucide:code-xml" width="24" height="24"  />, path: '/admin/infraestructura-tecnologica/software' },
+      { title: 'Máquinas',icon:<Icon icon="lucide:monitor-smartphone" width="24" height="24"  />, path: '/admin/gestion-equipos/maquinas' },
+      { title: 'Proyectores',icon:<Icon icon="lucide:projector" width="24" height="24"  />, path: '/admin/gestion-equipos/proyectores' },
+      { title: 'Software', icon: <Icon icon="lucide:code-xml" width="24" height="24"  />, path: '/admin/gestion-equipos/software' },
     ],
   },
   {
