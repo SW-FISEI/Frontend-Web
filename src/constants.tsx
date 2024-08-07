@@ -24,6 +24,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:user-round-check" width="24" height="24"  />,
     submenu: true,
     subMenuItems: [
+      { title: 'Titulos', icon: <Icon icon="lucide:award" width="24" height="24"  />, path: '/admin/gestion-personal/titulos' },
       { title: 'Docentes', icon: <Icon icon="lucide:user-round" width="24" height="24"  />, path: '/admin/gestion-personal/docentes' },
       { title: 'Laboratoristas', icon: <Icon icon="lucide:user-round-cog" width="24" height="24"  />, path: '/admin/gestion-personal/laboratoristas' },
     ],
@@ -37,6 +38,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
       { title: 'Edificios', icon: <Icon icon="lucide:building-2" width="24" height="24"  />, path: '/admin/infraestructura/edificios' },
       { title: 'Pisos', icon: <Icon icon="lucide:dock" width="24" height="24"  />, path: '/admin/infraestructura/pisos' },
       { title: 'Aulas', icon: <Icon icon="lucide:door-open" width="24" height="24"  />, path: '/admin/infraestructura/aulas' },
+      { title: 'Características de aulas', icon: <Icon icon="lucide:list-check" width="24" height="24"  />, path: '/admin/infraestructura/caracteristicas-aulas' },
     ],
   },
   {
