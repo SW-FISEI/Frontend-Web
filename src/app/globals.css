@@ -37,6 +37,15 @@ body {
   padding: 0;
 }
 
+h1, h2, h2, h4, h5, h6{
+  font-family: "Work Sans", sans-serif;
+  font-weight: 500;
+}
+
+p, span{
+  font-family: "Montserrat", system-ui;
+}
+
 .principal {
   height: 100vh;
   width: 100vw;
@@ -96,4 +105,9 @@ body {
   width: 100%;
   overflow-y: auto;
   color: #000;
+}
+
+.contenedorPrincipalPaginas{
+  min-height: 100vh;
+  width: 100%;
 }
