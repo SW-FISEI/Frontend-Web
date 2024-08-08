@@ -32,6 +32,7 @@ const DynamicTable: React.FC<TableProps> = ({ columns, data, rowActions, onActio
     <table className="dynamic-table">
       <thead>
         <tr>
+          <th>N</th> {/* Columna autoincremental */}
           {columns.map((col) => (
             <th key={col.dataField}>{col.title}</th>
           ))}
@@ -41,6 +42,7 @@ const DynamicTable: React.FC<TableProps> = ({ columns, data, rowActions, onActio
       <tbody>
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
+            <td>{rowIndex + 1}</td> {/* Mostrar el índice del array como un contador autoincremental */}
             {columns.map((col) => (
               <td key={col.dataField}>{row[col.dataField]}</td>
             ))}
