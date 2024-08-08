@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import TitlePage from '@/components/title-page';
+import DynamicTable from '@/components/DynamicTable';
+import { permission } from 'process';
 
 interface Titulo {
   id: number;
@@ -12,32 +14,50 @@ interface Titulo {
   abreviacion: string;
 }
 
+interface Column {
+  title: string;
+  dataField: string;
+  type?: string;
+  sortable?: boolean;
+  sort_direction?: 'asc' | 'desc';
+}
+
 const TitulosPage = () => {
   const { data: session, status } = useSession();
   const [titulos, setTitulos] = useState<Titulo[]>([]);
 
-  useEffect(() => {
-    const obtenerTitulos = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/titulos`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.token}`,
-          },
-        });
-        setTitulos(response.data);
-      } catch (error) {
-        console.error("Error al obtener los títulos:", error);
-      }
-    };
+  const obtenerTitulos = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/titulos`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.token}`,
+        },
+      });
+      setTitulos(response.data);
+    } catch (error) {
+      console.error("Error al obtener los títulos:", error);
+    }
+  };
 
+  useEffect(() => {
     if (session?.user?.token) {
       obtenerTitulos();
     }
   }, [session]);
 
-  if (status === "loading") {
-    return <p>Cargando...</p>;
+  const columnas: Column[] = [
+    { title: "Nombre", dataField: "nombre", type: "string", sortable: true, sort_direction: 'desc' },
+    { title: "Abreviación", dataField: "abreviacion", type: "string" }
+  ];
+
+  const Acciones = [
+    { label: "Edit", actionToPerform: "edit", icon: "ri-pencil-line", permission: "titulo.edit" },
+    { label: "Delete", actionToPerform: "delete", icon: "ri-delete-bin-line", permission: "titulo.destroy" }
+  ];
+
+  const handleAccion = (action: string, rowData: Titulo) => {
+    console.log(`Accion: ${action}`, rowData);
   }
 
   return (
@@ -54,22 +74,7 @@ const TitulosPage = () => {
           <button className='rounded-2xl px-5 py-2 text-white bg-[#450a0a] inline-block shadow-md shadow-[#4c2626]'>Nuevo <Icon className='inline-block' icon="lucide:plus" /></button>
         </div>
         <div className="row-start-3 row-span-4 col-start-1 col-span-4">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {titulos.map((titulo) => (
-                <tr key={titulo.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{titulo.nombre}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{titulo.abreviacion}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DynamicTable columns={columnas} data={titulos} rowActions={Acciones} onAction={handleAccion}/>
         </div>
       </div>
     </div>
