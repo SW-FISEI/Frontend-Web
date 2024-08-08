@@ -8,6 +8,7 @@ import { SideNavItem } from '@/types';
 import { Icon } from '@iconify/react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import '@/styles/side-nav.scss';
+import { signOut } from 'next-auth/react';
 
 const SideNav = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -33,10 +34,13 @@ const SideNav = () => {
                     ))}
                 </div>
                 <div className="cerrarSesion">
-                    <Link href="/" className="botonCerrarSesion">
-                        <Icon icon="lucide:log-out" width="24" height="24" />
-                        <span className="nombreCerrarSesion">Cerrar sesión</span>
-                    </Link>
+                    <button
+                        onClick={() => signOut()}
+                        className="nombreCerrarSesion"
+                    >
+                        <Icon className='inline-block ml-[10px] mr-[10px]' icon="lucide:log-out" width="24" height="24" />
+                        Cerrar sesión
+                    </button>
                 </div>
             </aside>
         </div>
@@ -72,7 +76,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                     {subMenuOpen && (
                         <div className={`submenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}>
                             {item.subMenuItems?.map((subItem, idx) => (
-                                <Link 
+                                <Link
                                     key={idx}
                                     href={subItem.path}
                                     className={`submenuItem ${subItem.path === pathname ? 'submenuItemPressed' : ''}`}
