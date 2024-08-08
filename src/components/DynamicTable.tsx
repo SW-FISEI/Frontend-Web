@@ -1,5 +1,5 @@
 import React from 'react';
-import '@/styles/dinamic-table.scss';
+import '@/styles/dynamic-table.scss';
 
 interface Column {
   title: string;
