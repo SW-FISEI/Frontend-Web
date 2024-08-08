@@ -9,7 +9,6 @@ export default function AdminHome() {
   if (status === "loading") {
     return <p>Loading...</p>;
   }
-  console.log(session);
 
   return (
     <div className="contenedorPagina">
