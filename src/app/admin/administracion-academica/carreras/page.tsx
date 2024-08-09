@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TitlePage from '@/components/title-page';
-import DynamicTable from '@/components/DynamicTable';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation'; // Asegúrate de importar desde 'next/navigation'
+import { useRouter } from 'next/navigation';
+import DynamicTable from '@/components/DynamicTable';
+import '@/styles/carreras.scss'; // Asegúrate de importar tus estilos CSS
 
 interface Carrera {
   id: number;
@@ -16,22 +17,20 @@ interface Carrera {
   deleted_at: string | null;
 }
 
-interface Column {
-  title: string;
-  dataField: string;
-  type?: string;
-  sortable?: boolean;
-  sort_direction?: 'asc' | 'desc';
-}
+const columns = [
+  { uid: "nombre", name: "Nombre", sortable: true },
+  { uid: "descripcion", name: "Descripción", sortable: true },
+  { uid: "actions", name: "Actions" }
+];
 
 const Carreras = () => {
   const { data: session } = useSession();
   const [data, setData] = useState<Carrera[]>([]);
   const router = useRouter();
 
-  const obtenerCarreras = async () => {
+  const obtenerCarreras = async (nombre:string = "") => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras/buscar`,{nombre}, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.user?.token}`,
@@ -49,31 +48,44 @@ const Carreras = () => {
     }
   }, [session]);
 
-  const columns: Column[] = [
-    { title: "Nombre", dataField: "nombre", sortable: true, sort_direction: 'desc' },
-    { title: "Descripcion", dataField: "descripcion", sortable: true, sort_direction: 'desc' },
-  ];
-
-  const rowActions = [
-    { label: "Edit", actionToPerform: "edit", icon: "ri-pencil-line", permission: "carrera.edit" },
-    { label: "Delete", actionToPerform: "delete", icon: "ri-delete-bin-line", permission: "carrera.destroy" }
-  ];
-
-  const handleAction = (action: string, rowData: Carrera) => {
-    if (action === 'edit') {
-      router.push(`/admin/administracion-academica/carreras/carreras-form?id=${rowData.id}`);
-    }
-  };
-
-  const handleAddCarrera = () => {
+  const handleAdd = () => {
     router.push('/admin/administracion-academica/carreras/carreras-form');
   };
 
+  const handleEdit = (row: Carrera) => {
+    router.push(`/admin/administracion-academica/carreras/carreras-form?id=${row.id}`);
+  };
+
+  const eliminarCarrera = async (id: number) => {
+    try {
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.token}`,
+          },
+        }
+      );
+      obtenerCarreras("")
+    } catch (error) {
+      console.error("Error al eliminar el título:", error);
+    }
+  }
+
+  const handleDelete = (row: Carrera) => {
+    eliminarCarrera(row.id);
+  };
+
   return (
-    <section className='contenedorPrincipalPaginas'>
+    <section className=''>
       <TitlePage title="Carreras" />
-      <button onClick={handleAddCarrera}>Agregar carrera</button>
-      <DynamicTable columns={columns} data={data} rowActions={rowActions} onAction={handleAction} />
+      <DynamicTable
+        columns={columns}
+        data={data}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onAddNew={handleAdd}
+      />
     </section>
   );
 }

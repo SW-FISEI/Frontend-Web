@@ -18,7 +18,7 @@ export default function AdminLayout({
     return (
         <div className="contenedorAdmin">
             <SideNav />
-            <main className="contenedorContenido">
+            <main className="contenedorPrincipalPaginas">
                     <HeaderMobile />
                     <PageWrapper>{children}</PageWrapper>
             </main>
