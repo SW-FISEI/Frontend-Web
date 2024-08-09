@@ -1,12 +1,19 @@
 .contenedorTituloPagina{
-    height: 3rem;
-    margin: 20px 30px;
+    width: 100%;
+    height: fit-content;
     display: flex;
-    align-items: center;
-    font-size: 50px;
-    border-left: 0.2rem solid #450a0a;
-
+    align-items: baseline;
+    justify-content: space-between;
+    
     h1.tituloPagina{
+        padding: 0 10px;
+        font-size: 40px;
+        border-left: 0.2rem solid #450a0a;
         margin: 10px;
+    }
+
+    h2.subtituloPagina{
+        color: #450a0a;
+        font-size: 30px;
     }
 }
