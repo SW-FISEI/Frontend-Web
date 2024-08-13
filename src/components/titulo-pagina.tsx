@@ -1,14 +1,14 @@
 "use client";
 
 import React from 'react';
-import '@/styles/title-page.scss';
+import '@/styles/titulo-pagina.scss';
 
-interface TitlePageProps {
+interface TituloPaginaProps {
   title: string;
   subtitle?: string; // El subtítulo es opcional
 }
 
-const TitlePage: React.FC<TitlePageProps> = ({ title, subtitle }) => {
+const TituloPagina: React.FC<TituloPaginaProps> = ({ title, subtitle }) => {
   return (
     <div className='contenedorTituloPagina'>
         <h1 className='tituloPagina'>{title}</h1>
@@ -17,4 +17,4 @@ const TitlePage: React.FC<TitlePageProps> = ({ title, subtitle }) => {
   )
 }
 
-export default TitlePage;
+export default TituloPagina;

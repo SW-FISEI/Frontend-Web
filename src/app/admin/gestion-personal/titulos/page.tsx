@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import TitlePage from '@/components/title-page';
+import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import DynamicTable from '@/components/DynamicTable';
+import Tabla from '@/components/tabla';
 
 interface Titulo {
   id: number;
@@ -74,8 +74,8 @@ const TitulosPage = () => {
 
   return (
     <section className=''>
-      <TitlePage title="Titulos" />
-      <DynamicTable
+      <TituloPagina title="Titulos" />
+      <Tabla
         columns={columnas}
         data={titulos}
         onEdit={handleEditar}

@@ -15,10 +15,10 @@ import {
   useDisclosure
 } from "@nextui-org/react";
 import { Icon } from '@iconify/react';
-import ConfirmModal from './ConfirmModal';  // Importa el componente del modal
-import '@/styles/dynamic-table.scss'; // Asegúrate de importar tus estilos CSS
+import ConfirmModal from './modal-confirmacion';  // Importa el componente del modal
+import '@/styles/tabla.scss'; // Asegúrate de importar tus estilos CSS
 
-interface DynamicTableProps<T> {
+interface TablaProps<T> {
   columns: { uid: string; name: string; sortable?: boolean; }[];
   data: T[];
   onEdit: (row: T) => void;
@@ -26,13 +26,13 @@ interface DynamicTableProps<T> {
   onAddNew: () => void;
 }
 
-const DynamicTable = <T extends { id: number }>({
+const Tabla = <T extends { id: number }>({
   columns,
   data,
   onEdit,
   onDelete,
   onAddNew,
-}: DynamicTableProps<T>) => {
+}: TablaProps<T>) => {
   const [filterValue, setFilterValue] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({ column: "id", direction: "ascending" });
@@ -254,4 +254,4 @@ const DynamicTable = <T extends { id: number }>({
   );
 };
 
-export default DynamicTable;
+export default Tabla;

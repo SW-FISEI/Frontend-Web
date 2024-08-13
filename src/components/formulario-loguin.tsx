@@ -3,9 +3,9 @@
 import { signIn } from "next-auth/react";
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import '@/styles/LoginForm.scss';
+import '@/styles/formulario-loguin.scss';
 
-export default function LoginForm() {
+export default function FormularioLoguin() {
     const [errors, setErrors] = useState<string[]>([]);
     const [email, setEmail] = useState<string>("");
     const [contrasenia, setContrasenia] = useState<string>("");

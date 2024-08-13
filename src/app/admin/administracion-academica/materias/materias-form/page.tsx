@@ -1,6 +1,6 @@
 "use client";
 
-import TitlePage from '@/components/title-page';
+import TituloPagina from '@/components/titulo-pagina';
 import { Button, Input } from '@nextui-org/react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
@@ -87,7 +87,7 @@ const materiasForm = () => {
 
     return (
         <section className=''>
-            <TitlePage title="Materias" subtitle={isEditMode ? 'Editar materia' : 'Agregar materia'} />
+            <TituloPagina title="Materias" subtitle={isEditMode ? 'Editar materia' : 'Agregar materia'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>

@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import TitlePage from '@/components/title-page';
+import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import DynamicTable from '@/components/DynamicTable';
+import Tabla from '@/components/tabla';
 import '@/styles/carreras.scss'; // Asegúrate de importar tus estilos CSS
 
 interface Carrera {
@@ -78,8 +78,8 @@ const Carreras = () => {
 
   return (
     <section className=''>
-      <TitlePage title="Carreras" />
-      <DynamicTable
+      <TituloPagina title="Carreras" />
+      <Tabla
         columns={columns}
         data={data}
         onEdit={handleEdit}

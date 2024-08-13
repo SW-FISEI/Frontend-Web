@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import TitlePage from '@/components/title-page';
+import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
 import { Input, Button } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
@@ -83,7 +83,7 @@ const SoftwareForm = () => {
 
     return (
         <section className=''>
-            <TitlePage title="Softwares" subtitle={isEditMode ? 'Editar Software' : 'Agregar Software'} />
+            <TituloPagina title="Softwares" subtitle={isEditMode ? 'Editar Software' : 'Agregar Software'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
