@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import TitlePage from '@/components/title-page';
 import '@/styles/formulario.scss';
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
 interface Periodo {
@@ -67,24 +67,29 @@ const PeriodoForm = () => {
             };
             obtenerPeriodo();
         }
-    }, [id, isEditMode]);
+    }, [id, isEditMode, session]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+        setPeriodo({ ...periodo, [name]: value ?? '' });
+    };
+
+    const handleSelectChange = (name: string, value: string) => {
         setPeriodo({ ...periodo, [name]: value });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
+            const periodoDatos = {
+                nombre: periodo.nombre || '',
+                inicioMes: periodo.inicioMes || '',
+                inicioAño: periodo.inicioAño || '',
+                finMes: periodo.finMes || '',
+                finAño: periodo.finAño || ''
+            };
+
             if (isEditMode) {
-                const periodoDatos = {
-                    nombre: periodo.nombre,
-                    inicioMes: periodo.inicioMes,
-                    inicioAño: periodo.inicioAño,
-                    finMes: periodo.finMes,
-                    finAño: periodo.finAño
-                }
                 await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/periodos/${id}`, periodoDatos, {
                     headers: {
                         "Content-Type": "application/json",
@@ -92,7 +97,7 @@ const PeriodoForm = () => {
                     },
                 });
             } else {
-                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/periodos`, periodo, {
+                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/periodos`, periodoDatos, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
@@ -109,10 +114,10 @@ const PeriodoForm = () => {
         router.back();
     };
 
-    const añosDisponiblesFin = anios.filter(anio => anio >= parseInt(periodo.inicioAño));
+    const añosDisponiblesFin = anios.filter(anio => anio >= parseInt(periodo.inicioAño || '0'));
 
-    const mesesDisponiblesFin = (parseInt(periodo.inicioAño) === parseInt(periodo.finAño))
-        ? meses.filter(mes => parseInt(mes.value) >= parseInt(periodo.inicioMes))
+    const mesesDisponiblesFin = (parseInt(periodo.inicioAño || '0') === parseInt(periodo.finAño || '0'))
+        ? meses.filter(mes => parseInt(mes.value) >= parseInt(periodo.inicioMes || '0'))
         : meses;
 
     return (
@@ -133,78 +138,74 @@ const PeriodoForm = () => {
                     </div>
                     <div className='grid grid-cols-2'>
                         <div className='col-start-1 px-2'>
-                            <label className='mr-[25%] ml-1 text-[#7c7c84]' htmlFor="inicioMes">Mes de Inicio</label>
-                            <select
-                                id="inicioMes"
+                            <Select
+                                variant="faded"
+                                label="Mes de Inicio"
+                                placeholder="Seleccione un mes"
                                 name="inicioMes"
-                                value={periodo.inicioMes}
-                                onChange={handleInputChange}
-                                required
-                                className="border border-[#d2cdd2] rounded-xl w-full py-2 shadow-md bg-[#f4f4f5]"
+                                selectedKeys={periodo.inicioMes ? [periodo.inicioMes] : ['']}
+                                onSelectionChange={(selected) => handleSelectChange('inicioMes', selected.currentKey || '')}
+                                className="max-w-full"
                             >
-                                <option value="">Seleccione un mes</option>
                                 {meses.map((mes) => (
-                                    <option key={mes.value} value={mes.value}>
+                                    <SelectItem key={mes.value} value={mes.value} textValue={mes.name}>
                                         {mes.name}
-                                    </option>
+                                    </SelectItem>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                         <div className='col-start-2 px-2'>
-                            <label className='mr-[25%] ml-1 text-[#7c7c84]' htmlFor="inicioMes">Mes de Fin</label>
-                            <select
-                                id="finMes"
+                            <Select
+                                variant="faded"
+                                label="Mes de Fin"
+                                placeholder="Seleccione un mes"
                                 name="finMes"
-                                value={periodo.finMes}
-                                onChange={handleInputChange}
-                                required
-                                className="border border-[#d2cdd2] rounded-xl w-full py-2 shadow-md bg-[#f4f4f5]"
+                                selectedKeys={periodo.finMes ? [periodo.finMes] : ['']}
+                                onSelectionChange={(selected) => handleSelectChange('finMes', selected.currentKey || '')}
+                                className="max-w-full"
                             >
-                                <option value="">Seleccione un mes</option>
                                 {mesesDisponiblesFin.map((mes) => (
-                                    <option key={mes.value} value={mes.value}>
+                                    <SelectItem key={mes.value} value={mes.value} textValue={mes.name}>
                                         {mes.name}
-                                    </option>
+                                    </SelectItem>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                     </div>
                     <div className='grid grid-cols-2'>
                         <div className='col-start-1 px-2'>
-                            <label className='mr-[25%] ml-1 text-[#7c7c84]' htmlFor="inicioAño">Inicio Año</label>
-                            <select
-                                id="inicioAño"
+                            <Select
+                                variant="faded"
+                                label="Inicio Año"
+                                placeholder="Seleccione un año"
                                 name="inicioAño"
-                                value={periodo.inicioAño}
-                                onChange={handleInputChange}
-                                required
-                                className="border border-[#d2cdd2] rounded-xl w-full py-2 shadow-md bg-[#f4f4f5]"
+                                selectedKeys={periodo.inicioAño ? [periodo.inicioAño] : ['']}
+                                onSelectionChange={(selected) => handleSelectChange('inicioAño', selected.currentKey || '')}
+                                className="max-w-full"
                             >
-                                <option value="">Seleccione un año</option>
                                 {anios.map((anio) => (
-                                    <option key={anio} value={anio}>
+                                    <SelectItem key={anio.toString()} value={anio.toString()} textValue={anio.toString()}>
                                         {anio}
-                                    </option>
+                                    </SelectItem>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                         <div className='col-start-2 px-2'>
-                            <label className='mr-[25%] ml-1 text-[#7c7c84]' htmlFor="finAño">Fin Año</label>
-                            <select
-                                id="finAño"
+                            <Select
+                                variant="faded"
+                                label="Fin Año"
+                                placeholder="Seleccione un año"
                                 name="finAño"
-                                value={periodo.finAño}
-                                onChange={handleInputChange}
-                                required
-                                className="border border-[#d2cdd2] rounded-xl w-full py-2 shadow-md bg-[#f4f4f5]"
+                                selectedKeys={periodo.finAño ? [periodo.finAño] : ['']}
+                                onSelectionChange={(selected) => handleSelectChange('finAño', selected.currentKey || '')}
+                                className="max-w-full"
                             >
-                                <option value="">Seleccione un año</option>
                                 {añosDisponiblesFin.map((anio) => (
-                                    <option key={anio} value={anio}>
+                                    <SelectItem key={anio.toString()} value={anio.toString()} textValue={anio.toString()}>
                                         {anio}
-                                    </option>
+                                    </SelectItem>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                     </div>
                     <div className="botonFormulario">
