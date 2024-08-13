@@ -9,14 +9,14 @@ import {
   useDisclosure
 } from "@nextui-org/react";
 
-interface ConfirmModalProps {
+interface ModalConfirmacionProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
   message: string;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm, message }) => {
+const ModalConfirmacion: React.FC<ModalConfirmacionProps> = ({ isOpen, onClose, onConfirm, message }) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose}>
       <ModalContent>
@@ -41,4 +41,4 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm,
   );
 };
 
-export default ConfirmModal;
+export default ModalConfirmacion;

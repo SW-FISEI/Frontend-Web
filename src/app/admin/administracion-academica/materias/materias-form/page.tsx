@@ -1,74 +1,82 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
-import '@/styles/formulario.scss';
-import { Input, Button } from "@nextui-org/react";
+import { Button, Input } from '@nextui-org/react';
+import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import '@/styles/formulario.scss';
 
-interface Paralelo {
+interface Materia {
     id?: number;
     nombre: string;
+    descripcion: string;
+    created_at?: string;
+    updated_at?: string;
+    deleted_at?: string | null;
 }
 
-const ParalelosForm = () => {
+const materiasForm = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
-    const [paralelo, setParalelo] = useState<Paralelo>({ nombre: '' });
+    const [formData, setFormData] = useState<Materia>({ nombre: '', descripcion: '' });
     const isEditMode = !!id;
 
     useEffect(() => {
         if (isEditMode) {
-            const obtenerParalelo = async () => {
+            // Cargar los datos de la carrera si estamos en modo edición
+            const obtenerMateria = async () => {
                 try {
-                    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/paralelos/${id}`, {
+                    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/materias/${id}`, {
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${session?.user?.token}`,
                         },
                     });
-                    setParalelo(response.data);
+                    setFormData(response.data);
                 } catch (error) {
-                    console.error('Error al obtener el paralelo:', error);
+                    console.error('Error al obtener la materia:', error);
                 }
             };
-            obtenerParalelo();
+            obtenerMateria();
         }
     }, [id, isEditMode]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setParalelo({ ...paralelo, [name]: value });
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             if (isEditMode) {
-                const paraleloDatos = {
-                    nombre: paralelo.nombre
+                // Actualizar carrera existente
+                const carreraDatos = {
+                    nombre: formData.nombre,
+                    descripcion: formData.descripcion
                 }
-                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/paralelos/${id}`, paraleloDatos, {
+                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/materias/${id}`, carreraDatos, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
             } else {
-                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/paralelos`, paralelo, {
+                // Crear nueva carrera
+                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/materias`, formData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
             }
-            router.push('/admin/administracion-academica/paralelos');
+            router.push('/admin/administracion-academica/materias');
         } catch (error) {
-            console.error('Error al guardar el paralelo:', error);
+            console.error('Error al guardar la materia:', error);
         }
     };
 
@@ -79,7 +87,7 @@ const ParalelosForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Paralelos" subtitle={isEditMode ? 'Editar Paralelo' : 'Agregar Paralelo'} />
+            <TituloPagina title="Materias" subtitle={isEditMode ? 'Editar materia' : 'Agregar materia'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -87,8 +95,19 @@ const ParalelosForm = () => {
                             variant="faded"
                             type="text"
                             label="Nombre"
-                            name="nombre"
-                            value={paralelo.nombre}
+                            name="nombre"  // Agrega el nombre al input
+                            value={formData.nombre}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            variant="faded"
+                            type="text"
+                            label="Descripción"
+                            name="descripcion"
+                            value={formData.descripcion}
                             onChange={handleInputChange}
                             required
                         />
@@ -103,7 +122,7 @@ const ParalelosForm = () => {
                 </form>
             </div>
         </section>
-    );
-};
+    )
+}
 
-export default ParalelosForm;
+export default materiasForm

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import TitlePage from '@/components/title-page';
+import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
 import { Input, Button } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
@@ -81,7 +81,7 @@ const TitulosForm = () => {
 
   return (
     <section className=''>
-      <TitlePage title="Titulos" subtitle={isEditMode ? 'Editar Titulo' : 'Agregar Titulo'} />
+      <TituloPagina title="Titulos" subtitle={isEditMode ? 'Editar Titulo' : 'Agregar Titulo'} />
       <div className="contenedorFormulario">
         <form onSubmit={handleSubmit}>
           <div>

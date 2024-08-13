@@ -1,7 +1,7 @@
 "use client";
 
-import DynamicTable from '@/components/DynamicTable';
-import TitlePage from '@/components/title-page'
+import Tabla from '@/components/tabla';
+import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'; // Cambiado a next/navigation
@@ -59,8 +59,8 @@ const edificios = () => {
   
   return (
     <section className=''>
-      <TitlePage title="Edificios" />
-      <DynamicTable
+      <TituloPagina title="Edificios" />
+      <Tabla
         columns={columns}
         data={data}
         onEdit={handleEdit}

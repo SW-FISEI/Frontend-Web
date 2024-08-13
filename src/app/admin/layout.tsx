@@ -2,9 +2,8 @@
 
 import React from 'react';
 import { useRouter } from "next/navigation";
-import HeaderMobile from '@/components/header-mobile';
-import MarginWidthWrapper from '@/components/margin-width-wrapper';
-import PageWrapper from '@/components/page-wrapper';
+import HeaderMovil from '@/components/header-movil';
+import ContenedorPagina from '@/components/contenedor-pagina';
 import SideNav from '@/components/side-nav';
 import "@/styles/admin.scss"
 
@@ -19,8 +18,8 @@ export default function AdminLayout({
         <div className="contenedorAdmin">
             <SideNav />
             <main className="contenedorPrincipalPaginas">
-                    <HeaderMobile />
-                    <PageWrapper>{children}</PageWrapper>
+                    <HeaderMovil />
+                    <ContenedorPagina>{children}</ContenedorPagina>
             </main>
         </div>
     );

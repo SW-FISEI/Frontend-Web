@@ -34,7 +34,7 @@ const sidebar = {
     },
 };
 
-const HeaderMobile = () => {
+const HeaderMovil = () => {
     const pathname = usePathname();
     const containerRef = useRef(null);
     const { height } = useDimensions(containerRef);
@@ -89,7 +89,7 @@ const HeaderMobile = () => {
     );
 };
 
-export default HeaderMobile;
+export default HeaderMovil;
 
 const MenuToggle = ({ toggle }: { toggle: any }) => (
     <button

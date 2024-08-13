@@ -58,21 +58,23 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
     };
 
     return (
-        <div className={`contenedorSubmenuItems ${pathname.includes(item.path) ? 'contenedorSubmenuItemsPressed' : ''}`}>
+        <div className={`contenedorSubmenuItems ${pathname.includes(`${item.path}`) ? 'contenedorSubmenuItemsPressed' : ''}`}>
             {item.submenu ? (
                 <>
-                    <button
-                        onClick={toggleSubMenu}
-                        className={`fondoOpcionMenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}
-                    >
-                        <div className="textoOpcionMenu">
-                            {item.icon}
-                            <span className="menu-item-title">{item.title}</span>
-                        </div>
-                        <div className={`${subMenuOpen ? 'rotate-180' : ''} flex`}>
-                            <Icon icon="lucide:chevron-down" width="24" height="24" />
-                        </div>
-                    </button>
+                    <Link href={item.path}>
+                        <button
+                            onClick={toggleSubMenu}
+                            className={`fondoOpcionMenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}
+                        >
+                            <div className="textoOpcionMenu">
+                                {item.icon}
+                                <span className="menu-item-title">{item.title}</span>
+                            </div>
+                            <div className={`${subMenuOpen ? 'rotate-180' : ''} flex`}>
+                                <Icon icon="lucide:chevron-down" width="24" height="24" />
+                            </div>
+                        </button>
+                    </Link>
                     {subMenuOpen && (
                         <div className={`submenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}>
                             {item.subMenuItems?.map((subItem, idx) => (
@@ -100,3 +102,4 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
         </div>
     );
 };
+
