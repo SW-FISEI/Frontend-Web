@@ -83,8 +83,15 @@ const Tabla = <T extends { id: number }>({
   }, [sortDescriptor, items]);
 
   const renderCell = useCallback((item: T, columnKey: React.Key) => {
-    const cellValue = item[columnKey as keyof T];
-
+    const columnKeyStr = String(columnKey);
+    const keys = columnKeyStr.split('.');
+  
+    // Reduce el objeto item para acceder a la propiedad anidada
+    const cellValue = keys.reduce((obj, key) => {
+      // Usa 'as' para afirmar que el objeto tiene esta clave
+      return obj?.[key as keyof typeof obj];
+    }, item as any);  // 'any' para evitar problemas de tipado dinámico
+  
     switch (columnKey) {
       case "n":
         return items.indexOf(item) + 1 + (page - 1) * rowsPerPage;
@@ -108,7 +115,7 @@ const Tabla = <T extends { id: number }>({
                 size="sm"
                 variant="light"
                 className="custom-delete-button"
-                onPress={() => handleDeleteClick(item)}  // Usa la nueva función para eliminar
+                onPress={() => handleDeleteClick(item)}
               >
                 <Icon icon="lucide:trash" className="custom-icon" />
               </Button>
@@ -116,10 +123,10 @@ const Tabla = <T extends { id: number }>({
           </div>
         );
       default:
-        return String(cellValue);
+        return String(cellValue || '');
     }
   }, [onEdit, items, page, rowsPerPage]);
-
+  
   const handleDeleteClick = (row: T) => {
     setSelectedRow(row);
     onOpen();  // Abre el modal
@@ -167,7 +174,7 @@ const Tabla = <T extends { id: number }>({
         <Input
           isClearable
           className="search-input"
-          placeholder="Search by any field..."
+          placeholder="Busque por nombre..."
           startContent={<Icon icon="lucide:search" />}
           value={filterValue}
           onClear={onClear}
