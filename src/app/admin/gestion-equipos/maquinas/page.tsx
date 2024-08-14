@@ -30,9 +30,9 @@ const maquinas = () => {
   const [maquina, setMaquina] = useState<Maquina[]>([]);
   const router = useRouter();
 
-  const obtenerMaquinas = async () => {
+  const obtenerMaquinas = async (nombre: string = "") => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maquinas`,
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maquinas/buscarM`, { nombre },
         {
           headers: {
             "Content-Type": "application/json",
@@ -48,7 +48,7 @@ const maquinas = () => {
 
   useEffect(() => {
     if (session?.user?.token) {
-      obtenerMaquinas();
+      obtenerMaquinas("");
     }
   }, [session]);
 

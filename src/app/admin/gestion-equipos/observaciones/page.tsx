@@ -50,9 +50,9 @@ const observaciones = () => {
     const [observacion, setObservacion] = useState<Observacion[]>([]);
     const router = useRouter();
 
-    const obtenerObservaciones = async () => {
+    const obtenerObservaciones = async (descripcion: string = "") => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/observaciones`,
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/observaciones/buscar`, { descripcion },
                 {
                     headers: {
                         "Content-Type": "application/json",
