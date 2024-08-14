@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
-import { Input, Button, Select, SelectItem } from "@nextui-org/react";
+import { Input, Button, Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
 interface Periodo {
@@ -138,74 +138,86 @@ const PeriodoForm = () => {
                     </div>
                     <div className='grid grid-cols-2'>
                         <div className='col-start-1 px-2'>
-                            <Select
+                            <Autocomplete
                                 variant="faded"
                                 label="Mes de Inicio"
                                 placeholder="Seleccione un mes"
-                                name="inicioMes"
-                                selectedKeys={periodo.inicioMes ? [periodo.inicioMes] : ['']}
-                                onSelectionChange={(selected) => handleSelectChange('inicioMes', selected.currentKey || '')}
                                 className="max-w-full"
+                                selectedKey={periodo.inicioMes}
+                                onSelectionChange={(selected) => {
+                                    const selectedValue = selected ? selected.toString() : '';
+                                    handleSelectChange('inicioMes', selectedValue);
+                                }}
                             >
-                                {meses.map((mes) => (
-                                    <SelectItem key={mes.value} value={mes.value} textValue={mes.name}>
-                                        {mes.name}
-                                    </SelectItem>
-                                ))}
-                            </Select>
+                                {meses
+                                    .filter((mes) => mes.value) // Filtrar los meses con valores válidos
+                                    .map((mes) => (
+                                        <AutocompleteItem key={mes.value} value={mes.value} textValue={mes.name}>
+                                            {mes.name}
+                                        </AutocompleteItem>
+                                    ))}
+                            </Autocomplete>
                         </div>
                         <div className='col-start-2 px-2'>
-                            <Select
+                            <Autocomplete
                                 variant="faded"
                                 label="Mes de Fin"
                                 placeholder="Seleccione un mes"
-                                name="finMes"
-                                selectedKeys={periodo.finMes ? [periodo.finMes] : ['']}
-                                onSelectionChange={(selected) => handleSelectChange('finMes', selected.currentKey || '')}
                                 className="max-w-full"
+                                selectedKey={periodo.finMes}
+                                onSelectionChange={(selected) => {
+                                    const selectedValue = selected ? selected.toString() : '';
+                                    handleSelectChange('finMes', selectedValue);
+                                }}
                             >
-                                {mesesDisponiblesFin.map((mes) => (
-                                    <SelectItem key={mes.value} value={mes.value} textValue={mes.name}>
-                                        {mes.name}
-                                    </SelectItem>
-                                ))}
-                            </Select>
+                                {mesesDisponiblesFin
+                                    .filter((mes) => mes.value) // Filtrar los meses con valores válidos
+                                    .map((mes) => (
+                                        <AutocompleteItem key={mes.value} value={mes.value} textValue={mes.name}>
+                                            {mes.name}
+                                        </AutocompleteItem>
+                                    ))}
+                            </Autocomplete>
                         </div>
                     </div>
                     <div className='grid grid-cols-2'>
                         <div className='col-start-1 px-2'>
-                            <Select
+                            <Autocomplete
                                 variant="faded"
                                 label="Inicio Año"
                                 placeholder="Seleccione un año"
-                                name="inicioAño"
-                                selectedKeys={periodo.inicioAño ? [periodo.inicioAño] : ['']}
-                                onSelectionChange={(selected) => handleSelectChange('inicioAño', selected.currentKey || '')}
                                 className="max-w-full"
+                                selectedKey={periodo.inicioAño || ''}
+                                onSelectionChange={(selected) => {
+                                    const selectedValue = selected ? selected.toString() : '';
+                                    handleSelectChange('inicioAño', selectedValue);
+                                }}
                             >
                                 {anios.map((anio) => (
-                                    <SelectItem key={anio.toString()} value={anio.toString()} textValue={anio.toString()}>
+                                    <AutocompleteItem key={anio.toString()} value={anio.toString()} textValue={anio.toString()}>
                                         {anio}
-                                    </SelectItem>
+                                    </AutocompleteItem>
                                 ))}
-                            </Select>
+                            </Autocomplete>
                         </div>
                         <div className='col-start-2 px-2'>
-                            <Select
+                            <Autocomplete
                                 variant="faded"
                                 label="Fin Año"
                                 placeholder="Seleccione un año"
-                                name="finAño"
-                                selectedKeys={periodo.finAño ? [periodo.finAño] : ['']}
-                                onSelectionChange={(selected) => handleSelectChange('finAño', selected.currentKey || '')}
                                 className="max-w-full"
+                                selectedKey={periodo.finAño || ''}
+                                onSelectionChange={(selected) => {
+                                    const selectedValue = selected ? selected.toString() : '';
+                                    handleSelectChange('finAño', selectedValue);
+                                }}
                             >
                                 {añosDisponiblesFin.map((anio) => (
-                                    <SelectItem key={anio.toString()} value={anio.toString()} textValue={anio.toString()}>
+                                    <AutocompleteItem key={anio.toString()} value={anio.toString()} textValue={anio.toString()}>
                                         {anio}
-                                    </SelectItem>
+                                    </AutocompleteItem>
                                 ))}
-                            </Select>
+                            </Autocomplete>
                         </div>
                     </div>
                     <div className="botonFormulario">
