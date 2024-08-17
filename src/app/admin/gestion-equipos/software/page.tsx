@@ -77,7 +77,7 @@ const Software = () => {
 
   return (
     <section className=''>
-      <TituloPagina title="Softwares" />
+      <TituloPagina title="Software" />
       <Tabla
         columns={columnas}
         data={software}
