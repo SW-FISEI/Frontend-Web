@@ -30,9 +30,9 @@ const MaquinaForm = () => {
     const isEditMode = !!id;
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = async (nombre: string = "") => {
             try {
-                const aulaResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas`, {
+                const aulaResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas/buscar`, { nombre }, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
