@@ -58,7 +58,6 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:calendar-cog" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Horarios', icon: <Icon icon="lucide:calendar-days" width="24" height="24" />, path: '/admin/administracion-horarios/horarios' },
       { title: 'Periodos', icon: <Icon icon="lucide:calendar-range" width="24" height="24" />, path: '/admin/administracion-horarios/periodos' },
     ],
   },
