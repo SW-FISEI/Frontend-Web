@@ -32,13 +32,13 @@ const PisoForm = () => {
     useEffect(() => {
         const fetchData = async (nombre: string = "") => {
             try {
-                const aulaResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/edificios/buscar`, { nombre }, {
+                const edificioResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/edificios/buscar`, { nombre }, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
-                setEdificio(aulaResponse.data);
+                setEdificio(edificioResponse.data);
 
                 if (isEditMode) {
                     const maquinaResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/${id}`, {
