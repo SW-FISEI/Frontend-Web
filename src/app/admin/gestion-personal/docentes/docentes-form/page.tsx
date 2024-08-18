@@ -107,7 +107,7 @@ const DocentesForm = () => {
             const docenteDatos = {
                 cedula: docente.cedula,
                 docente: docente.docente,
-                titulo_id: docente.titulo.id,
+                titulo: docente.titulo.id,
             };
 
             if (isEditMode) {
@@ -118,6 +118,7 @@ const DocentesForm = () => {
                     },
                 });
             } else {
+                console.log(docenteDatos)
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/docentes`, docenteDatos, {
                     headers: {
                         "Content-Type": "application/json",

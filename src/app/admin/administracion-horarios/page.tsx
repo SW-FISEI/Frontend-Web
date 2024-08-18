@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import Tabla from '@/components/tabla';
-import TituloPagina from '@/components/titulo-pagina';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import TablaConFiltros from '@/components/tabla-filtros'; // Verifica si este es el componente correcto
+import TituloPagina from '@/components/titulo-pagina';
 
 interface Aula {
   id: number;
@@ -19,7 +19,7 @@ interface Docente {
 
 interface Detalle_Materia {
   id: number;
-  materia: Materia
+  materia: Materia;
 }
 
 interface Materia {
@@ -44,17 +44,18 @@ interface Detalle_Horario {
 }
 
 const columnas = [
-  { uid: "aula.nombre", name: "Aula", sortable: true },
-  { uid: "inicio", name: "Inicio", sortable: true },
-  { uid: "fin", name: "Fin", sortable: true },
-  { uid: "dia", name: "Dia", sortable: true },
-  { uid: "materia.materia.nombre", name: "Materia", sortable: true },
-  { uid: "docente.docente", name: "Docente", sortable: true },
-  { uid: "periodo.nombre", name: "Periodo", sortable: true },
-  { uid: "actions", name: "Acciones", sortable: true },
-]
+  { uid: "aula.nombre", name: "Aula", sortable: true, filterable: true },
+  { uid: "inicio", name: "Inicio", sortable: true, filterable: true },
+  { uid: "fin", name: "Fin", sortable: true, filterable: true },
+  { uid: "dia", name: "Dia", sortable: true, filterable: true },
+  { uid: "materia.materia.nombre", name: "Materia", sortable: true, filterable: true },
+  { uid: "docente.docente", name: "Docente", sortable: true, filterable: true },
+  { uid: "periodo.nombre", name: "Periodo", sortable: true, filterable: true },
+  { uid: "actions", name: "Acciones", sortable: false, filterable: false }, // No necesita filtro
+];
 
-const administracionHorarios = () => {
+
+const AdministracionHorarios = () => {
   const { data: session } = useSession();
   const [detalle_horario, setDetalleHorario] = useState<Detalle_Horario[]>([]);
   const router = useRouter();
@@ -79,14 +80,13 @@ const administracionHorarios = () => {
     }
   }, [session]);
 
-
   const handleAñadir = () => {
     router.push('/admin/administracion-horarios/administracion-horarios-form');
-  }
+  };
 
   const handleEditar = (row: Detalle_Horario) => {
     router.push(`/admin/administracion-horarios/administracion-horarios-form?id=${row.id}`);
-  }
+  };
 
   const eliminarDetalle = async (id: number) => {
     try {
@@ -104,20 +104,20 @@ const administracionHorarios = () => {
 
   const handleEliminar = (row: Detalle_Horario) => {
     eliminarDetalle(row.id);
-  }
+  };
 
   return (
     <section className=''>
-    <TituloPagina title="Detalle Horarios" />
-    <Tabla
-      columns={columnas}
-      data={detalle_horario}
-      onEdit={handleEditar}
-      onDelete={handleEliminar}
-      onAddNew={handleAñadir}
-    />
-  </section>
-  )
-}
+      <TituloPagina title="Detalle Horarios" />
+      <TablaConFiltros
+        columns={columnas}
+        data={detalle_horario}
+        onEdit={handleEditar}
+        onDelete={handleEliminar}
+        onAddNew={handleAñadir}
+      />
+    </section>
+  );
+};
 
-export default administracionHorarios
+export default AdministracionHorarios;
