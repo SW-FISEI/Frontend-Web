@@ -12,6 +12,7 @@
     "@iconify/react": "^5.0.2",
     "@nextui-org/react": "^2.4.6",
     "@nextui-org/theme": "^2.2.9",
+    "@react-pdf/renderer": "^3.4.4",
     "axios": "^1.7.3",
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.24",
