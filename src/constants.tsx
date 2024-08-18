@@ -71,10 +71,5 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
       { title: 'Carreras', icon: <Icon icon="lucide:graduation-cap" width="24" height="24" />, path: '/admin/administracion-academica/carreras' },
       { title: 'Paralelos', icon: <Icon icon="lucide:users-round" width="24" height="24" />, path: '/admin/administracion-academica/paralelos' },
     ],
-  },
-  {
-    title: 'Sugerencias',
-    path: '/admin/sugerencias',
-    icon: <Icon icon="lucide:inbox" width="24" height="24" />,
-  },
+  }
 ];

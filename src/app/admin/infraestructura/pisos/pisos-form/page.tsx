@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
-import { Input, Button, Autocomplete, AutocompleteItem } from "@nextui-org/react";
+import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
 interface Edificio {
@@ -69,8 +69,12 @@ const PisoForm = () => {
     }, [id, isEditMode, session?.user?.token]);
 
     if (loading) {
-        return <p>Cargando...</p>;
-    }
+        return (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <CircularProgress label="Cargando..." />
+          </div>
+        );
+      }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
