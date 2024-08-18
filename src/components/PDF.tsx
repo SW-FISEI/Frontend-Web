@@ -1,37 +1,58 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 
 /* IMPORTAR LOGOS */
 const logoFISEI = '/logo.png';
 const logoUTA = '/logoUTA.png';
 
+Font.register({
+    family: 'Playfair Display',
+    fonts: [
+        { src: '/fonts/PlayfairDisplay-Regular.ttf', fontWeight: 'normal' },
+        { src: '/fonts/PlayfairDisplay-Bold.ttf', fontWeight: 'bold' },
+    ]
+});
+
 const styles = StyleSheet.create({
     page: {
-        padding: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 50,
         fontSize: 10,
+        fontFamily: 'Playfair Display'
     },
     header: {
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    logosContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 10,
+        justifyContent: 'space-around',
+        alignContent: 'center',
+        marginBottom: 10
     },
     logo: {
-        width: 50, // Ajusta el ancho del logo
-        height: 50, // Ajusta la altura del logo
+        width: 50,
+        height: 50,
     },
     section: {
-        margin: 10,
-        padding: 10,
-        flexGrow: 1,
+        marginBottom: 10,
     },
-    row: {
+    row1: {
         flexDirection: 'row',
+        width: '100%',
+    },
+    column1: {
+        minWidth: '50%',
+        flexDirection: 'row',
+        marginBottom: 5
+    },
+    row2: {
         justifyContent: 'space-between',
-        marginBottom: 5,
+        flexDirection: 'row',
+    },
+    column2:{
+        flexDirection: 'row',
+        marginBottom: 5
+    },
+    tableTitle: {
+        justifyContent: 'center',
+        textAlign: 'center',
     },
     table: {
         display: "flex",
@@ -39,35 +60,50 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderWidth: 1,
         borderColor: '#000',
-        marginTop: 10
     },
     tableRow: {
         flexDirection: "row",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: '#000'
+        borderBottomWidth: 1,
+        borderBottomColor: '#000',
+        borderBottomStyle: 'solid',
     },
-    tableColHeader: {
-        width: "33.33%",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: '#000',
+    tableCustomRow: {
+        flexDirection: "row",
+    },
+    tableCol1: {
+        width: "10%",
+        textAlign: "center",
+        fontWeight: "bold",
+        alignItems: "center"
+    },
+    tableCol2: {
+        borderLeftWidth: 1,
+        borderLeftColor: '#000',
+        borderLeftStyle: 'solid',
+        borderRightWidth: 1,
+        borderRightColor: '#000',
+        borderRightStyle: 'solid',
+        width: "60%",
         textAlign: "center",
         fontWeight: "bold"
     },
-    tableCol: {
-        width: "33.33%",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: '#000',
-        textAlign: "center"
-    },
-    tableCellHeader: {
-        margin: 5,
+    tableCol3: {
+        width: "30%",
+        textAlign: "center",
         fontWeight: "bold"
     },
-    tableCell: {
-        margin: 5
+    tableCenterCol: {
+        width: "60%",
+        height: 26,
+        borderLeftWidth: 1,
+        borderLeftColor: '#000',
+        borderLeftStyle: 'solid',
+        borderRightWidth: 1,
+        borderRightColor: '#000',
+        borderRightStyle: 'solid',
+    },
+    tableCenterRow: {
+        height: 13
     },
     signatureSection: {
         flexDirection: 'row',
@@ -86,57 +122,111 @@ function PDF() {
     return (
         <Document>
             <Page style={styles.page}>
-                <View style={styles.logosContainer}>
-                    <Image src={logoUTA} style={styles.logo} />
-                    <Image src={logoFISEI} style={styles.logo} />
-                </View>
-
                 {/* Encabezado */}
                 <View style={styles.header}>
-                    <Text>UNIVERSIDAD TÉCNICA DE AMBATO</Text>
-                    <Text>FISEI</Text>
-                    <Text>CARRERA DE TELECOMUNICACIONES</Text>
+                    <Image src={logoUTA} style={styles.logo} />
+                    <View style={{ flex: 1, textAlign: 'center' }}>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>UNIVERSIDAD TÉCNICA DE AMBATO</Text>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>FISEI</Text>
+                        <Text style={{ fontSize: 10, fontWeight: 'normal' }}>CARRERA DE TELECOMUNICACIONES</Text>
+                    </View>
+                    <Image src={logoFISEI} style={styles.logo} />
                 </View>
 
                 {/* Detalles del Laboratorio */}
                 <View style={styles.section}>
-                    <View style={styles.row}>
-                        <Text>LABORATORIO: LABORATORIO 8</Text>
-                        <Text>DOCENTE: ROBALINO PEÑA EDGAR FREDDY</Text>
+                    <View style={styles.row1}>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>LABORATORIO:</Text>
+                            <Text>LABORATORIO 8</Text>
+                        </View>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>DOCENTE:</Text>
+                            <Text>ROBALINO PEÑA EDGAR FREDDY</Text>
+                        </View>
                     </View>
-                    <View style={styles.row}>
-                        <Text>AUXILIAR DE LABORATORIO: DIANA GARCÉS</Text>
-                        <Text>PERIODO ACADÉMICO: MARZO - AGOSTO 2024</Text>
+                    <View style={styles.row1}>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>AUXILIAR DE LABORATORIO:</Text>
+                            <Text>DIANA GARCÉS</Text>
+                        </View>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>PERIODO ACADÉMICO:</Text>
+                            <Text>MARZO - AGOSTO 2024</Text>
+                        </View>
                     </View>
-                    <View style={styles.row}>
-                        <Text>NIVEL: TERCERO A</Text>
-                        <Text>FECHA: 8 de Abril de 2024</Text>
+                    <View style={styles.row1}>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>NIVEL:</Text>
+                            <Text>TERCERO A</Text>
+                        </View>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>FECHA:</Text>
+                            <Text>8 de Abril de 2024</Text>
+                        </View>
                     </View>
-                    <View style={styles.row}>
-                        <Text>H.INGRESO: 11H00</Text>
-                        <Text>H.SALIDA: 13H00</Text>
-                        <Text>H.PRACTICAS: ____</Text>
+                    <View style={styles.row2}>
+                        <View style={styles.column2}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.INGRESO:</Text>
+                            <Text>11H00</Text>
+                        </View>
+                        <View style={styles.column2}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.SALIDA:</Text>
+                            <Text>13H00</Text>
+                        </View>
+                        <View style={styles.column2}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.PRACTICAS:</Text>
+                            <Text>____</Text>
+                        </View>
                     </View>
-                    <View style={styles.row}>
-                        <Text>MATERIA: PROGRAMACIÓN AVANZADA</Text>
-                        <Text>TEMA DE LA PRÁCTICA: ___________________________</Text>
+                    <View style={styles.row1}>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>MATERIA:</Text>
+                            <Text>PROGRAMACIÓN AVANZADA</Text>
+                        </View>
+                        <View style={styles.column1}>
+                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>TEMA DE LA PRÁCTICA:</Text>
+                            <Text>_____________________</Text>
+                        </View>
                     </View>
                 </View>
 
                 {/* Tabla de Registro de Prácticas */}
+                <View style={styles.tableTitle}>
+                    <Text style={{ fontWeight: 'bold' }}>REGISTRO DE PRÁCTICAS DE LABORATORIO</Text>
+                </View>
                 <View style={styles.table}>
                     <View style={styles.tableRow}>
-                        <View style={styles.tableColHeader}><Text>#MAQ</Text></View>
-                        <View style={styles.tableColHeader}><Text>NÓMINA DE ESTUDIANTES</Text></View>
-                        <View style={styles.tableColHeader}><Text>OBSERVACIONES</Text></View>
+                        <View style={styles.tableCol1}><Text>#MAQ</Text></View>
+                        <View style={styles.tableCol2}><Text>NÓMINA DE ESTUDIANTES</Text></View>
+                        <View style={styles.tableCol3}><Text>OBSERVACIONES</Text></View>
                     </View>
-                    {[...Array(20)].map((_, i) => (
+                    {[...Array(19)].map((_, i) => (
                         <View style={styles.tableRow} key={i}>
-                            <View style={styles.tableCol}><Text>{i + 1}</Text></View>
-                            <View style={styles.tableCol}><Text></Text></View>
-                            <View style={styles.tableCol}><Text></Text></View>
+                            <View style={styles.tableCol1}><Text>{i + 1}</Text></View>
+                            <View style={styles.tableCenterCol}>
+                                <View style={[styles.tableCenterRow, { borderBottomWidth: 1, borderBottomColor: '#000', borderBottomStyle: 'solid' }]}>
+                                    <Text></Text>
+                                </View>
+                                <View style={styles.tableCenterRow}>
+                                    <Text></Text>
+                                </View>
+                            </View>
+                            <View style={styles.tableCol3}><Text></Text></View>
                         </View>
                     ))}
+                    <View style={styles.tableCustomRow}>
+                        <View style={styles.tableCol1}><Text>20</Text></View>
+                        <View style={styles.tableCenterCol}>
+                            <View style={[styles.tableCenterRow, { borderBottomWidth: 1, borderBottomColor: '#000', borderBottomStyle: 'solid' }]}>
+                                <Text></Text>
+                            </View>
+                            <View style={styles.tableCenterRow}>
+                                <Text></Text>
+                            </View>
+                        </View>
+                        <View style={styles.tableCol3}><Text></Text></View>
+                    </View>
                 </View>
 
                 {/* Sección de Firmas */}
