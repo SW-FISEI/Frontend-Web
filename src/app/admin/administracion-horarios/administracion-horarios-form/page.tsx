@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
-import { Input, Button, Autocomplete, AutocompleteItem } from "@nextui-org/react";
+import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
 interface Aula {
@@ -54,7 +54,7 @@ const DetalleHorarioForm = () => {
         fin: '',
         dia: '',
         aula: { id: 0, nombre: '' },
-        detalle_materia: { id: 0, materia: { id: 0, nombre: '' } }, // Asegúrate de tener el ID de detalle_materia
+        detalle_materia: { id: 0, materia: { id: 0, nombre: '' } },
         docente: { cedula: '', docente: '' },
         periodo: { id: 0, nombre: '' }
     });
@@ -155,8 +155,12 @@ const DetalleHorarioForm = () => {
     }, [id, isEditMode, session?.user?.token]);
 
     if (loading) {
-        return <p>Cargando...</p>;
-    }
+        return (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <CircularProgress label="Cargando..." />
+          </div>
+        );
+      }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
