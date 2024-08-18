@@ -15,11 +15,12 @@ import {
   DropdownMenu,
   DropdownItem,
   Spinner,
+  Input,
   useDisclosure,
 } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import ConfirmModal from './modal-confirmacion';
-import '@/styles/tabla-filtros.scss'; 
+import '@/styles/tabla-filtros.scss';
 
 interface TablaProps<T> {
   columns: { uid: string; name: string; sortable?: boolean; filterable?: boolean }[];
@@ -29,7 +30,7 @@ interface TablaProps<T> {
   onAddNew: () => void;
 }
 
-const getUniqueValues = <T, >(data: T[], key: string): { uid: string; name: string }[] => {
+const getUniqueValues = <T,>(data: T[], key: string): { uid: string; name: string }[] => {
   const values = data.map(item => {
     const keys = key.split('.');
     return keys.reduce((acc, curr) => (acc && acc[curr as keyof typeof acc]) || '', item as any);
@@ -45,6 +46,7 @@ const TablaConFiltros = <T extends { id: number }>({
   onDelete,
   onAddNew,
 }: TablaProps<T>) => {
+  const [filterValue, setFilterValue] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({ column: "id", direction: "ascending" });
   const [page, setPage] = useState(1);
@@ -52,7 +54,6 @@ const TablaConFiltros = <T extends { id: number }>({
   const [columnFilters, setColumnFilters] = useState<{ [key: string]: Set<string> }>({});
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // Generar dinámicamente las opciones de filtro para cada columna
   const dynamicFilterOptions = useMemo(() => {
     const options: { [key: string]: { uid: string; name: string }[] } = {};
     columns.forEach(column => {
@@ -65,7 +66,7 @@ const TablaConFiltros = <T extends { id: number }>({
 
   const headerColumns = useMemo(() => {
     return [
-      { uid: "n", name: "N" }, 
+      { uid: "n", name: "N" },
       ...columns.map(column =>
         column.uid === "actions" ? { ...column, name: "Acciones" } : column
       )
@@ -74,7 +75,15 @@ const TablaConFiltros = <T extends { id: number }>({
 
   const filteredItems = useMemo(() => {
     let filteredData = [...data];
-  
+
+    if (filterValue) {
+      filteredData = filteredData.filter((item) =>
+        Object.values(item).some(value =>
+          String(value).toLowerCase().includes(filterValue.toLowerCase())
+        )
+      );
+    }
+
     Object.keys(columnFilters).forEach((key) => {
       const filterValues = columnFilters[key];
       if (filterValues && filterValues.size > 0) {
@@ -85,10 +94,9 @@ const TablaConFiltros = <T extends { id: number }>({
         });
       }
     });
-  
+
     return filteredData;
-  }, [data, columnFilters]);
-  
+  }, [data, filterValue, columnFilters]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -165,14 +173,14 @@ const TablaConFiltros = <T extends { id: number }>({
 
   const handleDeleteClick = (row: T) => {
     setSelectedRow(row);
-    onOpen();  
+    onOpen();
   };
 
   const handleConfirmDelete = () => {
     if (selectedRow) {
       onDelete(selectedRow);
       setSelectedRow(null);
-      onClose(); 
+      onClose();
     }
   };
 
@@ -192,6 +200,37 @@ const TablaConFiltros = <T extends { id: number }>({
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
+
+  const onSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFilterValue(value);
+    setPage(1);
+  }, []);
+
+  const onClear = useCallback(() => {
+    setFilterValue("");
+    setPage(1);
+  }, []);
+
+  const topContent = useMemo(() => {
+    return (
+      <div className="top-content">
+        <Input
+          isClearable
+          className="search-input"
+          placeholder="Busque por nombre o descripción..."
+          startContent={<Icon icon="lucide:search" />}
+          value={filterValue}
+          onClear={onClear}
+          onChange={onSearchChange}
+        />
+        <Button className="add-button" onPress={onAddNew}>
+          <Icon icon="lucide:plus" width="26" height="26" />
+          Agregar
+        </Button>
+      </div>
+    );
+  }, [filterValue, onSearchChange, onClear, onAddNew]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -222,6 +261,7 @@ const TablaConFiltros = <T extends { id: number }>({
 
   return (
     <div className="table-container">
+      {topContent}
       <div className="contenedorTablaFiltros">
         <div className="tabla">
           <Table
@@ -259,18 +299,22 @@ const TablaConFiltros = <T extends { id: number }>({
           </Table>
         </div>
         <div className="filtros">
-          <div className="filtro-header">
+          <div className="encabezadoFiltros">
             <h3>Filtros</h3>
-            <Button size="sm" onPress={handleClearFilters}>
-              Limpiar Filtros
-            </Button>
+            <Tooltip content="Limpiar Filtros">
+              <Button size="sm" onPress={handleClearFilters}>
+                <Icon icon="lucide:filter-x" />
+              </Button>
+            </Tooltip>
           </div>
           {columns.map(column => (
             column.filterable && dynamicFilterOptions[column.uid] && column.uid !== "actions" && (
               <div key={column.uid} className="filtro-columna">
+                {/* 
                 <label>{column.name}</label>
-                <Dropdown>
-                  <DropdownTrigger className="hidden sm:flex">
+                */}
+                <Dropdown className="filtro">
+                  <DropdownTrigger className="filtroDropdown">
                     <Button endContent={<Icon icon="lucide:chevron-down" />} variant="flat">
                       {column.name}
                     </Button>
