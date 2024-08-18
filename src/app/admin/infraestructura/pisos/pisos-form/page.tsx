@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -8,52 +8,52 @@ import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
-interface Aula {
+interface Edificio {
     id: number;
     nombre: string;
 }
 
-interface Maquina {
+interface Piso {
     id?: number;
     nombre: string;
-    aula: Aula;
+    edificio: Edificio;
 }
 
-const MaquinaForm = () => {
+const PisoForm = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
-    const [maquina, setMaquina] = useState<Maquina>({ nombre: '', aula: { id: 0, nombre: '' } });
-    const [aula, setAula] = useState<Aula[]>([]);
+    const [piso, setPiso] = useState<Piso>({ nombre: '', edificio: { id: 0, nombre: '' } });
+    const [edificio, setEdificio] = useState<Edificio[]>([]);
     const [loading, setLoading] = useState(true);
     const isEditMode = !!id;
 
     useEffect(() => {
         const fetchData = async (nombre: string = "") => {
             try {
-                const aulaResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas/buscar`, { nombre }, {
+                const edificioResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/edificios/buscar`, { nombre }, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
-                setAula(aulaResponse.data);
+                setEdificio(edificioResponse.data);
 
                 if (isEditMode) {
-                    const maquinaResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maquinas/${id}`, {
+                    const maquinaResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/${id}`, {
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${session?.user?.token}`,
                         },
                     });
 
-                    setMaquina({
+                    setPiso({
                         id: maquinaResponse.data.id,
                         nombre: maquinaResponse.data.nombre,
-                        aula: {
-                            id: maquinaResponse.data.aula.id,
-                            nombre: maquinaResponse.data.aula.nombre,
+                        edificio: {
+                            id: maquinaResponse.data.edificio.id,
+                            nombre: maquinaResponse.data.edificio.nombre,
                         }
                     });
                 }
@@ -74,50 +74,46 @@ const MaquinaForm = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setMaquina({ ...maquina, [name]: value });
+        setPiso({ ...piso, [name]: value ?? '' });
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        setMaquina({ ...maquina, [name]: value });
+        setPiso({ ...piso, [name]: value });
     };
 
-    const handleAulaChange = (selected: string) => {
-        const selectedAula = aula.find(p => p.nombre === selected);
-        if (selectedAula) {
-            setMaquina({ ...maquina, aula: selectedAula });
+    const handleEdificioChange = (selected: string) => {
+        const selectedEdificio = edificio.find(p => p.nombre === selected);
+        if (selectedEdificio) {
+            setPiso({ ...piso, edificio: selectedEdificio });
         }
-    };
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const maquinaDatos = {
-                nombre: maquina.nombre,
-                aula: maquina.aula.id,
+            const pisoDatos = {
+                nombre: piso.nombre,
+                edificio: piso.edificio.id
             };
 
             if (isEditMode) {
-                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maquinas/${id}`, maquinaDatos, {
+                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/${id}`, pisoDatos, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
             } else {
-                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maquinas`, maquinaDatos, {
+                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos`, pisoDatos, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
             }
-            router.push('/admin/gestion-equipos/maquinas');
+            router.push('/admin/infraestructura/pisos');
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('Error al guardar la maquina:', error.response?.data);
-            } else {
-                console.error('Error inesperado:', error);
-            }
+            console.error('Error al guardar el piso:', error);
         }
     };
 
@@ -127,16 +123,16 @@ const MaquinaForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Maquinas" subtitle={isEditMode ? 'Editar Maquina' : 'Agregar Maquina'} />
+            <TituloPagina title="Pisos" subtitle={isEditMode ? 'Editar Piso' : 'Agregar Piso'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Input
                             variant="faded"
                             type="text"
-                            label="Nombre"
+                            label="Piso"
                             name="nombre"
-                            value={maquina.nombre}
+                            value={piso.nombre}
                             onChange={handleInputChange}
                             required
                         />
@@ -144,18 +140,18 @@ const MaquinaForm = () => {
                     <div>
                         <Autocomplete
                             variant="faded"
-                            label="Aula"
-                            name="aula"
-                            selectedKey={maquina.aula.nombre}
+                            label="Edificio"
+                            name="edificio"
+                            selectedKey={piso.edificio.nombre}
                             onSelectionChange={(selected) => {
                                 const selectedValue = selected ? selected.toString() : '';
-                                handleAulaChange(selectedValue);
+                                handleEdificioChange(selectedValue);
                             }}
                             required
                         >
-                            {aula.map(aula => (
-                                <AutocompleteItem key={aula.nombre} value={aula.nombre}>
-                                    {aula.nombre}
+                            {edificio.map(edificio => (
+                                <AutocompleteItem key={edificio.nombre} value={edificio.nombre}>
+                                    {edificio.nombre}
                                 </AutocompleteItem>
                             ))}
                         </Autocomplete>
@@ -167,9 +163,9 @@ const MaquinaForm = () => {
                         </Button>
                     </div>
                 </form>
-            </div >
-        </section >
+            </div>
+        </section>
     );
 };
 
-export default MaquinaForm;
+export default PisoForm;

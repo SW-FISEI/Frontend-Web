@@ -83,7 +83,7 @@ const SoftwareForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Softwares" subtitle={isEditMode ? 'Editar Software' : 'Agregar Software'} />
+            <TituloPagina title="Software" subtitle={isEditMode ? 'Editar Software' : 'Agregar Software'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
