@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 50,
         fontSize: 10,
-        fontFamily: 'Playfair Display'
+        fontFamily: 'Playfair Display',
+        textTransform: 'uppercase'
     },
     header: {
         flexDirection: 'row',
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
-    column2:{
+    column2: {
         flexDirection: 'row',
         marginBottom: 5
     },
@@ -118,7 +119,21 @@ const styles = StyleSheet.create({
     }
 });
 
-function PDF() {
+interface PDFProps {
+    periodo: string | null;
+    carrera: string | null;
+    semestre: string | null;
+    paralelo: string | null;
+    aula: string | null;
+    docente: string | null;
+    materia: string | null;
+    inicio: string | null;
+    fin: string | null;
+    fecha: string;
+    laboratorista: string | null;
+}
+
+function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, inicio, fin, fecha, laboratorista }: PDFProps) {
     return (
         <Document>
             <Page style={styles.page}>
@@ -128,7 +143,7 @@ function PDF() {
                     <View style={{ flex: 1, textAlign: 'center' }}>
                         <Text style={{ fontSize: 12, fontWeight: 'bold' }}>UNIVERSIDAD TÉCNICA DE AMBATO</Text>
                         <Text style={{ fontSize: 12, fontWeight: 'bold' }}>FISEI</Text>
-                        <Text style={{ fontSize: 10, fontWeight: 'normal' }}>CARRERA DE TELECOMUNICACIONES</Text>
+                        <Text style={{ fontSize: 10, fontWeight: 'normal' }}>CARRERA DE {carrera}</Text>
                     </View>
                     <Image src={logoFISEI} style={styles.logo} />
                 </View>
@@ -138,41 +153,41 @@ function PDF() {
                     <View style={styles.row1}>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>LABORATORIO:</Text>
-                            <Text>LABORATORIO 8</Text>
+                            <Text>{aula}</Text>
                         </View>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>DOCENTE:</Text>
-                            <Text>ROBALINO PEÑA EDGAR FREDDY</Text>
+                            <Text>{docente}</Text>
                         </View>
                     </View>
                     <View style={styles.row1}>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>AUXILIAR DE LABORATORIO:</Text>
-                            <Text>DIANA GARCÉS</Text>
+                            <Text>{laboratorista}</Text>
                         </View>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>PERIODO ACADÉMICO:</Text>
-                            <Text>MARZO - AGOSTO 2024</Text>
+                            <Text>{periodo}</Text>
                         </View>
                     </View>
                     <View style={styles.row1}>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>NIVEL:</Text>
-                            <Text>TERCERO A</Text>
+                            <Text>{semestre} {paralelo}</Text>
                         </View>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>FECHA:</Text>
-                            <Text>8 de Abril de 2024</Text>
+                            <Text>{fecha}</Text>
                         </View>
                     </View>
                     <View style={styles.row2}>
                         <View style={styles.column2}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.INGRESO:</Text>
-                            <Text>11H00</Text>
+                            <Text>{inicio}</Text>
                         </View>
                         <View style={styles.column2}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.SALIDA:</Text>
-                            <Text>13H00</Text>
+                            <Text>{fin}</Text>
                         </View>
                         <View style={styles.column2}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.PRACTICAS:</Text>
@@ -182,7 +197,7 @@ function PDF() {
                     <View style={styles.row1}>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>MATERIA:</Text>
-                            <Text>PROGRAMACIÓN AVANZADA</Text>
+                            <Text>{materia}</Text>
                         </View>
                         <View style={styles.column1}>
                             <Text style={{ marginRight: 10, fontWeight: 'bold' }}>TEMA DE LA PRÁCTICA:</Text>
