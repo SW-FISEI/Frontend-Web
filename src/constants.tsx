@@ -10,7 +10,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },*/
   {
     title: 'Hojas de control',
-    path: '/admin/hojas-control',
+    path: '',
     icon: <Icon icon="lucide:clipboard-check" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
