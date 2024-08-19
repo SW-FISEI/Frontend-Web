@@ -212,30 +212,12 @@ const individual = () => {
 
   return (
     <section>
-      <TituloPagina title="Hoja de control por Bloques" subtitle={'Generar hoja'} />
+      <TituloPagina title="Hoja de control individual" subtitle={'Generar hoja'} />
       <div className="contenedorFormulario">
         {!showPDF ? (
           <form onSubmit={handleSubmit}>
             <div>
               <p>Fecha actual: {fecha}</p>
-            </div>
-            <div>
-              <Autocomplete
-                variant="faded"
-                label="Carrera"
-                name="carrera"
-                onSelectionChange={(selected) => {
-                  const selectedValue = selected ? selected.toString() : '';
-                  handleCarreraChange(selectedValue);
-                }}
-                required
-              >
-                {carreras.map(carrera => (
-                  <AutocompleteItem key={carrera.nombre} value={carrera.nombre}>
-                    {carrera.nombre}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
             </div>
             <div>
               <Autocomplete
@@ -255,116 +237,142 @@ const individual = () => {
                 ))}
               </Autocomplete>
             </div>
-            <div>
-              <Autocomplete
-                variant="faded"
-                label="Paralelo"
-                name="paralelo"
-                onSelectionChange={(selected) => {
-                  const selectedValue = selected ? selected.toString() : '';
-                  handleParaleloChange(selectedValue);
-                }}
-                required
-              >
-                {paralelos.map(paralelo => (
-                  <AutocompleteItem key={paralelo.nombre} value={paralelo.nombre}>
-                    {paralelo.nombre}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
+            <div className="contenedorDobleColumna">
+              <div>
+                <Autocomplete
+                  variant="faded"
+                  label="Carrera"
+                  name="carrera"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleCarreraChange(selectedValue);
+                  }}
+                  required
+                >
+                  {carreras.map(carrera => (
+                    <AutocompleteItem key={carrera.nombre} value={carrera.nombre}>
+                      {carrera.nombre}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
+              <div>
+                <Autocomplete
+                  variant="faded"
+                  label="Paralelo"
+                  name="paralelo"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleParaleloChange(selectedValue);
+                  }}
+                  required
+                >
+                  {paralelos.map(paralelo => (
+                    <AutocompleteItem key={paralelo.nombre} value={paralelo.nombre}>
+                      {paralelo.nombre}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
             </div>
-            <div>
-              <Autocomplete
-                variant="faded"
-                label="Laboratorio"
-                name="aula"
-                onSelectionChange={(selected) => {
-                  const selectedValue = selected ? selected.toString() : '';
-                  handleAulaChange(selectedValue);
-                }}
-                required
-              >
-                {aulas.map(aula => (
-                  <AutocompleteItem key={aula.nombre} value={aula.nombre}>
-                    {aula.nombre}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
+            <div className="contenedorDobleColumna">
+              <div>
+                <Autocomplete
+                  variant="faded"
+                  label="Docente"
+                  name="docente"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleDocenteChange(selectedValue);
+                  }}
+                  required
+                >
+                  {docentes.map(docente => (
+                    <AutocompleteItem key={docente.docente} value={docente.docente}>
+                      {docente.docente}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
+              <div>
+                <Autocomplete
+                  variant="faded"
+                  label="Materia"
+                  name="materia"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleMateriaChange(selectedValue);
+                  }}
+                  required
+                >
+                  {materias.map(materia => (
+                    <AutocompleteItem key={materia.nombre} value={materia.nombre}>
+                      {materia.nombre}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
             </div>
-            <div>
-              <Autocomplete
-                variant="faded"
-                label="Docente"
-                name="docente"
-                onSelectionChange={(selected) => {
-                  const selectedValue = selected ? selected.toString() : '';
-                  handleDocenteChange(selectedValue);
-                }}
-                required
-              >
-                {docentes.map(docente => (
-                  <AutocompleteItem key={docente.docente} value={docente.docente}>
-                    {docente.docente}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
+            <div className="contenedorDobleColumna">
+              <div>
+                <Input
+                  variant="faded"
+                  type="time"
+                  label="Inicio"
+                  name="inicio"
+                  onChange={handleInicioChange}
+                  required
+                />
+              </div>
+              <div>
+                <Input
+                  variant="faded"
+                  type="time"
+                  label="Fin"
+                  name="fin"
+                  onChange={handleFinChange}
+                  required
+                />
+              </div>
             </div>
+            <div className="contenedorDobleColumna">
             <div>
-              <Autocomplete
-                variant="faded"
-                label="Materia"
-                name="materia"
-                onSelectionChange={(selected) => {
-                  const selectedValue = selected ? selected.toString() : '';
-                  handleMateriaChange(selectedValue);
-                }}
-                required
-              >
-                {materias.map(materia => (
-                  <AutocompleteItem key={materia.nombre} value={materia.nombre}>
-                    {materia.nombre}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
-            </div>
-            <div>
-              <Input
-                variant="faded"
-                type="time"
-                label="Inicio"
-                name="inicio"
-                onChange={handleInicioChange}
-                required
-              />
-            </div>
-            <div>
-              <Input
-                variant="faded"
-                type="time"
-                label="Fin"
-                name="fin"
-                onChange={handleFinChange}
-                required
-              />
-            </div>
-            <div>
-              <Autocomplete
-                variant="faded"
-                label="Laboratorista"
-                name="laboratorista"
-                onSelectionChange={(selected) => {
-                  const selectedValue = selected ? selected.toString() : '';
-                  handleLaboratoristaChange(selectedValue);
-                  handlePeriodoChange();
-                }}
-                required
-              >
-                {laboratoristas.map(laboratorista => (
-                  <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
-                    {laboratorista.laboratorista}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
+                <Autocomplete
+                  variant="faded"
+                  label="Laboratorista"
+                  name="laboratorista"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleLaboratoristaChange(selectedValue);
+                    handlePeriodoChange();
+                  }}
+                  required
+                >
+                  {laboratoristas.map(laboratorista => (
+                    <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
+                      {laboratorista.laboratorista}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
+              <div>
+                <Autocomplete
+                  variant="faded"
+                  label="Laboratorio"
+                  name="aula"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleAulaChange(selectedValue);
+                  }}
+                  required
+                >
+                  {aulas.map(aula => (
+                    <AutocompleteItem key={aula.nombre} value={aula.nombre}>
+                      {aula.nombre}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
             </div>
             <div className="botonFormulario">
               <Button color="secondary" onPress={handleCancel}>Cancelar</Button>

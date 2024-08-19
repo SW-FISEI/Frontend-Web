@@ -10,7 +10,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },*/
   {
     title: 'Hojas de control',
-    path: '',
+    path: '/admin/hojas-control/individual',
     icon: <Icon icon="lucide:clipboard-check" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
@@ -20,7 +20,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: 'Gestión de personal',
-    path: '/admin/gestion-personal',
+    path: '/admin/gestion-personal/titulos',
     icon: <Icon icon="lucide:user-round-check" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
@@ -31,7 +31,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: 'Infraestructura',
-    path: '/admin/infraestructura',
+    path: '/admin/infraestructura/edificios',
     icon: <Icon icon="lucide:building" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
@@ -46,6 +46,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:server-cog" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
+      { title: 'Distribución de software', icon: <Icon icon="lucide:shapes" width="24" height="24" />, path: '/admin/gestion-equipos' },
       { title: 'Máquinas', icon: <Icon icon="lucide:monitor-smartphone" width="24" height="24" />, path: '/admin/gestion-equipos/maquinas' },
       { title: 'Observaciones', icon: <Icon icon="lucide:inbox" width="24" height="24" />, path: '/admin/gestion-equipos/observaciones' },
       { title: 'Software', icon: <Icon icon="lucide:code-xml" width="24" height="24" />, path: '/admin/gestion-equipos/software' },
@@ -57,6 +58,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:calendar-cog" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
+      { title: 'Horarios', icon: <Icon icon="lucide:calendar-days" width="24" height="24" />, path: '/admin/administracion-horarios/horarios' },
       { title: 'Periodos', icon: <Icon icon="lucide:calendar-range" width="24" height="24" />, path: '/admin/administracion-horarios/periodos' },
     ],
   },
@@ -66,6 +68,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:folder-cog" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
+      { title: 'Distribución de materias', icon: <Icon icon="lucide:blocks" width="24" height="24" />, path: '/admin/administracion-academica/distribucion-materias' },
       { title: 'Semestres', icon: <Icon icon="lucide:calendar" width="24" height="24" />, path: '/admin/administracion-academica/semestres' },
       { title: 'Materias', icon: <Icon icon="lucide:book-marked" width="24" height="24" />, path: '/admin/administracion-academica/materias' },
       { title: 'Carreras', icon: <Icon icon="lucide:graduation-cap" width="24" height="24" />, path: '/admin/administracion-academica/carreras' },

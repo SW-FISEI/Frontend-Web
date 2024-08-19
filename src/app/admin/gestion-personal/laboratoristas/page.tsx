@@ -27,7 +27,7 @@ interface Edificio {
 
 const columnas = [
   { uid: "cedula", name: "Cédula", sortable: true },
-  { uid: "titulo.nombre", name: "Titulo", sortable: true },
+  { uid: "titulo.nombre", name: "Título", sortable: true },
   { uid: "laboratorista", name: "Nombre", sortable: true },
   { uid: "edificio.nombre", name: "Edificio", sortable: true },
   { uid: "actions", name: "Acciones" }
@@ -92,7 +92,7 @@ const Laboratoristas = () => {
   const laboratoristasConId = laboratoristas.map(laboratorista => ({
     ...laboratorista,
     id: laboratorista.cedula,
-    laboratorista: `${laboratorista.titulo.abreviacion} ${laboratorista.laboratorista}` // Concatenación de abreviación y nombre
+    laboratorista: `${laboratorista.laboratorista}` // Concatenación de abreviación y nombre
   }));
 
   return (

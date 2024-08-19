@@ -48,7 +48,6 @@ const SideNav = () => {
 };
 
 export default SideNav;
-
 const MenuItem = ({ item }: { item: SideNavItem }) => {
     const pathname = usePathname();
     const [subMenuOpen, setSubMenuOpen] = useState(false);
@@ -57,31 +56,32 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
         setSubMenuOpen(!subMenuOpen);
     };
 
+    // Comprobar si el pathname actual coincide o es una subruta de item.path
+    const isActive = pathname.startsWith(item.path) || item.subMenuItems?.some(subItem => pathname.startsWith(subItem.path));
+
     return (
-        <div className={`contenedorSubmenuItems ${pathname.includes(`${item.path}`) ? 'contenedorSubmenuItemsPressed' : ''}`}>
+        <div className={`contenedorSubmenuItems ${isActive ? 'contenedorSubmenuItemsPressed' : ''}`}>
             {item.submenu ? (
                 <>
-                    <Link href={item.path}>
-                        <button
-                            onClick={toggleSubMenu}
-                            className={`fondoOpcionMenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}
-                        >
-                            <div className="textoOpcionMenu">
-                                {item.icon}
-                                <span className="menu-item-title">{item.title}</span>
-                            </div>
-                            <div className={`${subMenuOpen ? 'rotate-180' : ''} flex`}>
-                                <Icon icon="lucide:chevron-down" width="24" height="24" />
-                            </div>
-                        </button>
-                    </Link>
+                    <button
+                        onClick={toggleSubMenu}
+                        className={`fondoOpcionMenu ${isActive ? 'fondoOpcionMenuPressed' : ''}`}
+                    >
+                        <div className="textoOpcionMenu">
+                            {item.icon}
+                            <span className="menu-item-title">{item.title}</span>
+                        </div>
+                        <div className={`${subMenuOpen ? 'rotate-180' : ''} flex`}>
+                            <Icon icon="lucide:chevron-down" width="24" height="24" />
+                        </div>
+                    </button>
                     {subMenuOpen && (
-                        <div className={`submenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}>
+                        <div className={`submenu ${isActive ? 'fondoOpcionMenuPressed' : ''}`}>
                             {item.subMenuItems?.map((subItem, idx) => (
                                 <Link
                                     key={idx}
                                     href={subItem.path}
-                                    className={`submenuItem ${subItem.path === pathname ? 'submenuItemPressed' : ''}`}
+                                    className={`submenuItem ${pathname.startsWith(subItem.path) ? 'submenuItemPressed' : ''}`}
                                 >
                                     {subItem.icon}
                                     <span className="submenu-item-title">{subItem.title}</span>
@@ -93,7 +93,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
             ) : (
                 <Link
                     href={item.path}
-                    className={`single-submenu ${item.path === pathname ? 'single-submenu' : ''}`}
+                    className={`single-submenu ${pathname.startsWith(item.path) ? 'single-submenuPressed' : ''}`}
                 >
                     {item.icon}
                     <span className="single-submenu-title">{item.title}</span>

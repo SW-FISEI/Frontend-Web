@@ -21,7 +21,7 @@ interface Titulo {
 
 const columnas = [
   { uid: "cedula", name: "Cédula", sortable: true },
-  { uid: "titulo.nombre", name: "Titulo", sortable: true },
+  { uid: "titulo.nombre", name: "Título", sortable: true },
   { uid: "docente", name: "Nombre", sortable: true },
   { uid: "actions", name: "Acciones" }
 ];
@@ -58,7 +58,7 @@ const Docentes = () => {
   };
 
   const handleEdit = (row: Docente) => {
-    router.push(`/admin/gestion-personal/docentes/docentes-form?id=${row.cedula}`);
+    router.push(`/admin/gestion-personal/docentes/docentes-form?cedula=${row.cedula}`);
   };
   
   const handleEliminar = (row: Docente) => {

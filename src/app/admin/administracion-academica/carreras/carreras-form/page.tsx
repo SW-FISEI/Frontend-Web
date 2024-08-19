@@ -84,7 +84,7 @@ const CarrerasForm = () => {
 
   return (
     <section className=''>
-      <TituloPagina title="Carreras" subtitle={isEditMode ? 'Editar Carrera' : 'Agregar Carrera'} />
+      <TituloPagina title="Carreras" subtitle={isEditMode ? 'Editar carrera' : 'Agregar carrera'} />
       <div className="contenedorFormulario">
         <form onSubmit={handleSubmit}>
           <div>

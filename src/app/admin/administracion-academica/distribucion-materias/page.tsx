@@ -5,7 +5,8 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import TablaConFiltros from '@/components/tabla-filtros';
 
 interface Carrera {
   id: number;
@@ -38,7 +39,7 @@ interface Detalle_Materia {
 }
 
 const columnas = [
-  { uid: "carrera.nombre", name: "Carrera", sortable: true },
+  { uid: "carrera.nombre", name: "Carrera", sortable: true, filterable: true },
   { uid: "semestre.nombre", name: "Semestre", sortable: true },
   { uid: "materia.nombre", name: "Materia", sortable: true },
   { uid: "paralelo.nombre", name: "Paralelo", sortable: true },
@@ -71,11 +72,11 @@ const administracionAcademica = () => {
   }, [session]);
 
   const handleAñadir = () => {
-    router.push('/admin/administracion-academica/administracion-academica-form');
+    router.push('/admin/administracion-academica/distribucion-materias/distribucion-materias-form');
   }
 
   const handleEditar = (row: Detalle_Materia) => {
-    router.push(`/admin/administracion-academica/administracion-academica-form?id=${row.id}`)
+    router.push(`/admin/administracion-academica/distribucion-materias/distribucion-materias-form?id=${row.id}`)
   }
 
   const eliminarDetalle = async (id: number) => {
@@ -98,8 +99,8 @@ const administracionAcademica = () => {
 
   return (
     <section className=''>
-      <TituloPagina title="Detalle Materias" />
-      <Tabla
+      <TituloPagina title="Distribución de materias" />
+      <TablaConFiltros
         columns={columnas}
         data={detalle_materia}
         onEdit={handleEditar}

@@ -47,10 +47,10 @@ const columnas = [
   { uid: "aula.nombre", name: "Aula", sortable: true, filterable: true },
   { uid: "inicio", name: "Inicio", sortable: true, filterable: true },
   { uid: "fin", name: "Fin", sortable: true, filterable: true },
-  { uid: "dia", name: "Dia", sortable: true, filterable: true },
+  { uid: "dia", name: "Día", sortable: true, filterable: true },
   { uid: "materia.materia.nombre", name: "Materia", sortable: true, filterable: true },
   { uid: "docente.docente", name: "Docente", sortable: true, filterable: true },
-  { uid: "periodo.nombre", name: "Periodo", sortable: true, filterable: true },
+  { uid: "periodo.nombre", name: "Período", sortable: true, filterable: true },
   { uid: "actions", name: "Acciones", sortable: false, filterable: false }, // No necesita filtro
 ];
 
@@ -81,11 +81,11 @@ const AdministracionHorarios = () => {
   }, [session]);
 
   const handleAñadir = () => {
-    router.push('/admin/administracion-horarios/administracion-horarios-form');
+    router.push('/admin/administracion-horarios/horarios/horarios-form');
   };
 
   const handleEditar = (row: Detalle_Horario) => {
-    router.push(`/admin/administracion-horarios/administracion-horarios-form?id=${row.id}`);
+    router.push(`/admin/administracion-horarios/horarios/horarios-form?id=${row.id}`);
   };
 
   const eliminarDetalle = async (id: number) => {
@@ -108,7 +108,7 @@ const AdministracionHorarios = () => {
 
   return (
     <section className=''>
-      <TituloPagina title="Detalle Horarios" />
+      <TituloPagina title="Horarios" />
       <TablaConFiltros
         columns={columnas}
         data={detalle_horario}

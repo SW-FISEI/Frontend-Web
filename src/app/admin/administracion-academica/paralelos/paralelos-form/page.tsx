@@ -79,7 +79,7 @@ const ParalelosForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Paralelos" subtitle={isEditMode ? 'Editar Paralelo' : 'Agregar Paralelo'} />
+            <TituloPagina title="Paralelos" subtitle={isEditMode ? 'Editar paralelo' : 'Agregar paralelo'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>

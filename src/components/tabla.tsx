@@ -174,7 +174,7 @@ const Tabla = <T extends { id: number }>({
         <Input
           isClearable
           className="search-input"
-          placeholder="Busque por nombre o descripción..."
+          placeholder="Busque por cualquier campo..."
           startContent={<Icon icon="lucide:search" />}
           value={filterValue}
           onClear={onClear}

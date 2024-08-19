@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Textarea } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
 interface Software {
@@ -109,7 +109,7 @@ const SoftwareForm = () => {
                         />
                     </div>
                     <div>
-                        <Input
+                        <Textarea
                             variant="faded"
                             type="text"
                             label="Descripción"
@@ -117,6 +117,9 @@ const SoftwareForm = () => {
                             value={software.descripcion}
                             onChange={handleInputChange}
                             required
+                            classNames={{
+                                input: "resize-y min-h-[40px]",
+                            }}
                         />
                     </div>
                     <div className="botonFormulario">

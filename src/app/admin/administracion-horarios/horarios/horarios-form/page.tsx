@@ -20,7 +20,7 @@ interface Docente {
 
 interface Detalle_Materia {
     id: number;
-    materia: Materia
+    materia: Materia;
 }
 
 interface Materia {
@@ -117,10 +117,14 @@ const DetalleHorarioForm = () => {
                         },
                     });
 
+                    // Asegúrate de que el formato de las horas es correcto
+                    const inicio = detalleResponse.data.inicio.slice(0, 5); // Formato HH:mm
+                    const fin = detalleResponse.data.fin.slice(0, 5); // Formato HH:mm
+
                     setDetalle({
                         id: detalleResponse.data.id,
-                        inicio: detalleResponse.data.inicio,
-                        fin: detalleResponse.data.fin,
+                        inicio: inicio,
+                        fin: fin,
                         dia: detalleResponse.data.dia,
                         aula: {
                             id: detalleResponse.data.aula.id,
@@ -156,50 +160,64 @@ const DetalleHorarioForm = () => {
 
     if (loading) {
         return (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <CircularProgress label="Cargando..." />
-          </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress label="Cargando..." />
+            </div>
         );
-      }
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setDetalle({ ...detalle, [name]: value ?? '' });
+        setDetalle(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        setDetalle({ ...detalle, [name]: value });
+        setDetalle(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
     const handleAulaChange = (selected: string) => {
         const selectedAula = aula.find(p => p.nombre === selected);
         if (selectedAula) {
-            setDetalle({ ...detalle, aula: selectedAula });
+            setDetalle(prevState => ({
+                ...prevState,
+                aula: selectedAula,
+            }));
         }
     }
 
     const handleMateriaChange = (selected: string) => {
         const selectedDetalleMateria = detalle_materia.find(dm => dm.materia.nombre === selected);
-
         if (selectedDetalleMateria) {
-            setDetalle({
-                ...detalle,
-                detalle_materia: selectedDetalleMateria // Aquí aseguramos que se guarda el detalle_materia completo
-            });
+            setDetalle(prevState => ({
+                ...prevState,
+                detalle_materia: selectedDetalleMateria,
+            }));
         }
     };
 
     const handleDocenteChange = (selected: string) => {
         const selectedDocente = docente.find(p => p.docente === selected);
         if (selectedDocente) {
-            setDetalle({ ...detalle, docente: selectedDocente });
+            setDetalle(prevState => ({
+                ...prevState,
+                docente: selectedDocente,
+            }));
         }
     }
 
     const handlePeriodoChange = (selected: string) => {
         const selectedPeriodo = periodo.find(p => p.nombre === selected);
         if (selectedPeriodo) {
-            setDetalle({ ...detalle, periodo: selectedPeriodo });
+            setDetalle(prevState => ({
+                ...prevState,
+                periodo: selectedPeriodo,
+            }));
         }
     }
 
@@ -231,7 +249,7 @@ const DetalleHorarioForm = () => {
                     },
                 });
             }
-            router.push('/admin/administracion-horarios');
+            router.push('admin/administracion-horarios/horarios');
         } catch (error) {
             console.error('Error al guardar:', error);
         }
@@ -243,39 +261,51 @@ const DetalleHorarioForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Detalle Horario" subtitle={isEditMode ? 'Editar Detalle Horario' : 'Agregar Detalle Horario'} />
+            <TituloPagina title="Horarios" subtitle={isEditMode ? 'Editar horario' : 'Agregar horario'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <Input
+                        <Autocomplete
                             variant="faded"
-                            type="time"
-                            label="Inicio"
-                            name="inicio"
-                            value={detalle.inicio}
-                            min={0}
-                            max={60}
-                            onChange={handleInputChange}
+                            label="Período"
+                            name="periodo"
+                            selectedKey={detalle.periodo.nombre}
+                            onSelectionChange={(selected) => {
+                                const selectedValue = selected ? selected.toString() : '';
+                                handlePeriodoChange(selectedValue);
+                            }}
                             required
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            variant="faded"
-                            type="time"
-                            label="Fin"
-                            name="fin"
-                            value={detalle.fin}
-                            min={0}
-                            max={60}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        >
+                            {periodo.map(periodo => (
+                                <AutocompleteItem key={periodo.nombre} value={periodo.nombre}>
+                                    {periodo.nombre}
+                                </AutocompleteItem>
+                            ))}
+                        </Autocomplete>
                     </div>
                     <div>
                         <Autocomplete
                             variant="faded"
-                            label="Dia"
+                            label="Aula"
+                            name="aula"
+                            selectedKey={detalle.aula.nombre}
+                            onSelectionChange={(selected) => {
+                                const selectedValue = selected ? selected.toString() : '';
+                                handleAulaChange(selectedValue);
+                            }}
+                            required
+                        >
+                            {aula.map(aula => (
+                                <AutocompleteItem key={aula.nombre} value={aula.nombre}>
+                                    {aula.nombre}
+                                </AutocompleteItem>
+                            ))}
+                        </Autocomplete>
+                    </div>
+                    <div>
+                        <Autocomplete
+                            variant="faded"
+                            label="Día"
                             placeholder="Dia"
                             className="max-w-full"
                             name="dia"
@@ -303,81 +333,73 @@ const DetalleHorarioForm = () => {
                             </AutocompleteItem>
                         </Autocomplete>
                     </div>
-                    <div>
-                        <Autocomplete
-                            variant="faded"
-                            label="Aula"
-                            name="aula"
-                            selectedKey={detalle.aula.nombre}
-                            onSelectionChange={(selected) => {
-                                const selectedValue = selected ? selected.toString() : '';
-                                handleAulaChange(selectedValue);
-                            }}
-                            required
-                        >
-                            {aula.map(aula => (
-                                <AutocompleteItem key={aula.nombre} value={aula.nombre}>
-                                    {aula.nombre}
-                                </AutocompleteItem>
-                            ))}
-                        </Autocomplete>
+                    <div className="contenedorDobleColumna">
+                        <div>
+                            <Input
+                                variant="faded"
+                                type="time"
+                                label="Inicio"
+                                name="inicio"
+                                value={detalle.inicio}
+                                min={0}
+                                max={60}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                variant="faded"
+                                type="time"
+                                label="Fin"
+                                name="fin"
+                                value={detalle.fin}
+                                min={0}
+                                max={60}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <Autocomplete
-                            variant="faded"
-                            label="Materia"
-                            name="semestre"
-                            selectedKey={detalle.detalle_materia.materia.nombre}
-                            onSelectionChange={(selected) => {
-                                const selectedValue = selected ? selected.toString() : '';
-                                handleMateriaChange(selectedValue);
-                            }}
-                            required
-                        >
-                            {materia.map(materia => (
-                                <AutocompleteItem key={materia.nombre} value={materia.nombre}>
-                                    {materia.nombre}
-                                </AutocompleteItem>
-                            ))}
-                        </Autocomplete>
-                    </div>
-                    <div>
-                        <Autocomplete
-                            variant="faded"
-                            label="Docente"
-                            name="docente"
-                            selectedKey={detalle.docente.docente}
-                            onSelectionChange={(selected) => {
-                                const selectedValue = selected ? selected.toString() : '';
-                                handleDocenteChange(selectedValue);
-                            }}
-                            required
-                        >
-                            {docente.map(docente => (
-                                <AutocompleteItem key={docente.docente} value={docente.docente}>
-                                    {docente.docente}
-                                </AutocompleteItem>
-                            ))}
-                        </Autocomplete>
-                    </div>
-                    <div>
-                        <Autocomplete
-                            variant="faded"
-                            label="Periodo"
-                            name="periodo"
-                            selectedKey={detalle.periodo.nombre}
-                            onSelectionChange={(selected) => {
-                                const selectedValue = selected ? selected.toString() : '';
-                                handlePeriodoChange(selectedValue);
-                            }}
-                            required
-                        >
-                            {periodo.map(periodo => (
-                                <AutocompleteItem key={periodo.nombre} value={periodo.nombre}>
-                                    {periodo.nombre}
-                                </AutocompleteItem>
-                            ))}
-                        </Autocomplete>
+                    <div className="contenedorDobleColumna">
+                        <div>
+                            <Autocomplete
+                                variant="faded"
+                                label="Docente"
+                                name="docente"
+                                selectedKey={detalle.docente.docente}
+                                onSelectionChange={(selected) => {
+                                    const selectedValue = selected ? selected.toString() : '';
+                                    handleDocenteChange(selectedValue);
+                                }}
+                                required
+                            >
+                                {docente.map(docente => (
+                                    <AutocompleteItem key={docente.docente} value={docente.docente}>
+                                        {docente.docente}
+                                    </AutocompleteItem>
+                                ))}
+                            </Autocomplete>
+                        </div>
+                        <div>
+                            <Autocomplete
+                                variant="faded"
+                                label="Materia"
+                                name="semestre"
+                                selectedKey={detalle.detalle_materia.materia.nombre}
+                                onSelectionChange={(selected) => {
+                                    const selectedValue = selected ? selected.toString() : '';
+                                    handleMateriaChange(selectedValue);
+                                }}
+                                required
+                            >
+                                {materia.map(materia => (
+                                    <AutocompleteItem key={materia.nombre} value={materia.nombre}>
+                                        {materia.nombre}
+                                    </AutocompleteItem>
+                                ))}
+                            </Autocomplete>
+                        </div>
                     </div>
                     <div className="botonFormulario">
                         <Button color="secondary" onPress={handleCancel}>Cancelar</Button>

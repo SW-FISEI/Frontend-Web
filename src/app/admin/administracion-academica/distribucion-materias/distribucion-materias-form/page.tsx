@@ -8,6 +8,7 @@ import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
+
 interface Carrera {
     id: number;
     nombre: string;
@@ -201,7 +202,7 @@ const DetalleMateriaForm = () => {
                     },
                 });
             }
-            router.push('/admin/administracion-academica');
+            router.push('/admin/administracion-academica/distribucion-materias');
         } catch (error) {
             console.error('Error al guardar:', error);
         }
@@ -213,7 +214,7 @@ const DetalleMateriaForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Detalle Materia" subtitle={isEditMode ? 'Editar Detalle Materia' : 'Agregar Detalle Materia'} />
+            <TituloPagina title="Distribución de materias" subtitle={isEditMode ? 'Editar' : 'Agregar'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
