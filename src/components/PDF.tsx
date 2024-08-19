@@ -1,7 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 
-/* IMPORTAR LOGOS */
 const logoFISEI = '/logo.png';
 const logoUTA = '/logoUTA.png';
 
@@ -135,103 +134,86 @@ interface PDFProps {
 
 function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, inicio, fin, fecha, laboratorista }: PDFProps) {
     return (
-        <Document>
-            <Page style={styles.page}>
-                {/* Encabezado */}
-                <View style={styles.header}>
-                    <Image src={logoUTA} style={styles.logo} />
-                    <View style={{ flex: 1, textAlign: 'center' }}>
-                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>UNIVERSIDAD TÉCNICA DE AMBATO</Text>
-                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>FISEI</Text>
-                        <Text style={{ fontSize: 10, fontWeight: 'normal' }}>CARRERA DE {carrera}</Text>
-                    </View>
-                    <Image src={logoFISEI} style={styles.logo} />
+        <View style={styles.page}>
+            <View style={styles.header}>
+                <Image src={logoUTA} style={styles.logo} />
+                <View style={{ flex: 1, textAlign: 'center' }}>
+                    <Text style={{ fontSize: 12, fontWeight: 'bold' }}>UNIVERSIDAD TÉCNICA DE AMBATO</Text>
+                    <Text style={{ fontSize: 12, fontWeight: 'bold' }}>FISEI</Text>
+                    <Text style={{ fontSize: 10, fontWeight: 'normal' }}>CARRERA DE {carrera}</Text>
                 </View>
+                <Image src={logoFISEI} style={styles.logo} />
+            </View>
 
-                {/* Detalles del Laboratorio */}
-                <View style={styles.section}>
-                    <View style={styles.row1}>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>LABORATORIO:</Text>
-                            <Text>{aula}</Text>
-                        </View>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>DOCENTE:</Text>
-                            <Text>{docente}</Text>
-                        </View>
+            <View style={styles.section}>
+                <View style={styles.row1}>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>LABORATORIO:</Text>
+                        <Text>{aula}</Text>
                     </View>
-                    <View style={styles.row1}>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>AUXILIAR DE LABORATORIO:</Text>
-                            <Text>{laboratorista}</Text>
-                        </View>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>PERIODO ACADÉMICO:</Text>
-                            <Text>{periodo}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.row1}>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>NIVEL:</Text>
-                            <Text>{semestre} {paralelo}</Text>
-                        </View>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>FECHA:</Text>
-                            <Text>{fecha}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.row2}>
-                        <View style={styles.column2}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.INGRESO:</Text>
-                            <Text>{inicio}</Text>
-                        </View>
-                        <View style={styles.column2}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.SALIDA:</Text>
-                            <Text>{fin}</Text>
-                        </View>
-                        <View style={styles.column2}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.PRACTICAS:</Text>
-                            <Text>____</Text>
-                        </View>
-                    </View>
-                    <View style={styles.row1}>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>MATERIA:</Text>
-                            <Text>{materia}</Text>
-                        </View>
-                        <View style={styles.column1}>
-                            <Text style={{ marginRight: 10, fontWeight: 'bold' }}>TEMA DE LA PRÁCTICA:</Text>
-                            <Text>_____________________</Text>
-                        </View>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>DOCENTE:</Text>
+                        <Text>{docente}</Text>
                     </View>
                 </View>
+                <View style={styles.row1}>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>AUXILIAR DE LABORATORIO:</Text>
+                        <Text>{laboratorista}</Text>
+                    </View>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>PERIODO ACADÉMICO:</Text>
+                        <Text>{periodo}</Text>
+                    </View>
+                </View>
+                <View style={styles.row1}>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>NIVEL:</Text>
+                        <Text>{semestre} {paralelo}</Text>
+                    </View>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>FECHA:</Text>
+                        <Text>{fecha}</Text>
+                    </View>
+                </View>
+                <View style={styles.row2}>
+                    <View style={styles.column2}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.INGRESO:</Text>
+                        <Text>{inicio}</Text>
+                    </View>
+                    <View style={styles.column2}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.SALIDA:</Text>
+                        <Text>{fin}</Text>
+                    </View>
+                    <View style={styles.column2}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.PRACTICAS:</Text>
+                        <Text>____</Text>
+                    </View>
+                </View>
+                <View style={styles.row1}>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>MATERIA:</Text>
+                        <Text>{materia}</Text>
+                    </View>
+                    <View style={styles.column1}>
+                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>TEMA DE LA PRÁCTICA:</Text>
+                        <Text>_____________________</Text>
+                    </View>
+                </View>
+            </View>
 
-                {/* Tabla de Registro de Prácticas */}
-                <View style={styles.tableTitle}>
-                    <Text style={{ fontWeight: 'bold' }}>REGISTRO DE PRÁCTICAS DE LABORATORIO</Text>
+            <View style={styles.tableTitle}>
+                <Text style={{ fontWeight: 'bold' }}>REGISTRO DE PRÁCTICAS DE LABORATORIO</Text>
+            </View>
+            <View style={styles.table}>
+                <View style={styles.tableRow}>
+                    <View style={styles.tableCol1}><Text>#MAQ</Text></View>
+                    <View style={styles.tableCol2}><Text>NÓMINA DE ESTUDIANTES</Text></View>
+                    <View style={styles.tableCol3}><Text>OBSERVACIONES</Text></View>
                 </View>
-                <View style={styles.table}>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableCol1}><Text>#MAQ</Text></View>
-                        <View style={styles.tableCol2}><Text>NÓMINA DE ESTUDIANTES</Text></View>
-                        <View style={styles.tableCol3}><Text>OBSERVACIONES</Text></View>
-                    </View>
-                    {[...Array(19)].map((_, i) => (
-                        <View style={styles.tableRow} key={i}>
-                            <View style={styles.tableCol1}><Text>{i + 1}</Text></View>
-                            <View style={styles.tableCenterCol}>
-                                <View style={[styles.tableCenterRow, { borderBottomWidth: 1, borderBottomColor: '#000', borderBottomStyle: 'solid' }]}>
-                                    <Text></Text>
-                                </View>
-                                <View style={styles.tableCenterRow}>
-                                    <Text></Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableCol3}><Text></Text></View>
-                        </View>
-                    ))}
-                    <View style={styles.tableCustomRow}>
-                        <View style={styles.tableCol1}><Text>20</Text></View>
+                {[...Array(19)].map((_, i) => (
+                    <View style={styles.tableRow} key={i}>
+                        <View style={styles.tableCol1}><Text>{i + 1}</Text></View>
                         <View style={styles.tableCenterCol}>
                             <View style={[styles.tableCenterRow, { borderBottomWidth: 1, borderBottomColor: '#000', borderBottomStyle: 'solid' }]}>
                                 <Text></Text>
@@ -242,15 +224,14 @@ function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, ini
                         </View>
                         <View style={styles.tableCol3}><Text></Text></View>
                     </View>
-                </View>
+                ))}
+            </View>
 
-                {/* Sección de Firmas */}
-                <View style={styles.signatureSection}>
-                    <Text style={styles.signature}>FIRMA DEL DOCENTE</Text>
-                    <Text style={styles.signature}>FIRMA DEL RESPONSABLE</Text>
-                </View>
-            </Page>
-        </Document>
+            <View style={styles.signatureSection}>
+                <Text style={styles.signature}>FIRMA DEL DOCENTE</Text>
+                <Text style={styles.signature}>FIRMA DEL RESPONSABLE</Text>
+            </View>
+        </View>
     );
 }
 
