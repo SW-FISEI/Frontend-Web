@@ -145,8 +145,8 @@ const LaboratoristasForm = () => {
             const laboratoristaDatos = {
                 cedula: laboratorista.cedula,
                 laboratorista: laboratorista.laboratorista,
-                titulo_id: laboratorista.titulo.id,
-                edificio_id: laboratorista.edificio.id,
+                titulo: laboratorista.titulo.id,
+                edificio: laboratorista.edificio.id,
             };
 
             if (isEditMode) {
@@ -164,7 +164,7 @@ const LaboratoristasForm = () => {
                     },
                 });
             }
-            router.push('/admin/gestion-laboratorios/laboratoristas');
+            router.push('/admin/gestion-personal/laboratoristas');
         } catch (error) {
             console.error('Error al guardar el laboratorista:', error);
         }

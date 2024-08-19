@@ -249,7 +249,7 @@ const DetalleHorarioForm = () => {
                     },
                 });
             }
-            router.push('admin/administracion-horarios/horarios');
+            router.push('/admin/administracion-horarios/horarios');
         } catch (error) {
             console.error('Error al guardar:', error);
         }
@@ -322,8 +322,8 @@ const DetalleHorarioForm = () => {
                             <AutocompleteItem key={'Martes'} value={'Martes'} textValue="Martes">
                                 Martes
                             </AutocompleteItem>
-                            <AutocompleteItem key={'Miercoles'} value={'Miercoles'} textValue="Miercoles">
-                                Miercoles
+                            <AutocompleteItem key={'Miércoles'} value={'Miércoles'} textValue="Miércoles">
+                                Miércoles
                             </AutocompleteItem>
                             <AutocompleteItem key={'Jueves'} value={'Jueves'} textValue="Jueves">
                                 Jueves
@@ -383,9 +383,9 @@ const DetalleHorarioForm = () => {
                         </div>
                         <div>
                             <Autocomplete
-                                variant="faded"
+                                variant="faded" 
                                 label="Materia"
-                                name="semestre"
+                                name="materia"
                                 selectedKey={detalle.detalle_materia.materia.nombre}
                                 onSelectionChange={(selected) => {
                                     const selectedValue = selected ? selected.toString() : '';
