@@ -25,7 +25,7 @@ const DocentesForm = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const id = searchParams.get('id');
+    const id = searchParams.get('cedula');
     const [docente, setDocente] = useState<Docente>({ cedula: '', docente: '', titulo: { id: 0, nombre: '', abreviacion: '' } });
     const [titulos, setTitulos] = useState<Titulo[]>([]);
     const [loading, setLoading] = useState(true);
@@ -60,7 +60,7 @@ const DocentesForm = () => {
                     });
 
                     setDocente({
-                        id: docenteResponse.data.id,
+                        id: docenteResponse.data.cedula,
                         cedula: docenteResponse.data.cedula,
                         docente: docenteResponse.data.docente,
                         titulo: {
@@ -142,7 +142,7 @@ const DocentesForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Docentes" subtitle={isEditMode ? 'Editar Docente' : 'Agregar Docente'} />
+            <TituloPagina title="Docentes" subtitle={isEditMode ? 'Editar docente' : 'Agregar docente'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -151,16 +151,6 @@ const DocentesForm = () => {
                             label="Cédula"
                             name="cedula"
                             value={docente.cedula}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            variant="faded"
-                            label="Nombre del Docente"
-                            name="docente"
-                            value={docente.docente}
                             onChange={handleInputChange}
                             required
                         />
@@ -183,6 +173,16 @@ const DocentesForm = () => {
                                 </AutocompleteItem>
                             ))}
                         </Autocomplete>
+                    </div>
+                    <div>
+                        <Input
+                            variant="faded"
+                            label="Nombre del Docente"
+                            name="docente"
+                            value={docente.docente}
+                            onChange={handleInputChange}
+                            required
+                        />
                     </div>
                     <div className="botonFormulario">
                         <Button color="secondary" onPress={handleCancel}>Cancelar</Button>
