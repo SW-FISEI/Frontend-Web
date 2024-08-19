@@ -126,13 +126,30 @@ interface PDFProps {
     aula: string | null;
     docente: string | null;
     materia: string | null;
-    inicio: string | null;
-    fin: string | null;
+    inicio: string;
+    fin: string;
     fecha: string;
     laboratorista: string | null;
 }
 
+function calcularHoras(inicio: string, fin: string): string {
+    const [inicioHoras, inicioMinutos] = inicio.split(':').map(Number);
+    const [finHoras, finMinutos] = fin.split(':').map(Number);
+
+    let horas = finHoras - inicioHoras;
+    let minutos = finMinutos - inicioMinutos;
+
+    if (minutos < 0) {
+        horas -= 1;
+        minutos += 60;
+    }
+
+    return `${horas}:${minutos < 10 ? '0' : ''}${minutos}`;
+}
+
 function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, inicio, fin, fecha, laboratorista }: PDFProps) {
+    const horasPracticas = calcularHoras(inicio, fin);
+
     return (
         <View style={styles.page}>
             <View style={styles.header}>
@@ -187,7 +204,7 @@ function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, ini
                     </View>
                     <View style={styles.column2}>
                         <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.PRACTICAS:</Text>
-                        <Text>____</Text>
+                        <Text>{horasPracticas}</Text>
                     </View>
                 </View>
                 <View style={styles.row1}>
@@ -225,6 +242,18 @@ function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, ini
                         <View style={styles.tableCol3}><Text></Text></View>
                     </View>
                 ))}
+                <View style={styles.tableCustomRow}>
+                    <View style={styles.tableCol1}><Text>20</Text></View>
+                    <View style={styles.tableCenterCol}>
+                        <View style={[styles.tableCenterRow, { borderBottomWidth: 1, borderBottomColor: '#000', borderBottomStyle: 'solid' }]}>
+                            <Text></Text>
+                        </View>
+                        <View style={styles.tableCenterRow}>
+                            <Text></Text>
+                        </View>
+                    </View>
+                    <View style={styles.tableCol3}><Text></Text></View>
+                </View>
             </View>
 
             <View style={styles.signatureSection}>
