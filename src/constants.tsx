@@ -20,7 +20,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: 'Gestión de personal',
-    path: '/admin/gestion-personal',
+    path: '',
     icon: <Icon icon="lucide:user-round-check" width="24" height="24" />,
     submenu: true,
     subMenuItems: [

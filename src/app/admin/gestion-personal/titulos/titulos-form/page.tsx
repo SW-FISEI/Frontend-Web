@@ -81,14 +81,14 @@ const TitulosForm = () => {
 
   return (
     <section className=''>
-      <TituloPagina title="Titulos" subtitle={isEditMode ? 'Editar Titulo' : 'Agregar Titulo'} />
+      <TituloPagina title="Títulos" subtitle={isEditMode ? 'Editar título' : 'Agregar título'} />
       <div className="contenedorFormulario">
         <form onSubmit={handleSubmit}>
           <div>
             <Input 
               variant="faded" 
               type="text" 
-              label="Nombre" 
+              label="Nombre de título" 
               name="nombre"
               value={titulos.nombre}
               onChange={handleInputChange}
@@ -99,7 +99,7 @@ const TitulosForm = () => {
             <Input 
               variant="faded" 
               type="text" 
-              label="Abreviacion" 
+              label="Abreviación" 
               name="abreviacion"
               value={titulos.abreviacion}
               onChange={handleInputChange}

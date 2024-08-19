@@ -14,7 +14,7 @@ interface Titulo {
 }
 
 const columnas = [
-  { uid: "nombre", name: "Titulo", sortable: true },
+  { uid: "nombre", name: "Título", sortable: true },
   { uid: "abreviacion", name: "Abreviación", sortable: true },
   { uid: "actions", name: "Acciones" }
 ];
