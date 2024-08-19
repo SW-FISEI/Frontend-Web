@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
-import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
+import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress, Textarea } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
 interface Edificio {
@@ -204,7 +204,7 @@ const PisoForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Aulas" subtitle={isEditMode ? 'Editar Aula' : 'Agregar Aula'} />
+            <TituloPagina title="Aulas" subtitle={isEditMode ? 'Editar aula' : 'Agregar aula'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -218,8 +218,8 @@ const PisoForm = () => {
                             required
                         />
                     </div>
-                    <div className='grid grid-cols-2'>
-                        <div className='col-start-1'>
+                    <div className="contenedorDobleColumna">
+                        <div>
                             <Input
                                 variant="faded"
                                 type="number"
@@ -232,7 +232,7 @@ const PisoForm = () => {
                                 required
                             />
                         </div>
-                        <div className='col-start-2'>
+                        <div>
                             <Input
                                 variant="faded"
                                 type="number"
@@ -246,8 +246,8 @@ const PisoForm = () => {
                             />
                         </div>
                     </div>
-                    <div className='grid grid-cols-2'>
-                        <div className='col-start-1'>
+                    <div className="contenedorDobleColumna">
+                        <div>
                             <Autocomplete
                                 variant="faded"
                                 label="Proyector"
@@ -269,7 +269,7 @@ const PisoForm = () => {
                                 </AutocompleteItem>
                             </Autocomplete>
                         </div>
-                        <div className='col-start-2'>
+                        <div>
                             <Autocomplete
                                 variant="faded"
                                 label="Aire"
@@ -293,7 +293,7 @@ const PisoForm = () => {
                         </div>
                     </div>
                     <div>
-                        <Input
+                        <Textarea
                             variant="faded"
                             type="text"
                             label="Descripción"
@@ -301,6 +301,9 @@ const PisoForm = () => {
                             value={aula.descripcion}
                             onChange={handleInputChange}
                             required
+                            classNames={{
+                                input: "resize-y min-h-[40px]",
+                              }}
                         />
                     </div>
                     <div>

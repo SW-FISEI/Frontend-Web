@@ -181,7 +181,7 @@ const porBloque = () => {
 
   return (
     <section>
-      <TituloPagina title="Hoja de control por Bloques" subtitle={'Generar hoja'} />
+      <TituloPagina title="Hoja de control por bloque" subtitle={'Generar hoja'} />
       <div className="contenedorFormulario">
         {!showPDF ? (
           <form onSubmit={handleSubmit}>
@@ -216,7 +216,7 @@ const porBloque = () => {
             <div>
               <Autocomplete
                 variant="faded"
-                label="Laboratorista Mañana"
+                label="Laboratorista mañana"
                 name="laboratoristaMañana"
                 onSelectionChange={(selected) => {
                   const selectedValue = selected ? selected.toString() : '';
@@ -235,7 +235,7 @@ const porBloque = () => {
             <div>
               <Autocomplete
                 variant="faded"
-                label="Laboratorista Tarde"
+                label="Laboratorista tarde"
                 name="laboratoristaTarde"
                 onSelectionChange={(selected) => {
                   const selectedValue = selected ? selected.toString() : '';

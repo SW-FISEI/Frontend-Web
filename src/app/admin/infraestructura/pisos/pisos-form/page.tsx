@@ -127,7 +127,7 @@ const PisoForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Pisos" subtitle={isEditMode ? 'Editar Piso' : 'Agregar Piso'} />
+            <TituloPagina title="Pisos" subtitle={isEditMode ? 'Editar piso' : 'Agregar piso'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>

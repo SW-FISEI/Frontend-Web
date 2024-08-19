@@ -5,7 +5,8 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import TablaConFiltros from '@/components/tabla-filtros';
 
 interface Edificio {
   id: number;
@@ -38,9 +39,9 @@ interface Software_Aulas {
 }
 
 const columnas = [
-  { uid: "software.nombre", name: "Software", sortable: true },
+  { uid: "software.nombre", name: "Software", sortable: true, filterable: true },
   { uid: "software.version", name: "Versión", sortable: true },
-  { uid: "aula.nombre", name: "Aula", sortable: true },
+  { uid: "aula.nombre", name: "Aula", sortable: true, filterable: true },
   { uid: "aula.piso.nombre", name: "Piso", sortable: true },
   { uid: "aula.piso.edificio.nombre", name: "Edificio", sortable: true },
   { uid: "actions", name: "Acciones" },
@@ -101,8 +102,8 @@ const gestionEquipos = () => {
 
   return (
     <section className=''>
-      <TituloPagina title="Software y Aulas" />
-      <Tabla
+      <TituloPagina title="Distribución de software" />
+      <TablaConFiltros
         columns={columnas}
         data={software_aulas}
         onEdit={handleEditar}
