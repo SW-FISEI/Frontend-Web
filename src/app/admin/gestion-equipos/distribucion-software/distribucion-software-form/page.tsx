@@ -156,7 +156,7 @@ const PisoForm = () => {
                     },
                 });
             }
-            router.push('/admin/gestion-equipos');
+            router.push('/admin/gestion-equipos/distribucion-software');
         } catch (error) {
             console.error('Error al guardar:', error);
         }
@@ -168,7 +168,7 @@ const PisoForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Software y Aulas" subtitle={isEditMode ? 'Editar Software y Aula' : 'Agregar Software y Aula'} />
+            <TituloPagina title="Distribución de software" subtitle={isEditMode ? 'Editar' : 'Agregar'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
