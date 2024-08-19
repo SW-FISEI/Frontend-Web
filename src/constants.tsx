@@ -5,7 +5,7 @@ import { SideNavItem } from './types';
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
     title: 'Inicio',
-    path: '/admin',
+    path: '#',
     icon: <Icon icon="lucide:home" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
@@ -51,7 +51,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:server-cog" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Distribución de software', icon: <Icon icon="lucide:shapes" width="24" height="24" />, path: '/admin/gestion-equipos' },
+      { title: 'Distribución de software', icon: <Icon icon="lucide:shapes" width="24" height="24" />, path: '/admin/gestion-equipos/distribucion-software' },
       { title: 'Máquinas', icon: <Icon icon="lucide:monitor-smartphone" width="24" height="24" />, path: '/admin/gestion-equipos/maquinas' },
       { title: 'Observaciones', icon: <Icon icon="lucide:inbox" width="24" height="24" />, path: '/admin/gestion-equipos/observaciones' },
       { title: 'Software', icon: <Icon icon="lucide:code-xml" width="24" height="24" />, path: '/admin/gestion-equipos/software' },

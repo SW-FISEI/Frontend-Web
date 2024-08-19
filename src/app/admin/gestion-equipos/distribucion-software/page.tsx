@@ -73,11 +73,11 @@ const gestionEquipos = () => {
   }, [session]);
 
   const handleAñadir = () => {
-    router.push('/admin/gestion-equipos/gestion-equipos-form');
+    router.push('/admin/gestion-equipos/distribucion-software/distribucion-software-form');
   }
 
   const handleEditar = (row: Software_Aulas) => {
-    router.push(`/admin/gestion-equipos/gestion-equipos-form?id=${row.id}`);
+    router.push(`/admin/gestion-equipos/distribucion-software/distribucion-software-form?id=${row.id}`);
   }
 
   const eliminarPiso = async (id: number) => {
