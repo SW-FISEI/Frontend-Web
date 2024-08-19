@@ -176,7 +176,7 @@ const LaboratoristasForm = () => {
 
     return (
         <section className=''>
-            <TituloPagina title="Laboratoristas" subtitle={isEditMode ? 'Editar Laboratorista' : 'Agregar Laboratorista'} />
+            <TituloPagina title="Laboratoristas" subtitle={isEditMode ? 'Editar laboratorista' : 'Agregar laboratorista'} />
             <div className="contenedorFormulario">
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -190,19 +190,9 @@ const LaboratoristasForm = () => {
                         />
                     </div>
                     <div>
-                        <Input
-                            variant="faded"
-                            label="Nombre del Laboratorista"
-                            name="laboratorista"
-                            value={laboratorista.laboratorista}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div>
                         <Autocomplete
                             variant="faded"
-                            label="Titulo"
+                            label="Título"
                             name="titulo"
                             selectedKey={laboratorista.titulo.nombre}
                             onSelectionChange={(selected) => {
@@ -218,6 +208,17 @@ const LaboratoristasForm = () => {
                             ))}
                         </Autocomplete>
                     </div>
+                    <div>
+                        <Input
+                            variant="faded"
+                            label="Nombre de laboratorista"
+                            name="laboratorista"
+                            value={laboratorista.laboratorista}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+
                     <div>
                         <Autocomplete
                             variant="faded"
