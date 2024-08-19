@@ -92,7 +92,7 @@ const Laboratoristas = () => {
   const laboratoristasConId = laboratoristas.map(laboratorista => ({
     ...laboratorista,
     id: laboratorista.cedula,
-    laboratorista: `${laboratorista.titulo.abreviacion} ${laboratorista.laboratorista}` // Concatenación de abreviación y nombre
+    laboratorista: `${laboratorista.laboratorista}` // Concatenación de abreviación y nombre
   }));
 
   return (

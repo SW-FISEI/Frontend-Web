@@ -10,7 +10,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },*/
   {
     title: 'Hojas de control',
-    path: '',
+    path: '/admin/hojas-control/individual',
     icon: <Icon icon="lucide:clipboard-check" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
@@ -20,7 +20,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: 'Gestión de personal',
-    path: '',
+    path: '/admin/gestion-personal/titulos',
     icon: <Icon icon="lucide:user-round-check" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
@@ -31,7 +31,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: 'Infraestructura',
-    path: '/admin/infraestructura',
+    path: '/admin/infraestructura/edificios',
     icon: <Icon icon="lucide:building" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
