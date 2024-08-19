@@ -9,8 +9,17 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:home" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Consultas', icon: <Icon icon="lucide:book-marked" width="24" height="24" />, path: '/admin/laboratoristas/consultas' },
       { title: 'Dashboard', icon: <Icon icon="lucide:layout-dashboard" width="24" height="24" />, path: '/admin/laboratoristas/dashboard' },
+    ]
+  },
+  {
+    title: 'Consultas',
+    path: '#',
+    icon: <Icon icon="lucide:notebook-pen" width="24" height="24" />,
+    submenu: true,
+    subMenuItems: [
+      { title: 'Docentes', icon: <Icon icon="lucide:users" width="24" height="24" />, path: '/admin/consultas/docentes' },
+      { title: 'Laboratorios', icon: <Icon icon="lucide:pc-case" width="24" height="24" />, path: '/admin/consultas/laboratorios' },
     ]
   },
   {
