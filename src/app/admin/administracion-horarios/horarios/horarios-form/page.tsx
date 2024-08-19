@@ -20,7 +20,7 @@ interface Docente {
 
 interface Detalle_Materia {
     id: number;
-    materia: Materia
+    materia: Materia;
 }
 
 interface Materia {
@@ -117,10 +117,14 @@ const DetalleHorarioForm = () => {
                         },
                     });
 
+                    // Asegúrate de que el formato de las horas es correcto
+                    const inicio = detalleResponse.data.inicio.slice(0, 5); // Formato HH:mm
+                    const fin = detalleResponse.data.fin.slice(0, 5); // Formato HH:mm
+
                     setDetalle({
                         id: detalleResponse.data.id,
-                        inicio: detalleResponse.data.inicio,
-                        fin: detalleResponse.data.fin,
+                        inicio: inicio,
+                        fin: fin,
                         dia: detalleResponse.data.dia,
                         aula: {
                             id: detalleResponse.data.aula.id,
@@ -164,42 +168,56 @@ const DetalleHorarioForm = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setDetalle({ ...detalle, [name]: value ?? '' });
+        setDetalle(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        setDetalle({ ...detalle, [name]: value });
+        setDetalle(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
     const handleAulaChange = (selected: string) => {
         const selectedAula = aula.find(p => p.nombre === selected);
         if (selectedAula) {
-            setDetalle({ ...detalle, aula: selectedAula });
+            setDetalle(prevState => ({
+                ...prevState,
+                aula: selectedAula,
+            }));
         }
     }
 
     const handleMateriaChange = (selected: string) => {
         const selectedDetalleMateria = detalle_materia.find(dm => dm.materia.nombre === selected);
-
         if (selectedDetalleMateria) {
-            setDetalle({
-                ...detalle,
-                detalle_materia: selectedDetalleMateria // Aquí aseguramos que se guarda el detalle_materia completo
-            });
+            setDetalle(prevState => ({
+                ...prevState,
+                detalle_materia: selectedDetalleMateria,
+            }));
         }
     };
 
     const handleDocenteChange = (selected: string) => {
         const selectedDocente = docente.find(p => p.docente === selected);
         if (selectedDocente) {
-            setDetalle({ ...detalle, docente: selectedDocente });
+            setDetalle(prevState => ({
+                ...prevState,
+                docente: selectedDocente,
+            }));
         }
     }
 
     const handlePeriodoChange = (selected: string) => {
         const selectedPeriodo = periodo.find(p => p.nombre === selected);
         if (selectedPeriodo) {
-            setDetalle({ ...detalle, periodo: selectedPeriodo });
+            setDetalle(prevState => ({
+                ...prevState,
+                periodo: selectedPeriodo,
+            }));
         }
     }
 
