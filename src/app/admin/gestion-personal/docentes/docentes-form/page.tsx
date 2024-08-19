@@ -59,15 +59,19 @@ const DocentesForm = () => {
                         },
                     });
 
+                    const docenteData = docenteResponse.data;
+
                     setDocente({
-                        id: docenteResponse.data.cedula,
-                        cedula: docenteResponse.data.cedula,
-                        docente: docenteResponse.data.docente,
-                        titulo: {
-                            id: docenteResponse.data.titulo.id,
-                            nombre: docenteResponse.data.titulo.nombre,
-                            abreviacion: docenteResponse.data.titulo.abreviacion,
-                        },
+                        id: docenteData.cedula,
+                        cedula: docenteData.cedula,
+                        docente: docenteData.docente,
+                        titulo: docenteData.titulo
+                            ? {
+                                id: docenteData.titulo.id,
+                                nombre: docenteData.titulo.nombre,
+                                abreviacion: docenteData.titulo.abreviacion,
+                            }
+                            : { id: 0, nombre: '', abreviacion: '' }, // Maneja el caso donde título es null
                     });
                 }
                 setLoading(false);
@@ -94,7 +98,7 @@ const DocentesForm = () => {
         setDocente({ ...docente, [name]: value });
     };
 
-    const handleTituloChange = (selected: string) => {
+    const handleTituloChange = (selected: string | null) => {
         const selectedTitulo = titulos.find(t => t.nombre === selected);
         if (selectedTitulo) {
             setDocente({ ...docente, titulo: selectedTitulo });
@@ -107,7 +111,7 @@ const DocentesForm = () => {
             const docenteDatos = {
                 cedula: docente.cedula,
                 docente: docente.docente,
-                titulo: docente.titulo.id,
+                titulo: docente.titulo.id !== 0 ? docente.titulo.id : null,  // Aquí se asegura que el título sea null si no se selecciona
             };
 
             if (isEditMode) {
@@ -118,7 +122,6 @@ const DocentesForm = () => {
                     },
                 });
             } else {
-                console.log(docenteDatos)
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/docentes`, docenteDatos, {
                     headers: {
                         "Content-Type": "application/json",
@@ -160,12 +163,11 @@ const DocentesForm = () => {
                             variant="faded"
                             label="Titulo"
                             name="titulo"
-                            selectedKey={docente.titulo.nombre}
+                            selectedKey={docente.titulo?.nombre || null}
                             onSelectionChange={(selected) => {
-                                const selectedValue = selected ? selected.toString() : '';
+                                const selectedValue = selected ? selected.toString() : null;
                                 handleTituloChange(selectedValue);
                             }}
-                            required
                         >
                             {titulos.map(titulo => (
                                 <AutocompleteItem key={titulo.nombre} value={titulo.nombre}>
