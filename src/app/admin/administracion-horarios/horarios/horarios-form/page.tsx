@@ -168,10 +168,12 @@ const DetalleHorarioForm = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setDetalle(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
+        if (name === "inicio" || name === "fin") {
+            const timeValue = value.substring(0, 5);
+            setDetalle({ ...detalle, [name]: timeValue });
+        } else {
+            setDetalle({ ...detalle, [name]: value });
+        }
     };
 
     const handleSelectChange = (name: string, value: string) => {
@@ -383,7 +385,7 @@ const DetalleHorarioForm = () => {
                         </div>
                         <div>
                             <Autocomplete
-                                variant="faded" 
+                                variant="faded"
                                 label="Materia"
                                 name="materia"
                                 selectedKey={detalle.detalle_materia.materia.nombre}

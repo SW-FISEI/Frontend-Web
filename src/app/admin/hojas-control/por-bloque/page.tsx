@@ -196,7 +196,7 @@ const porBloque = () => {
                 }}
                 required
               >
-                {edificios.map(edificio => (
+                {edificios.map((edificio) => (
                   <AutocompleteItem key={edificio.nombre} value={edificio.nombre}>
                     {edificio.nombre}
                   </AutocompleteItem>
@@ -225,7 +225,7 @@ const porBloque = () => {
                 value={selectedLaboratoristaMañana || ''}
                 required
               >
-                {laboratoristas.map(laboratorista => (
+                {laboratoristas.map((laboratorista) => (
                   <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
                     {laboratorista.laboratorista}
                   </AutocompleteItem>
@@ -244,7 +244,7 @@ const porBloque = () => {
                 value={selectedLaboratoristaTarde || ''}
                 required
               >
-                {laboratoristas.map(laboratorista => (
+                {laboratoristas.map((laboratorista) => (
                   <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
                     {laboratorista.laboratorista}
                   </AutocompleteItem>
@@ -259,27 +259,34 @@ const porBloque = () => {
             </div>
           </form>
         ) : (
-          <PDFViewer width="100%" height="800px">
-            <Document>
-              {detalleHorarios.map((detalles: DetalleHorario, index: number) => (
-                <Page key={index}>
-                  <PDF
-                    periodo={detalles.periodo.nombre}
-                    carrera={detalles.materia.carrera.nombre}
-                    semestre={detalles.materia.semestre.nombre}
-                    paralelo={detalles.materia.paralelo.nombre}
-                    aula={detalles.aula.nombre}
-                    docente={detalles.docente.docente}
-                    materia={detalles.materia.materia.nombre}
-                    inicio={detalles.inicio}
-                    fin={detalles.fin}
-                    fecha={detalles.fecha}
-                    laboratorista={detalles.laboratorista ? detalles.laboratorista.laboratorista : null}
-                  />
-                </Page>
-              ))}
-            </Document>
-          </PDFViewer>
+          <>
+            <div className="botonFormulario mb-5">
+              <Button color="primary" onPress={() => setShowPDF(false)}>
+                Volver al formulario
+              </Button>
+            </div>
+            <PDFViewer width="100%" height="800px">
+              <Document>
+                {detalleHorarios.map((detalles: DetalleHorario, index: number) => (
+                  <Page key={index}>
+                    <PDF
+                      periodo={detalles.periodo.nombre}
+                      carrera={detalles.materia.carrera.nombre}
+                      semestre={detalles.materia.semestre.nombre}
+                      paralelo={detalles.materia.paralelo.nombre}
+                      aula={detalles.aula.nombre}
+                      docente={detalles.docente.docente}
+                      materia={detalles.materia.materia.nombre}
+                      inicio={detalles.inicio}
+                      fin={detalles.fin}
+                      fecha={detalles.fecha}
+                      laboratorista={detalles.laboratorista ? detalles.laboratorista.laboratorista : null}
+                    />
+                  </Page>
+                ))}
+              </Document>
+            </PDFViewer>
+          </>
         )}
       </div>
     </section>

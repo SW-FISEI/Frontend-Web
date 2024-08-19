@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PDFViewer } from '@react-pdf/renderer';
-import PDF from '@/components/PDF_individua'; 
+import PDF from '@/components/PDF_individual';
 import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -69,8 +69,8 @@ const individual = () => {
   const [selectedDocente, setSelectedDocente] = useState<string | null>(null);
   const [selectedMateria, setSelectedMateria] = useState<string | null>(null);
   const [selectedLaboratorista, setSelectedLaboratorista] = useState<string | null>(null);
-  const [selectedInicio, setSelectedInicio] = useState<string | null>(null);
-  const [selectedFin, setSelectedFin] = useState<string | null>(null);
+  const [selectedInicio, setSelectedInicio] = useState<string>('');
+  const [selectedFin, setSelectedFin] = useState<string>('');
 
   const [selectedPeriodo, setSelectedPeriodo] = useState<string | null>(null);
 
@@ -336,7 +336,7 @@ const individual = () => {
               </div>
             </div>
             <div className="contenedorDobleColumna">
-            <div>
+              <div>
                 <Autocomplete
                   variant="faded"
                   label="Laboratorista"
