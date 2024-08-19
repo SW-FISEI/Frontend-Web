@@ -249,7 +249,7 @@ const DetalleHorarioForm = () => {
                     },
                 });
             }
-            router.push('admin/administracion-horarios/horarios');
+            router.push('/admin/administracion-horarios/horarios');
         } catch (error) {
             console.error('Error al guardar:', error);
         }

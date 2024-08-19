@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PDFViewer } from '@react-pdf/renderer';
-import PDF from '@/components/PDF';
+import PDF from '@/components/PDF_individua'; 
 import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
