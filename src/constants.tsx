@@ -62,9 +62,9 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     submenu: true,
     subMenuItems: [
       { title: 'Distribución de software', icon: <Icon icon="lucide:shapes" width="24" height="24" />, path: '/admin/gestion-equipos/distribucion-software' },
+      { title: 'Software', icon: <Icon icon="lucide:code-xml" width="24" height="24" />, path: '/admin/gestion-equipos/software' },
       { title: 'Máquinas', icon: <Icon icon="lucide:monitor-smartphone" width="24" height="24" />, path: '/admin/gestion-equipos/maquinas' },
       { title: 'Observaciones', icon: <Icon icon="lucide:inbox" width="24" height="24" />, path: '/admin/gestion-equipos/observaciones' },
-      { title: 'Software', icon: <Icon icon="lucide:code-xml" width="24" height="24" />, path: '/admin/gestion-equipos/software' },
     ],
   },
   {
@@ -73,9 +73,9 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:user-round-check" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Titulos', icon: <Icon icon="lucide:award" width="24" height="24" />, path: '/admin/gestion-personal/titulos' },
       { title: 'Docentes', icon: <Icon icon="lucide:user-round" width="24" height="24" />, path: '/admin/gestion-personal/docentes' },
       { title: 'Laboratoristas', icon: <Icon icon="lucide:user-round-cog" width="24" height="24" />, path: '/admin/gestion-personal/laboratoristas' },
+      { title: 'Titulos', icon: <Icon icon="lucide:award" width="24" height="24" />, path: '/admin/gestion-personal/titulos' },
     ],
   },
   {
@@ -84,9 +84,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:building" width="24" height="24" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Edificios', icon: <Icon icon="lucide:building-2" width="24" height="24" />, path: '/admin/infraestructura/edificios' },
-      { title: 'Pisos', icon: <Icon icon="lucide:dock" width="24" height="24" />, path: '/admin/infraestructura/pisos' },
       { title: 'Aulas', icon: <Icon icon="lucide:door-open" width="24" height="24" />, path: '/admin/infraestructura/aulas' },
+      { title: 'Distribución de Pisos', icon: <Icon icon="lucide:door-closed" width="24" height="24" />, path: '/admin/infraestructura/distribucion-pisos' },
+      { title: 'Pisos', icon: <Icon icon="lucide:dock" width="24" height="24" />, path: '/admin/infraestructura/pisos' },
+      { title: 'Edificios', icon: <Icon icon="lucide:building-2" width="24" height="24" />, path: '/admin/infraestructura/edificios' },
     ],
   },
 ];
