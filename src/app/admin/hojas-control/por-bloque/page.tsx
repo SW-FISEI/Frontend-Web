@@ -157,8 +157,23 @@ const porBloque = () => {
     }
   };
 
-  const handleEdificioChange = (selected: string) => {
+  const handleEdificioChange = async (selected: string) => {
     setSelectedEdificio(selected);
+
+    const edificioSeleccionado = edificios.find(e => e.nombre === selected);
+    if (edificioSeleccionado) {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/laboratoristas/edificio/${edificioSeleccionado.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.token}`,
+          }
+        });
+        setLaboratoristas(response.data);
+      } catch (error) {
+        console.error("Error al obtener los laboratoristas:", error);
+      }
+    }
   };
 
   const handleLaboratoristaMañanaChange = (selected: string) => {
@@ -232,7 +247,7 @@ const porBloque = () => {
                 required
               >
                 {laboratoristas.map((laboratorista) => (
-                  <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
+                  <AutocompleteItem key={laboratorista.cedula} value={laboratorista.laboratorista}>
                     {laboratorista.laboratorista}
                   </AutocompleteItem>
                 ))}
