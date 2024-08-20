@@ -16,13 +16,18 @@ interface Edificio {
 interface Piso {
   id: number;
   nombre: string;
+}
+
+interface DetallePiso {
+  id: number,
+  piso: Piso;
   edificio: Edificio;
 }
 
 interface Aula {
   id: number;
   nombre: string;
-  piso: Piso
+  detalle_piso: DetallePiso
 }
 
 interface Software {
@@ -42,8 +47,8 @@ const columnas = [
   { uid: "software.nombre", name: "Software", sortable: true, filterable: true },
   { uid: "software.version", name: "Versión", sortable: true },
   { uid: "aula.nombre", name: "Aula", sortable: true, filterable: true },
-  { uid: "aula.piso.nombre", name: "Piso", sortable: true },
-  { uid: "aula.piso.edificio.nombre", name: "Edificio", sortable: true },
+  { uid: "aula.detalle_piso.piso.nombre", name: "Piso", sortable: true },
+  { uid: "aula.detalle_piso.edificio.nombre", name: "Edificio", sortable: true },
   { uid: "actions", name: "Acciones" },
 ]
 
