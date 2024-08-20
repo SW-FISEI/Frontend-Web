@@ -110,29 +110,35 @@ const porBloque = () => {
       });
 
       if (response.data) {
-        // Verificar que selectedFecha esté definido
         if (!selectedFecha) {
           console.error("No se ha seleccionado una fecha.");
           return;
         }
 
-        // Formatear la fecha seleccionada
         const fechaFormateada = formatearFecha(selectedFecha);
 
-        // Obtén el día de la semana de la fecha seleccionada
         const selectedDate = new Date(selectedFecha);
         const dayOfWeekMap = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const selectedDay = dayOfWeekMap[selectedDate.getDay()];
 
-        // Filtra los datos por el día de la semana
         const filteredHorarios = response.data.filter((detalles: DetalleHorario) => {
           return detalles.dia === selectedDay;
         });
 
-        // Asigna el laboratorista dependiendo de la hora de inicio
         const updatedHorarios = filteredHorarios.map((detalles: DetalleHorario) => {
-          detalles.fecha = fechaFormateada;  // Asigna la fecha formateada
-          const horaInicio = new Date(`1970-01-01T${detalles.inicio}`).getHours();
+          detalles.fecha = fechaFormateada;
+
+          // Formatear las horas de inicio y fin a HH:mm
+          const formatTime = (timeString: string) => {
+            const [hours, minutes] = timeString.split(':');
+            return `${hours}:${minutes}`;
+          };
+
+          detalles.inicio = formatTime(detalles.inicio);
+          detalles.fin = formatTime(detalles.fin);
+
+          // Asignar el laboratorista según la hora de inicio
+          const horaInicio = parseInt(detalles.inicio.split(':')[0], 10);
           if (horaInicio >= 14) {
             detalles.laboratorista = laboratoristas.find(l => l.laboratorista === selectedLaboratoristaTarde) || null;
           } else {
