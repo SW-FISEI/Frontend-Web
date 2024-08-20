@@ -8,9 +8,26 @@ import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
+interface Edificio {
+    id: number;
+    nombre: string;
+}
+
+interface Piso {
+    id: number;
+    nombre: string;
+}
+
+interface DetallePiso {
+    id: number;
+    piso: Piso;
+    edificio: Edificio;
+}
+
 interface Aula {
     id: number;
     nombre: string;
+    detalle_piso: DetallePiso;
 }
 
 interface Maquina {
@@ -24,8 +41,10 @@ const MaquinaForm = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
-    const [maquina, setMaquina] = useState<Maquina>({ nombre: '', aula: { id: 0, nombre: '' } });
+    const [maquina, setMaquina] = useState<Maquina>({ nombre: '', aula: { id: 0, nombre: '', detalle_piso: { id: 0, piso: { id: 0, nombre: '' }, edificio: { id: 0, nombre: '' } } } });
     const [aula, setAula] = useState<Aula[]>([]);
+    const [piso, setPiso] = useState<Piso[]>([]);
+    const [edificio, setEdificio] = useState<Edificio[]>([]);
     const [loading, setLoading] = useState(true);
     const isEditMode = !!id;
 
@@ -54,6 +73,17 @@ const MaquinaForm = () => {
                         aula: {
                             id: maquinaResponse.data.aula.id,
                             nombre: maquinaResponse.data.aula.nombre,
+                            detalle_piso: {
+                                id: maquinaResponse.data.aula.detalle_piso.id,
+                                piso: {
+                                    id: maquinaResponse.data.aula.detalle_piso.piso.id,
+                                    nombre: maquinaResponse.data.aula.detalle_piso.piso.nombre,
+                                },
+                                edificio: {
+                                    id: maquinaResponse.data.aula.detalle_piso.edificio.id,
+                                    nombre: maquinaResponse.data.aula.detalle_piso.edificio.nombre,
+                                }
+                            },
                         }
                     });
                 }
@@ -70,11 +100,11 @@ const MaquinaForm = () => {
 
     if (loading) {
         return (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <CircularProgress label="Cargando..." />
-          </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress label="Cargando..." />
+            </div>
         );
-      }
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -86,9 +116,12 @@ const MaquinaForm = () => {
     };
 
     const handleAulaChange = (selected: string) => {
-        const selectedAula = aula.find(p => p.nombre === selected);
+        const selectedAula = aula.find(dm => dm.id.toString() === selected);
         if (selectedAula) {
-            setMaquina({ ...maquina, aula: selectedAula });
+            setMaquina(prevMaquina => ({
+                ...prevMaquina,
+                aula: selectedAula
+            }));
         }
     };
 
@@ -150,16 +183,18 @@ const MaquinaForm = () => {
                             variant="faded"
                             label="Aula"
                             name="aula"
-                            selectedKey={maquina.aula.nombre}
+                            selectedKey={maquina.aula.id ? maquina.aula.id.toString() : ''}
                             onSelectionChange={(selected) => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleAulaChange(selectedValue);
                             }}
                             required
                         >
-                            {aula.map(aula => (
-                                <AutocompleteItem key={aula.nombre} value={aula.nombre}>
-                                    {aula.nombre}
+                            {aula.map((aula) => (
+                                <AutocompleteItem
+                                    key={aula.id}
+                                    value={aula.id.toString()}>
+                                    {`${aula.detalle_piso.edificio.nombre} - ${aula.detalle_piso.piso.nombre} - ${aula.nombre}`}
                                 </AutocompleteItem>
                             ))}
                         </Autocomplete>

@@ -1,15 +1,33 @@
 "use client"
 
 import Tabla from '@/components/tabla';
+import TablaConFiltros from '@/components/tabla-filtros';
 import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
+interface Edificio {
+  id: number;
+  nombre: string;
+}
+
+interface Piso {
+  id: number;
+  nombre: string;
+}
+
+interface DetallePiso {
+  id: number;
+  piso: Piso;
+  edificio: Edificio;
+}
+
 interface Aula {
   id: number;
   nombre: string;
+  detalle_piso: DetallePiso;
 }
 
 interface Maquina {
@@ -20,8 +38,10 @@ interface Maquina {
 }
 
 const columnas = [
-  { uid: "nombre", name: "Nombre", sortable: true },
-  { uid: "aula.nombre", name: "Aula", sortable: true },
+  { uid: "nombre", name: "Maquina", sortable: true },
+  { uid: "aula.detalle_piso.edificio.nombre", name: "Edificio", sortable: true, filterable: true },
+  { uid: "aula.detalle_piso.piso.nombre", name: "Piso", sortable: true, filterable: true },
+  { uid: "aula.nombre", name: "Aula", sortable: true, filterable: true },
   { uid: "actions", name: "Acciones", sortable: true },
 ];
 
@@ -82,7 +102,7 @@ const maquinas = () => {
   return (
     <section className=''>
       <TituloPagina title="Maquinas" />
-      <Tabla
+      <TablaConFiltros
         columns={columnas}
         data={maquina}
         onEdit={handleEdit}
