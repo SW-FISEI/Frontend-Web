@@ -8,7 +8,7 @@ import '@/styles/formulario.scss';
 import { Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
-/* interface Edificio {
+interface Edificio {
     id: number;
     nombre: string;
 }
@@ -16,13 +16,18 @@ import { useSession } from 'next-auth/react';
 interface Piso {
     id: number;
     nombre: string;
+}
+
+interface DetallePiso {
+    id: number,
+    piso: Piso;
     edificio: Edificio;
-} */
+}
 
 interface Aula {
     id: number;
     nombre: string;
-    /* piso: Piso */
+    detalle_piso: DetallePiso
 }
 
 interface Software {
@@ -44,7 +49,7 @@ const PisoForm = () => {
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
     /*     const [software_aulas, setSoftwareAula] = useState<Software_Aulas>({ software: { id: 0, nombre: '', version: '', descripcion: '' }, aula: { id: 0, nombre: '', piso: { id: 0, nombre: '', edificio: { id: 0, nombre: '' } } } }); */
-    const [software_aulas, setSoftwareAula] = useState<Software_Aulas>({ software: { id: 0, nombre: '', version: '', descripcion: '' }, aula: { id: 0, nombre: '' } });
+    const [software_aulas, setSoftwareAula] = useState<Software_Aulas>({ software: { id: 0, nombre: '', version: '', descripcion: '' }, aula: { id: 0, nombre: '', detalle_piso: { id: 0, piso: { id: 0, nombre: '' }, edificio: { id: 0, nombre: '' } } } });
     const [aula, setAula] = useState<Aula[]>([]);
     const [software, setSoftware] = useState<Software[]>([]);
     const [loading, setLoading] = useState(true);
@@ -88,6 +93,17 @@ const PisoForm = () => {
                         aula: {
                             id: softwareAulaResponse.data.aula.id,
                             nombre: softwareAulaResponse.data.aula.nombre,
+                            detalle_piso: {
+                                id: softwareAulaResponse.data.aula.detalle_piso.id,
+                                piso: {
+                                    id: softwareAulaResponse.data.aula.detalle_piso.piso.id,
+                                    nombre: softwareAulaResponse.data.aula.detalle_piso.piso.nombre,
+                                },
+                                edificio: {
+                                    id: softwareAulaResponse.data.aula.detalle_piso.edificio.id,
+                                    nombre: softwareAulaResponse.data.aula.detalle_piso.edificio.nombre,
+                                },
+                            }
                         }
                     });
                 }
@@ -104,11 +120,11 @@ const PisoForm = () => {
 
     if (loading) {
         return (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <CircularProgress label="Cargando..." />
-          </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress label="Cargando..." />
+            </div>
         );
-      }
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -120,11 +136,14 @@ const PisoForm = () => {
     };
 
     const handleAulaChange = (selected: string) => {
-        const selectedAula = aula.find(p => p.nombre === selected);
+        const selectedAula = aula.find(dm => dm.id.toString() === selected);
         if (selectedAula) {
-            setSoftwareAula({ ...software_aulas, aula: selectedAula });
+            setSoftwareAula(prevSoftwareAula => ({
+                ...prevSoftwareAula,
+                aula: selectedAula
+            }));
         }
-    }
+    };
 
     const handleSoftwareChange = (selected: string) => {
         const selectedSoftware = software.find(p => p.nombre === selected);
@@ -195,16 +214,18 @@ const PisoForm = () => {
                             variant="faded"
                             label="Aula"
                             name="aula"
-                            selectedKey={software_aulas.aula.nombre}
+                            selectedKey={software_aulas.aula.id ? software_aulas.aula.id.toString() : ''}
                             onSelectionChange={(selected) => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleAulaChange(selectedValue);
                             }}
                             required
                         >
-                            {aula.map(aula => (
-                                <AutocompleteItem key={aula.nombre} value={aula.nombre}>
-                                    {aula.nombre}
+                            {aula.map((aula) => (
+                                <AutocompleteItem
+                                    key={aula.id}
+                                    value={aula.id.toString()}>
+                                    {`${aula.detalle_piso.edificio.nombre} - ${aula.detalle_piso.piso.nombre} - ${aula.nombre}`}
                                 </AutocompleteItem>
                             ))}
                         </Autocomplete>

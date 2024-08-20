@@ -94,7 +94,7 @@ const Consultas = () => {
 
   return (
     <section className=''>
-      <TituloPagina title="Consultas" />
+      <TituloPagina title="Docentes" />
       <TablaConFiltros
         columns={columnas}
         data={detalle_horario}

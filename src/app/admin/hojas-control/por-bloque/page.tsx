@@ -110,29 +110,35 @@ const porBloque = () => {
       });
 
       if (response.data) {
-        // Verificar que selectedFecha esté definido
         if (!selectedFecha) {
           console.error("No se ha seleccionado una fecha.");
           return;
         }
 
-        // Formatear la fecha seleccionada
         const fechaFormateada = formatearFecha(selectedFecha);
 
-        // Obtén el día de la semana de la fecha seleccionada
         const selectedDate = new Date(selectedFecha);
         const dayOfWeekMap = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const selectedDay = dayOfWeekMap[selectedDate.getDay()];
 
-        // Filtra los datos por el día de la semana
         const filteredHorarios = response.data.filter((detalles: DetalleHorario) => {
           return detalles.dia === selectedDay;
         });
 
-        // Asigna el laboratorista dependiendo de la hora de inicio
         const updatedHorarios = filteredHorarios.map((detalles: DetalleHorario) => {
-          detalles.fecha = fechaFormateada;  // Asigna la fecha formateada
-          const horaInicio = new Date(`1970-01-01T${detalles.inicio}`).getHours();
+          detalles.fecha = fechaFormateada;
+
+          // Formatear las horas de inicio y fin a HH:mm
+          const formatTime = (timeString: string) => {
+            const [hours, minutes] = timeString.split(':');
+            return `${hours}:${minutes}`;
+          };
+
+          detalles.inicio = formatTime(detalles.inicio);
+          detalles.fin = formatTime(detalles.fin);
+
+          // Asignar el laboratorista según la hora de inicio
+          const horaInicio = parseInt(detalles.inicio.split(':')[0], 10);
           if (horaInicio >= 14) {
             detalles.laboratorista = laboratoristas.find(l => l.laboratorista === selectedLaboratoristaTarde) || null;
           } else {
@@ -151,8 +157,23 @@ const porBloque = () => {
     }
   };
 
-  const handleEdificioChange = (selected: string) => {
+  const handleEdificioChange = async (selected: string) => {
     setSelectedEdificio(selected);
+
+    const edificioSeleccionado = edificios.find(e => e.nombre === selected);
+    if (edificioSeleccionado) {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/laboratoristas/edificio/${edificioSeleccionado.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.token}`,
+          }
+        });
+        setLaboratoristas(response.data);
+      } catch (error) {
+        console.error("Error al obtener los laboratoristas:", error);
+      }
+    }
   };
 
   const handleLaboratoristaMañanaChange = (selected: string) => {
@@ -196,7 +217,7 @@ const porBloque = () => {
                 }}
                 required
               >
-                {edificios.map(edificio => (
+                {edificios.map((edificio) => (
                   <AutocompleteItem key={edificio.nombre} value={edificio.nombre}>
                     {edificio.nombre}
                   </AutocompleteItem>
@@ -225,8 +246,8 @@ const porBloque = () => {
                 value={selectedLaboratoristaMañana || ''}
                 required
               >
-                {laboratoristas.map(laboratorista => (
-                  <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
+                {laboratoristas.map((laboratorista) => (
+                  <AutocompleteItem key={laboratorista.cedula} value={laboratorista.laboratorista}>
                     {laboratorista.laboratorista}
                   </AutocompleteItem>
                 ))}
@@ -244,7 +265,7 @@ const porBloque = () => {
                 value={selectedLaboratoristaTarde || ''}
                 required
               >
-                {laboratoristas.map(laboratorista => (
+                {laboratoristas.map((laboratorista) => (
                   <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
                     {laboratorista.laboratorista}
                   </AutocompleteItem>
@@ -259,27 +280,34 @@ const porBloque = () => {
             </div>
           </form>
         ) : (
-          <PDFViewer width="100%" height="800px">
-            <Document>
-              {detalleHorarios.map((detalles: DetalleHorario, index: number) => (
-                <Page key={index}>
-                  <PDF
-                    periodo={detalles.periodo.nombre}
-                    carrera={detalles.materia.carrera.nombre}
-                    semestre={detalles.materia.semestre.nombre}
-                    paralelo={detalles.materia.paralelo.nombre}
-                    aula={detalles.aula.nombre}
-                    docente={detalles.docente.docente}
-                    materia={detalles.materia.materia.nombre}
-                    inicio={detalles.inicio}
-                    fin={detalles.fin}
-                    fecha={detalles.fecha}
-                    laboratorista={detalles.laboratorista ? detalles.laboratorista.laboratorista : null}
-                  />
-                </Page>
-              ))}
-            </Document>
-          </PDFViewer>
+          <>
+            <div className="botonFormulario mb-5">
+              <Button color="primary" onPress={() => setShowPDF(false)}>
+                Volver al formulario
+              </Button>
+            </div>
+            <PDFViewer width="100%" height="800px">
+              <Document>
+                {detalleHorarios.map((detalles: DetalleHorario, index: number) => (
+                  <Page key={index}>
+                    <PDF
+                      periodo={detalles.periodo.nombre}
+                      carrera={detalles.materia.carrera.nombre}
+                      semestre={detalles.materia.semestre.nombre}
+                      paralelo={detalles.materia.paralelo.nombre}
+                      aula={detalles.aula.nombre}
+                      docente={detalles.docente.docente}
+                      materia={detalles.materia.materia.nombre}
+                      inicio={detalles.inicio}
+                      fin={detalles.fin}
+                      fecha={detalles.fecha}
+                      laboratorista={detalles.laboratorista ? detalles.laboratorista.laboratorista : null}
+                    />
+                  </Page>
+                ))}
+              </Document>
+            </PDFViewer>
+          </>
         )}
       </div>
     </section>

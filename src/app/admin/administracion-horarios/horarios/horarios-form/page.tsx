@@ -20,12 +20,30 @@ interface Docente {
 
 interface Detalle_Materia {
     id: number;
+    carrera: Carrera;
+    semestre: Semestre;
     materia: Materia;
+    paralelo: Paralelo;
+}
+
+interface Carrera {
+    id: number;
+    nombre: string;
+}
+
+interface Semestre {
+    id: number;
+    nombre: string
 }
 
 interface Materia {
     id: number;
     nombre: string;
+}
+
+interface Paralelo {
+    id: number;
+    nombre: string
 }
 
 interface Periodo {
@@ -54,7 +72,7 @@ const DetalleHorarioForm = () => {
         fin: '',
         dia: '',
         aula: { id: 0, nombre: '' },
-        detalle_materia: { id: 0, materia: { id: 0, nombre: '' } },
+        detalle_materia: { id: 0, carrera: { id: 0, nombre: '' }, semestre: { id: 0, nombre: '' }, materia: { id: 0, nombre: '' }, paralelo: { id: 0, nombre: '' } },
         docente: { cedula: '', docente: '' },
         periodo: { id: 0, nombre: '' }
     });
@@ -132,10 +150,22 @@ const DetalleHorarioForm = () => {
                         },
                         detalle_materia: {
                             id: detalleResponse.data.materia.id,
+                            carrera: {
+                                id: detalleResponse.data.materia.carrera.id,
+                                nombre: detalleResponse.data.materia.carrera.nombre,
+                            },
+                            semestre: {
+                                id: detalleResponse.data.materia.semestre.id,
+                                nombre: detalleResponse.data.materia.semestre.nombre,
+                            },
                             materia: {
                                 id: detalleResponse.data.materia.materia.id,
                                 nombre: detalleResponse.data.materia.materia.nombre,
                             },
+                            paralelo: {
+                                id: detalleResponse.data.materia.paralelo.id,
+                                nombre: detalleResponse.data.materia.paralelo.nombre,
+                            }
                         },
                         docente: {
                             cedula: detalleResponse.data.docente.cedula,
@@ -168,10 +198,12 @@ const DetalleHorarioForm = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setDetalle(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
+        if (name === "inicio" || name === "fin") {
+            const timeValue = value.substring(0, 5);
+            setDetalle({ ...detalle, [name]: timeValue });
+        } else {
+            setDetalle({ ...detalle, [name]: value });
+        }
     };
 
     const handleSelectChange = (name: string, value: string) => {
@@ -191,8 +223,8 @@ const DetalleHorarioForm = () => {
         }
     }
 
-    const handleMateriaChange = (selected: string) => {
-        const selectedDetalleMateria = detalle_materia.find(dm => dm.materia.nombre === selected);
+    const handleMateriaChange = (selectedId: string) => {
+        const selectedDetalleMateria = detalle_materia.find(dm => dm.id.toString() === selectedId);
         if (selectedDetalleMateria) {
             setDetalle(prevState => ({
                 ...prevState,
@@ -383,19 +415,21 @@ const DetalleHorarioForm = () => {
                         </div>
                         <div>
                             <Autocomplete
-                                variant="faded" 
-                                label="Materia"
+                                variant="faded"
+                                label="Carrera, Semestre, Materia y Paralelo"
                                 name="materia"
-                                selectedKey={detalle.detalle_materia.materia.nombre}
+                                selectedKey={detalle.detalle_materia.id ? detalle.detalle_materia.id.toString() : ''}
                                 onSelectionChange={(selected) => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleMateriaChange(selectedValue);
                                 }}
                                 required
                             >
-                                {materia.map(materia => (
-                                    <AutocompleteItem key={materia.nombre} value={materia.nombre}>
-                                        {materia.nombre}
+                                {detalle_materia.map(detalle => (
+                                    <AutocompleteItem
+                                        key={detalle.id}
+                                        value={detalle.id.toString()}>
+                                        {`${detalle.carrera.nombre} - ${detalle.semestre.nombre} - ${detalle.materia.nombre} - ${detalle.paralelo.nombre}`}
                                     </AutocompleteItem>
                                 ))}
                             </Autocomplete>

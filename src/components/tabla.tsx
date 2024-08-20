@@ -34,7 +34,7 @@ const Tabla = <T extends { id: number }>({
   onAddNew,
 }: TablaProps<T>) => {
   const [filterValue, setFilterValue] = useState("");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(7);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({ column: "id", direction: "ascending" });
   const [page, setPage] = useState(1);
   const [selectedRow, setSelectedRow] = useState<T | null>(null);

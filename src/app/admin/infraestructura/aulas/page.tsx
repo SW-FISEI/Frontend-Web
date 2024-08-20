@@ -1,6 +1,7 @@
 "use client"
 
 import Tabla from '@/components/tabla';
+import TablaConFiltros from '@/components/tabla-filtros';
 import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
@@ -15,6 +16,11 @@ interface Edificio {
 interface Piso {
   id: number;
   nombre: string;
+}
+
+interface DetallePiso {
+  id: number;
+  piso: Piso;
   edificio: Edificio;
 }
 
@@ -26,7 +32,7 @@ interface Aula {
   proyector: string;
   aire: string;
   descripcion: string;
-  piso: Piso;
+  detalle_piso: DetallePiso;
 }
 
 const columnas = [
@@ -36,8 +42,8 @@ const columnas = [
   { uid: "proyector", name: "Proyector", sortable: true },
   { uid: "aire", name: "Aire", sortable: true },
   { uid: "descripcion", name: "Descripcion", sortable: true },
-  { uid: "piso.nombre", name: "Piso", sortable: true },
-  { uid: "piso.edificio.nombre", name: "Edificio", sortable: true },
+  { uid: "detalle_piso.piso.nombre", name: "Piso", sortable: true, filterable: true },
+  { uid: "detalle_piso.edificio.nombre", name: "Edificio", sortable: true, filterable: true },
   { uid: "actions", name: "Acciones" },
 ];
 
@@ -94,7 +100,7 @@ const aulas = () => {
   return (
     <section className=''>
       <TituloPagina title="Aulas" />
-      <Tabla
+      <TablaConFiltros
         columns={columnas}
         data={aula}
         onEdit={handleEditar}

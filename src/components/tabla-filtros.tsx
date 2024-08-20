@@ -47,7 +47,7 @@ const TablaConFiltros = <T extends { id: number }>({
   onAddNew,
 }: TablaProps<T>) => {
   const [filterValue, setFilterValue] = useState("");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(7);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({ column: "id", direction: "ascending" });
   const [page, setPage] = useState(1);
   const [selectedRow, setSelectedRow] = useState<T | null>(null);
@@ -108,9 +108,13 @@ const TablaConFiltros = <T extends { id: number }>({
 
   const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {
-      const first = String(a[sortDescriptor.column as keyof T]);
-      const second = String(b[sortDescriptor.column as keyof T]);
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+      const first = a[sortDescriptor.column as keyof T];
+      const second = b[sortDescriptor.column as keyof T];
+
+      const firstValue = typeof first === 'number' ? first : Number(first);
+      const secondValue = typeof second === 'number' ? second : Number(second);
+
+      const cmp = firstValue < secondValue ? -1 : firstValue > secondValue ? 1 : 0;
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
@@ -130,8 +134,8 @@ const TablaConFiltros = <T extends { id: number }>({
 
   const renderCell = useCallback((item: T, columnKey: React.Key) => {
     const columnKeyStr = String(columnKey);
-    const keys = columnKeyStr.split('.');
 
+    const keys = columnKeyStr.split('.');
     const cellValue = keys.reduce((obj, key) => {
       return obj?.[key as keyof typeof obj];
     }, item as any);

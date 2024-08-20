@@ -40,9 +40,9 @@ interface Detalle_Materia {
 
 const columnas = [
   { uid: "carrera.nombre", name: "Carrera", sortable: true, filterable: true },
-  { uid: "semestre.nombre", name: "Semestre", sortable: true },
-  { uid: "materia.nombre", name: "Materia", sortable: true },
-  { uid: "paralelo.nombre", name: "Paralelo", sortable: true },
+  { uid: "semestre.nombre", name: "Semestre", sortable: true, filterable: true },
+  { uid: "materia.nombre", name: "Materia", sortable: true, filterable: true },
+  { uid: "paralelo.nombre", name: "Paralelo", sortable: true, filterable: true },
   { uid: "actions", name: "Acciones" },
 ]
 
