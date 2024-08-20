@@ -8,6 +8,7 @@ import { SideNavItem } from '@/types';
 import { Icon } from '@iconify/react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import '@/styles/side-nav.scss';
+import { signOut } from 'next-auth/react';
 
 const SideNav = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -22,7 +23,7 @@ const SideNav = () => {
             </button>
             <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
                 <div className="encabezadoSidebar">
-                    <Link href="/admin" className="botonLogo">
+                    <Link href="/admin/laboratoristas/dashboard" className="botonLogo">
                         <img className="logoSidebar" src="/logo.png" width={80} height={80} alt="Logo" />
                         <p className="fisei">Sistema de Horarios</p>
                     </Link>
@@ -33,10 +34,13 @@ const SideNav = () => {
                     ))}
                 </div>
                 <div className="cerrarSesion">
-                    <Link href="/" className="botonCerrarSesion">
-                        <Icon icon="lucide:log-out" width="24" height="24" />
-                        <span className="nombreCerrarSesion">Cerrar sesión</span>
-                    </Link>
+                    <button
+                        onClick={() => signOut()}
+                        className="nombreCerrarSesion"
+                    >
+                        <Icon className='inline-block ml-[10px] mr-[10px]' icon="lucide:log-out" width="24" height="24" />
+                        Cerrar sesión
+                    </button>
                 </div>
             </aside>
         </div>
@@ -44,7 +48,6 @@ const SideNav = () => {
 };
 
 export default SideNav;
-
 const MenuItem = ({ item }: { item: SideNavItem }) => {
     const pathname = usePathname();
     const [subMenuOpen, setSubMenuOpen] = useState(false);
@@ -53,13 +56,16 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
         setSubMenuOpen(!subMenuOpen);
     };
 
+    // Comprobar si el pathname actual coincide o es una subruta de item.path
+    const isActive = pathname.startsWith(item.path) || item.subMenuItems?.some(subItem => pathname.startsWith(subItem.path));
+
     return (
-        <div className={`contenedorSubmenuItems ${pathname.includes(item.path) ? 'contenedorSubmenuItemsPressed' : ''}`}>
+        <div className={`contenedorSubmenuItems ${isActive ? 'contenedorSubmenuItemsPressed' : ''}`}>
             {item.submenu ? (
                 <>
                     <button
                         onClick={toggleSubMenu}
-                        className={`fondoOpcionMenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}
+                        className={`fondoOpcionMenu ${isActive ? 'fondoOpcionMenuPressed' : ''}`}
                     >
                         <div className="textoOpcionMenu">
                             {item.icon}
@@ -70,12 +76,12 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                         </div>
                     </button>
                     {subMenuOpen && (
-                        <div className={`submenu ${pathname.includes(item.path) ? 'fondoOpcionMenuPressed' : ''}`}>
+                        <div className={`submenu ${isActive ? 'fondoOpcionMenuPressed' : ''}`}>
                             {item.subMenuItems?.map((subItem, idx) => (
-                                <Link 
+                                <Link
                                     key={idx}
                                     href={subItem.path}
-                                    className={`submenuItem ${subItem.path === pathname ? 'submenuItemPressed' : ''}`}
+                                    className={`submenuItem ${pathname.startsWith(subItem.path) ? 'submenuItemPressed' : ''}`}
                                 >
                                     {subItem.icon}
                                     <span className="submenu-item-title">{subItem.title}</span>
@@ -87,7 +93,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
             ) : (
                 <Link
                     href={item.path}
-                    className={`single-submenu ${item.path === pathname ? 'single-submenu' : ''}`}
+                    className={`single-submenu ${pathname.startsWith(item.path) ? 'single-submenuPressed' : ''}`}
                 >
                     {item.icon}
                     <span className="single-submenu-title">{item.title}</span>
@@ -96,3 +102,4 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
         </div>
     );
 };
+

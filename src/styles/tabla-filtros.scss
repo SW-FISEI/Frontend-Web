@@ -1,0 +1,83 @@
+.table-container{
+  width: 100%;
+  margin: 30px 0;
+
+  .top-content{
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    Button{
+      background-color: #7e161b;
+      color: #fff;
+    }
+  }
+}
+
+.custom-edit-button {
+  background-color: #434343;
+}
+.custom-edit-button:hover {
+  background-color: #737373;
+}
+
+.custom-delete-button {
+  background-color: #450a0a;
+}
+
+.custom-delete-button:hover {
+  background-color: #7e161b;
+}
+
+.custom-icon {
+  color: white;
+}
+
+.custom-delete-tooltip{
+  background-color: #7e161b;
+  color: #fff;
+}
+.custom-edit-tooltip{
+  background-color: #434343;
+  color: #fff;
+}
+
+.bottom-content{
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.pagination-controls{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.contenedorTablaFiltros{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  .tabla{
+    width: 85%;
+  }
+  .filtros{
+    width: 15%;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .encabezadoFiltros{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+}
+
+.filtro,
+.filtroDropdown{
+  width: 100%;
+}

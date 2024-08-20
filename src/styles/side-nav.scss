@@ -1,6 +1,7 @@
 .contenedorSidebar {
     position: relative;
     max-height: 100vh;
+    color: #fff;
 }
 
 .btnSidebar {
@@ -21,7 +22,7 @@
 }
 
 .sidebar {
-    width: 21rem;
+    width: 22rem;
     height: 100vh;
     background-color: #450a0a;
     padding: 1rem;
@@ -133,6 +134,7 @@
 
 .contenedorSubmenuItemsPressed {
     background-color: #7e161b;
+    border-radius: 10px;
 }
 
 .textoOpcionMenu {
