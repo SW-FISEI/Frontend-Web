@@ -7,8 +7,10 @@ import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
+import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress, DatePicker } from "@nextui-org/react";
+import { DateValue, CalendarDate, CalendarDateTime, ZonedDateTime } from '@internationalized/date';
 import '@/styles/formulario.scss';
+import SelectorFecha from '@/components/selector-fecha';
 
 interface Laboratorista {
   cedula: string;
@@ -184,8 +186,8 @@ const porBloque = () => {
     setSelectedLaboratoristaTarde(selected);
   };
 
-  const handleFechaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFecha(e.target.value);
+  const handleFechaChange = (value: CalendarDate | CalendarDateTime | ZonedDateTime) => {
+    setSelectedFecha(value.toString());
   };
 
   const handleCancel = () => {
@@ -225,13 +227,12 @@ const porBloque = () => {
               </Autocomplete>
             </div>
             <div>
-              <Input
+              <SelectorFecha
                 variant="faded"
-                type="date"
+                showMonthAndYearPickers
                 label="Fecha"
                 name="fecha"
                 onChange={handleFechaChange}
-                required
               />
             </div>
             <div>

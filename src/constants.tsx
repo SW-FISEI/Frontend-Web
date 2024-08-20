@@ -39,6 +39,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     submenu: true,
     subMenuItems: [
       { title: 'Horarios', icon: <Icon icon="lucide:calendar-days" width="24" height="24" />, path: '/admin/administracion-horarios/horarios' },
+      { title: 'Periodos', icon: <Icon icon="lucide:calendar-range" width="24" height="24" />, path: '/admin/administracion-horarios/periodos' },
     ],
   },
   {
@@ -48,7 +49,6 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     submenu: true,
     subMenuItems: [
       { title: 'Distribución de materias', icon: <Icon icon="lucide:blocks" width="24" height="24" />, path: '/admin/administracion-academica/distribucion-materias' },
-      { title: 'Periodos', icon: <Icon icon="lucide:calendar-range" width="24" height="24" />, path: '/admin/administracion-horarios/periodos' },
       { title: 'Carreras', icon: <Icon icon="lucide:graduation-cap" width="24" height="24" />, path: '/admin/administracion-academica/carreras' },
       { title: 'Semestres', icon: <Icon icon="lucide:calendar" width="24" height="24" />, path: '/admin/administracion-academica/semestres' },
       { title: 'Materias', icon: <Icon icon="lucide:book-marked" width="24" height="24" />, path: '/admin/administracion-academica/materias' },
