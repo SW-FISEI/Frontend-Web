@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import '@/styles/formulario.scss';
+import { tree } from 'next/dist/build/templates/app-page';
 
 interface Carrera {
   id: number;
@@ -137,10 +138,9 @@ const individual = () => {
         setLaboratoristas(laboratoristaResponse.data);
 
         const fechaActual = new Date();
-        const dia = String(fechaActual.getDate()).padStart(2, '0');
-        const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-        const año = fechaActual.getFullYear();
-        setFecha(`${dia}/${mes}/${año}`);
+        const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' } as const;
+        const fechaFormateada = fechaActual.toLocaleDateString('es-ES', opcionesFecha);
+        setFecha(fechaFormateada);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       } finally {
@@ -222,17 +222,17 @@ const individual = () => {
             <div>
               <Autocomplete
                 variant="faded"
-                label="Semestre"
-                name="semestre"
+                label="Carrera"
+                name="carrera"
                 onSelectionChange={(selected) => {
                   const selectedValue = selected ? selected.toString() : '';
-                  handleSemestreChange(selectedValue);
+                  handleCarreraChange(selectedValue);
                 }}
-                required
+                isRequired
               >
-                {semestres.map(semestre => (
-                  <AutocompleteItem key={semestre.nombre} value={semestre.nombre}>
-                    {semestre.nombre}
+                {carreras.map(carrera => (
+                  <AutocompleteItem key={carrera.nombre} value={carrera.nombre}>
+                    {carrera.nombre}
                   </AutocompleteItem>
                 ))}
               </Autocomplete>
@@ -241,17 +241,55 @@ const individual = () => {
               <div>
                 <Autocomplete
                   variant="faded"
-                  label="Carrera"
-                  name="carrera"
+                  label="Semestre"
+                  name="semestre"
                   onSelectionChange={(selected) => {
                     const selectedValue = selected ? selected.toString() : '';
-                    handleCarreraChange(selectedValue);
+                    handleSemestreChange(selectedValue);
                   }}
-                  required
+                  isRequired
                 >
-                  {carreras.map(carrera => (
-                    <AutocompleteItem key={carrera.nombre} value={carrera.nombre}>
-                      {carrera.nombre}
+                  {semestres.map(semestre => (
+                    <AutocompleteItem key={semestre.nombre} value={semestre.nombre}>
+                      {semestre.nombre}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
+              <div>
+                <Autocomplete
+                  variant="faded"
+                  label="Docente"
+                  name="docente"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleDocenteChange(selectedValue);
+                  }}
+                  isRequired
+                >
+                  {docentes.map(docente => (
+                    <AutocompleteItem key={docente.docente} value={docente.docente}>
+                      {docente.docente}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </div>
+            </div>
+            <div className="contenedorDobleColumna">
+              <div>
+                <Autocomplete
+                  variant="faded"
+                  label="Materia"
+                  name="materia"
+                  onSelectionChange={(selected) => {
+                    const selectedValue = selected ? selected.toString() : '';
+                    handleMateriaChange(selectedValue);
+                  }}
+                  isRequired
+                >
+                  {materias.map(materia => (
+                    <AutocompleteItem key={materia.nombre} value={materia.nombre}>
+                      {materia.nombre}
                     </AutocompleteItem>
                   ))}
                 </Autocomplete>
@@ -265,49 +303,11 @@ const individual = () => {
                     const selectedValue = selected ? selected.toString() : '';
                     handleParaleloChange(selectedValue);
                   }}
-                  required
+                  isRequired
                 >
                   {paralelos.map(paralelo => (
                     <AutocompleteItem key={paralelo.nombre} value={paralelo.nombre}>
                       {paralelo.nombre}
-                    </AutocompleteItem>
-                  ))}
-                </Autocomplete>
-              </div>
-            </div>
-            <div className="contenedorDobleColumna">
-              <div>
-                <Autocomplete
-                  variant="faded"
-                  label="Docente"
-                  name="docente"
-                  onSelectionChange={(selected) => {
-                    const selectedValue = selected ? selected.toString() : '';
-                    handleDocenteChange(selectedValue);
-                  }}
-                  required
-                >
-                  {docentes.map(docente => (
-                    <AutocompleteItem key={docente.docente} value={docente.docente}>
-                      {docente.docente}
-                    </AutocompleteItem>
-                  ))}
-                </Autocomplete>
-              </div>
-              <div>
-                <Autocomplete
-                  variant="faded"
-                  label="Materia"
-                  name="materia"
-                  onSelectionChange={(selected) => {
-                    const selectedValue = selected ? selected.toString() : '';
-                    handleMateriaChange(selectedValue);
-                  }}
-                  required
-                >
-                  {materias.map(materia => (
-                    <AutocompleteItem key={materia.nombre} value={materia.nombre}>
-                      {materia.nombre}
                     </AutocompleteItem>
                   ))}
                 </Autocomplete>
@@ -339,18 +339,17 @@ const individual = () => {
               <div>
                 <Autocomplete
                   variant="faded"
-                  label="Laboratorista"
-                  name="laboratorista"
+                  label="Laboratorio"
+                  name="aula"
                   onSelectionChange={(selected) => {
                     const selectedValue = selected ? selected.toString() : '';
-                    handleLaboratoristaChange(selectedValue);
-                    handlePeriodoChange();
+                    handleAulaChange(selectedValue);
                   }}
-                  required
+                  isRequired
                 >
-                  {laboratoristas.map(laboratorista => (
-                    <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
-                      {laboratorista.laboratorista}
+                  {aulas.map(aula => (
+                    <AutocompleteItem key={aula.nombre} value={aula.nombre}>
+                      {aula.nombre}
                     </AutocompleteItem>
                   ))}
                 </Autocomplete>
@@ -358,17 +357,18 @@ const individual = () => {
               <div>
                 <Autocomplete
                   variant="faded"
-                  label="Laboratorio"
-                  name="aula"
+                  label="Laboratorista"
+                  name="laboratorista"
                   onSelectionChange={(selected) => {
                     const selectedValue = selected ? selected.toString() : '';
-                    handleAulaChange(selectedValue);
+                    handleLaboratoristaChange(selectedValue);
+                    handlePeriodoChange();
                   }}
-                  required
+                  isRequired
                 >
-                  {aulas.map(aula => (
-                    <AutocompleteItem key={aula.nombre} value={aula.nombre}>
-                      {aula.nombre}
+                  {laboratoristas.map(laboratorista => (
+                    <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
+                      {laboratorista.laboratorista}
                     </AutocompleteItem>
                   ))}
                 </Autocomplete>
@@ -382,21 +382,28 @@ const individual = () => {
             </div>
           </form>
         ) : (
-          <PDFViewer width="100%" height="800px">
-            <PDF
-              periodo={selectedPeriodo}
-              carrera={selectedCarrera}
-              semestre={selectedSemestre}
-              paralelo={selectedParalelo}
-              aula={selectedAula}
-              docente={selectedDocente}
-              materia={selectedMateria}
-              inicio={selectedInicio}
-              fin={selectedFin}
-              fecha={fecha}
-              laboratorista={selectedLaboratorista}
-            />
-          </PDFViewer>
+          <>
+            <div className="botonFormulario mb-5">
+              <Button color="primary" onPress={() => setShowPDF(false)}>
+                Volver al formulario
+              </Button>
+            </div>
+            <PDFViewer width="100%" height="800px">
+              <PDF
+                periodo={selectedPeriodo}
+                carrera={selectedCarrera}
+                semestre={selectedSemestre}
+                paralelo={selectedParalelo}
+                aula={selectedAula}
+                docente={selectedDocente}
+                materia={selectedMateria}
+                inicio={selectedInicio}
+                fin={selectedFin}
+                fecha={fecha}
+                laboratorista={selectedLaboratorista}
+              />
+            </PDFViewer>
+          </>
         )}
       </div>
     </section>
