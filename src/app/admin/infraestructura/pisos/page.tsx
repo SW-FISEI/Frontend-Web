@@ -7,20 +7,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
-interface Edificio {
-  id: number;
-  nombre: string;
-}
-
 interface Piso {
   id: number;
   nombre: string;
-  edificio: Edificio;
 }
 
 const columnas = [
   { uid: "nombre", name: "Piso", sortable: true },
-  { uid: "edificio.nombre", name: "Edificio", sortable: true },
   { uid: "actions", name: "Acciones" },
 ];
 
@@ -31,7 +24,7 @@ const pisos = () => {
 
   const obtenerPisos = async (nombre: string = "") => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/buscarP`, { nombre }, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/buscar`, { nombre }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.user?.token}`,

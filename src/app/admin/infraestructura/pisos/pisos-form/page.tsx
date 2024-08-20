@@ -8,15 +8,9 @@ import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
-interface Edificio {
-    id: number;
-    nombre: string;
-}
-
 interface Piso {
     id?: number;
     nombre: string;
-    edificio: Edificio;
 }
 
 const PisoForm = () => {
@@ -24,22 +18,13 @@ const PisoForm = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
-    const [piso, setPiso] = useState<Piso>({ nombre: '', edificio: { id: 0, nombre: '' } });
-    const [edificio, setEdificio] = useState<Edificio[]>([]);
+    const [piso, setPiso] = useState<Piso>({ nombre: '' });
     const [loading, setLoading] = useState(true);
     const isEditMode = !!id;
 
     useEffect(() => {
         const fetchData = async (nombre: string = "") => {
             try {
-                const edificioResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/edificios/buscar`, { nombre }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${session?.user?.token}`,
-                    },
-                });
-                setEdificio(edificioResponse.data);
-
                 if (isEditMode) {
                     const maquinaResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/${id}`, {
                         headers: {
@@ -50,11 +35,7 @@ const PisoForm = () => {
 
                     setPiso({
                         id: maquinaResponse.data.id,
-                        nombre: maquinaResponse.data.nombre,
-                        edificio: {
-                            id: maquinaResponse.data.edificio.id,
-                            nombre: maquinaResponse.data.edificio.nombre,
-                        }
+                        nombre: maquinaResponse.data.nombre
                     });
                 }
                 setLoading(false);
@@ -70,11 +51,11 @@ const PisoForm = () => {
 
     if (loading) {
         return (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <CircularProgress label="Cargando..." />
-          </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress label="Cargando..." />
+            </div>
         );
-      }
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -85,19 +66,11 @@ const PisoForm = () => {
         setPiso({ ...piso, [name]: value });
     };
 
-    const handleEdificioChange = (selected: string) => {
-        const selectedEdificio = edificio.find(p => p.nombre === selected);
-        if (selectedEdificio) {
-            setPiso({ ...piso, edificio: selectedEdificio });
-        }
-    }
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const pisoDatos = {
-                nombre: piso.nombre,
-                edificio: piso.edificio.id
+                nombre: piso.nombre
             };
 
             if (isEditMode) {
@@ -140,25 +113,6 @@ const PisoForm = () => {
                             onChange={handleInputChange}
                             required
                         />
-                    </div>
-                    <div>
-                        <Autocomplete
-                            variant="faded"
-                            label="Edificio"
-                            name="edificio"
-                            selectedKey={piso.edificio.nombre}
-                            onSelectionChange={(selected) => {
-                                const selectedValue = selected ? selected.toString() : '';
-                                handleEdificioChange(selectedValue);
-                            }}
-                            required
-                        >
-                            {edificio.map(edificio => (
-                                <AutocompleteItem key={edificio.nombre} value={edificio.nombre}>
-                                    {edificio.nombre}
-                                </AutocompleteItem>
-                            ))}
-                        </Autocomplete>
                     </div>
                     <div className="botonFormulario">
                         <Button color="secondary" onPress={handleCancel}>Cancelar</Button>
