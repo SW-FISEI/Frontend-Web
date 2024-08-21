@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Tabla from '@/components/tabla';
-import '@/styles/carreras.scss'; // Asegúrate de importar tus estilos CSS
+import '@/styles/carreras.scss';
 
 interface Carrera {
   id: number;
@@ -28,9 +28,9 @@ const Carreras = () => {
   const [data, setData] = useState<Carrera[]>([]);
   const router = useRouter();
 
-  const obtenerCarreras = async (nombre:string = "") => {
+  const obtenerCarreras = useCallback(async (nombre: string = "") => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras/buscar`,{nombre}, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras/buscar`, { nombre }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.user?.token}`,
@@ -40,13 +40,13 @@ const Carreras = () => {
     } catch (error) {
       console.error('Error al obtener carreras:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerCarreras();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerCarreras]);
 
   const handleAdd = () => {
     router.push('/admin/administracion-academica/carreras/carreras-form');

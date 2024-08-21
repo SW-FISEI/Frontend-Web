@@ -7,7 +7,7 @@ const logoUTA = '/logoUTA.png';
 Font.register({
     family: 'Playfair Display',
     fonts: [
-        { src: '/fonts/PlayfairDisplay-Regular.ttf', fontWeight: 'normal' },
+        { src: '/fonts/Lora-Regular.ttf', fontWeight: 'normal' },
         { src: '/fonts/PlayfairDisplay-Bold.ttf', fontWeight: 'bold' },
     ]
 });
@@ -133,8 +133,8 @@ interface PDFProps {
 }
 
 function calcularHoras(inicio: string, fin: string): string {
-    const [inicioHoras, inicioMinutos] = inicio.split(':').map(Number);
-    const [finHoras, finMinutos] = fin.split(':').map(Number);
+    const [inicioHoras, inicioMinutos] = inicio.split('H').map(Number);
+    const [finHoras, finMinutos] = fin.split('H').map(Number);
 
     let horas = finHoras - inicioHoras;
     let minutos = finMinutos - inicioMinutos;
@@ -144,7 +144,7 @@ function calcularHoras(inicio: string, fin: string): string {
         minutos += 60;
     }
 
-    return `${horas}:${minutos < 10 ? '0' : ''}${minutos}`;
+    return `${horas}H${minutos < 10 ? '0' : ''}${minutos}`;
 }
 
 function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, inicio, fin, fecha, laboratorista }: PDFProps) {
@@ -165,56 +165,56 @@ function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, ini
             <View style={styles.section}>
                 <View style={styles.row1}>
                     <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>LABORATORIO:</Text>
-                        <Text>{aula}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>LABORATORIO:</Text>
+                        <Text style={{ fontSize: 8 }}>{aula}</Text>
                     </View>
                     <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>DOCENTE:</Text>
-                        <Text>{docente}</Text>
-                    </View>
-                </View>
-                <View style={styles.row1}>
-                    <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>AUXILIAR DE LABORATORIO:</Text>
-                        <Text>{laboratorista}</Text>
-                    </View>
-                    <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>PERIODO ACADÉMICO:</Text>
-                        <Text>{periodo}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>DOCENTE:</Text>
+                        <Text style={{ fontSize: 8 }}>{docente}</Text>
                     </View>
                 </View>
                 <View style={styles.row1}>
                     <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>NIVEL:</Text>
-                        <Text>{semestre} {paralelo}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>AUXILIAR DE LABORATORIO:</Text>
+                        <Text style={{ fontSize: 8 }}>{laboratorista}</Text>
                     </View>
                     <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>FECHA:</Text>
-                        <Text>{fecha}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>PERIODO ACADÉMICO:</Text>
+                        <Text style={{ fontSize: 8, fontWeight: 'normal' }}>{periodo}</Text>
+                    </View>
+                </View>
+                <View style={styles.row1}>
+                    <View style={styles.column1}>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>NIVEL:</Text>
+                        <Text style={{ fontSize: 8 }}>{semestre} {paralelo}</Text>
+                    </View>
+                    <View style={styles.column1}>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>FECHA:</Text>
+                        <Text style={{ fontSize: 8 }}>{fecha}</Text>
                     </View>
                 </View>
                 <View style={styles.row2}>
                     <View style={styles.column2}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.INGRESO:</Text>
-                        <Text>{inicio}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>H.INGRESO:</Text>
+                        <Text style={{ fontSize: 8 }}>{inicio}</Text>
                     </View>
                     <View style={styles.column2}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.SALIDA:</Text>
-                        <Text>{fin}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>H.SALIDA:</Text>
+                        <Text style={{ fontSize: 8 }}>{fin}</Text>
                     </View>
                     <View style={styles.column2}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>H.PRACTICAS:</Text>
-                        <Text>{horasPracticas}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>H.PRACTICAS:</Text>
+                        <Text style={{ fontSize: 8 }}>{horasPracticas}</Text>
                     </View>
                 </View>
                 <View style={styles.row1}>
                     <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>MATERIA:</Text>
-                        <Text>{materia}</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>MATERIA:</Text>
+                        <Text style={{ fontSize: 8 }}>{materia}</Text>
                     </View>
                     <View style={styles.column1}>
-                        <Text style={{ marginRight: 10, fontWeight: 'bold' }}>TEMA DE LA PRÁCTICA:</Text>
-                        <Text>_____________________</Text>
+                        <Text style={{ fontSize: 8, marginRight: 3, fontWeight: 'bold' }}>TEMA DE LA PRÁCTICA:</Text>
+                        <Text style={{ fontSize: 8 }}>_____________________</Text>
                     </View>
                 </View>
             </View>
@@ -243,7 +243,7 @@ function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, ini
                     </View>
                 ))}
                 <View style={styles.tableCustomRow}>
-                    <View style={styles.tableCol1}><Text>20</Text></View>
+                    <View style={[styles.tableCol1, { height: 26 }]}><Text>20</Text></View>
                     <View style={styles.tableCenterCol}>
                         <View style={[styles.tableCenterRow, { borderBottomWidth: 1, borderBottomColor: '#000', borderBottomStyle: 'solid' }]}>
                             <Text></Text>
@@ -252,13 +252,12 @@ function PDF({ periodo, carrera, semestre, paralelo, aula, docente, materia, ini
                             <Text></Text>
                         </View>
                     </View>
-                    <View style={styles.tableCol3}><Text></Text></View>
+                    <View style={[styles.tableCol3, { height: 26 }]}><Text></Text></View>
                 </View>
             </View>
-
             <View style={styles.signatureSection}>
-                <Text style={styles.signature}>FIRMA DEL DOCENTE</Text>
-                <Text style={styles.signature}>FIRMA DEL RESPONSABLE</Text>
+                <Text style={styles.signature}>Firma Docente</Text>
+                <Text style={styles.signature}>Firma Responsable</Text>
             </View>
         </View>
     );

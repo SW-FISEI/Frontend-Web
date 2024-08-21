@@ -40,7 +40,7 @@ const SoftwareForm = () => {
             };
             obtenerSoftwares();
         }
-    }, [id, isEditMode]);
+    }, [id, isEditMode, session?.user?.token]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

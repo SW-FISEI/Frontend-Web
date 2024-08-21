@@ -48,7 +48,6 @@ const PisoForm = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
-    /*     const [software_aulas, setSoftwareAula] = useState<Software_Aulas>({ software: { id: 0, nombre: '', version: '', descripcion: '' }, aula: { id: 0, nombre: '', piso: { id: 0, nombre: '', edificio: { id: 0, nombre: '' } } } }); */
     const [software_aulas, setSoftwareAula] = useState<Software_Aulas>({ software: { id: 0, nombre: '', version: '', descripcion: '' }, aula: { id: 0, nombre: '', detalle_piso: { id: 0, piso: { id: 0, nombre: '' }, edificio: { id: 0, nombre: '' } } } });
     const [aula, setAula] = useState<Aula[]>([]);
     const [software, setSoftware] = useState<Software[]>([]);
@@ -200,7 +199,7 @@ const PisoForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleSoftwareChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {software.map(software => (
                                 <AutocompleteItem key={software.nombre} value={software.nombre}>
@@ -219,7 +218,7 @@ const PisoForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleAulaChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {aula.map((aula) => (
                                 <AutocompleteItem

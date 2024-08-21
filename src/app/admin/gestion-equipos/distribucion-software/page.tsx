@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import TablaConFiltros from '@/components/tabla-filtros';
 
 interface Edificio {
@@ -52,12 +52,12 @@ const columnas = [
   { uid: "actions", name: "Acciones" },
 ]
 
-const gestionEquipos = () => {
+const GestionEquipos = () => {
   const { data: session } = useSession();
   const [software_aulas, setSoftwareAula] = useState<Software_Aulas[]>([]);
   const router = useRouter();
 
-  const obtenerSoftwareAulas = async () => {
+  const obtenerSoftwareAulas = useCallback(async () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/software-aulas`, {
         headers: {
@@ -69,13 +69,13 @@ const gestionEquipos = () => {
     } catch (error) {
       console.error('Error al obtener software de aulas:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerSoftwareAulas();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerSoftwareAulas]);
 
   const handleAñadir = () => {
     router.push('/admin/gestion-equipos/distribucion-software/distribucion-software-form');
@@ -119,4 +119,4 @@ const gestionEquipos = () => {
   )
 }
 
-export default gestionEquipos
+export default GestionEquipos

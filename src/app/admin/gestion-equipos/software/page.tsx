@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Software {
   id: number;
@@ -26,7 +26,7 @@ const Software = () => {
   const [software, setSoftware] = useState<Software[]>([]);
   const router = useRouter();
 
-  const obtenerSoftwares = async (nombre: string = "") => {
+  const obtenerSoftwares = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/softwares/buscar`, { nombre },
         {
@@ -39,13 +39,13 @@ const Software = () => {
     } catch (error) {
       console.error('Error al obtener carreras:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerSoftwares();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerSoftwares]);
 
   const handleAñadir = () => {
     router.push('/admin/gestion-equipos/software/software-form');

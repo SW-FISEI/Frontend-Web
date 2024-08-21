@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
@@ -24,7 +24,7 @@ const TitulosPage = () => {
   const [titulos, setTitulos] = useState<Titulo[]>([]);
   const router = useRouter();
 
-  const obtenerTitulos = async (nombre: string = "") => {
+  const obtenerTitulos = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/titulos/buscarT`, { nombre }, {
         headers: {
@@ -36,13 +36,13 @@ const TitulosPage = () => {
     } catch (error) {
       console.error("Error al obtener los títulos:", error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerTitulos();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerTitulos]);
 
   const handleAñadir = () => {
     router.push('/admin/gestion-personal/titulos/titulos-form');

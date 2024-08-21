@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Paralelos {
   id: number;
@@ -22,7 +22,7 @@ const Paralelos = () => {
   const [paralelos, setParalelos] = useState<Paralelos[]>([]);
   const router = useRouter();
 
-  const obtenerParalelos = async (nombre: string = "") => {
+  const obtenerParalelos = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/paralelos/buscar`, { nombre },
         {
@@ -35,13 +35,13 @@ const Paralelos = () => {
     } catch (error) {
       console.error('Error al obtener carreras:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerParalelos();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerParalelos]);
 
   const handleAñadir = () => {
     router.push('/admin/administracion-academica/paralelos/paralelos-form');

@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Semestre {
   id: number;
@@ -20,14 +20,14 @@ const columns = [
   { uid: "actions", name: "Acciones" }
 ];
 
-const semestres = () => {
+const Semestres = () => {
   const { data: session } = useSession();
   const [data, setData] = useState<Semestre[]>([]);
   const router = useRouter();
 
-  const obtenerSemestres = async (nombre:string = "") => {
+  const obtenerSemestres = useCallback(async (nombre: string = "") => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/semestres/buscar`,{nombre}, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/semestres/buscar`, { nombre }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.user?.token}`,
@@ -37,13 +37,13 @@ const semestres = () => {
     } catch (error) {
       console.error('Error al obtener carreras:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerSemestres();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerSemestres]);
 
   const handleAdd = () => {
     router.push('/admin/administracion-academica/semestres/semestres-form');
@@ -87,4 +87,4 @@ const semestres = () => {
   )
 }
 
-export default semestres
+export default Semestres

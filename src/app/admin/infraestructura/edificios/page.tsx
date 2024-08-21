@@ -5,9 +5,9 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'; // Cambiado a next/navigation
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
-interface Edificios {
+interface Edificio {
   id: number;
   nombre: string;
   created_at: string;
@@ -20,12 +20,12 @@ const columns = [
   { uid: "actions", name: "Actions" }
 ];
 
-const edificios = () => {
+const Edificios = () => {
   const { data: session } = useSession();
-  const [data, setData] = useState<Edificios[]>([]);
+  const [data, setData] = useState<Edificio[]>([]);
   const router = useRouter(); // Cambiado a la versión de next/navigation
 
-  const obtenerEdificios = async (nombre: string = "") => {
+  const obtenerEdificios = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/edificios/buscar`, { nombre }, {
         headers: {
@@ -37,26 +37,40 @@ const edificios = () => {
     } catch (error) {
       console.error('Error al obtener carreras:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerEdificios();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerEdificios]);
 
   const handleAdd = () => {
     router.push('/admin/infraestructura/edificios/edificios-form');
   };
-  
-  const handleEdit = (row: Edificios) => {
+
+  const handleEdit = (row: Edificio) => {
     router.push(`/admin/infraestructura/edificios/edificios-form?id=${row.id}`);
   };
 
-  const handleDelete = (row: Edificios) => {
-    //eliminarCarrera(row.id);
+  const eliminarEdificio = async (id: number) => {
+    try {
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/edificios/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.token}`,
+        }
+      });
+      obtenerEdificios("")
+    } catch (error) {
+      console.error("Error al eliminar el título:", error);
+    }
+  }
+
+  const handleDelete = (row: Edificio) => {
+    eliminarEdificio(row.id);
   };
-  
+
   return (
     <section className=''>
       <TituloPagina title="Edificios" />
@@ -71,4 +85,4 @@ const edificios = () => {
   )
 }
 
-export default edificios;
+export default Edificios;
