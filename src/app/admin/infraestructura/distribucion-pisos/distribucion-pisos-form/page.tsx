@@ -164,7 +164,7 @@ const PisoForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handlePisoChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {piso.map(piso => (
                                 <AutocompleteItem key={piso.nombre} value={piso.nombre}>
@@ -183,7 +183,7 @@ const PisoForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleEdificioChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {edificio.map(edificio => (
                                 <AutocompleteItem key={edificio.nombre} value={edificio.nombre}>

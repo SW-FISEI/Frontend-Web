@@ -7,10 +7,38 @@ import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress, DatePicker } from "@nextui-org/react";
-import { DateValue, CalendarDate, CalendarDateTime, ZonedDateTime } from '@internationalized/date';
+import { Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
+import { CalendarDate, CalendarDateTime, ZonedDateTime } from '@internationalized/date';
 import '@/styles/formulario.scss';
 import SelectorFecha from '@/components/selector-fecha';
+
+interface Materia {
+  id: number;
+  nombre: string;
+}
+
+interface Paralelo {
+  id: number;
+  nombre: string;
+}
+
+interface Semestre {
+  id: number;
+  nombre: string;
+}
+
+interface Carrera {
+  id: number;
+  nombre: string;
+}
+
+interface Detalle_Materia {
+  id: number;
+  carrera: Carrera;
+  semestre: Semestre;
+  paralelo: Paralelo;
+  materia: Materia;
+}
 
 interface Laboratorista {
   cedula: string;
@@ -22,11 +50,26 @@ interface Edificio {
   nombre: string;
 }
 
+interface Aula {
+  id: number;
+  nombre: string;
+}
+
+interface Docente {
+  id: number;
+  docente: string;
+}
+
+interface Periodo {
+  id: number;
+  nombre: string;
+}
+
 interface DetalleHorario {
-  periodo: { nombre: string };
-  materia: { carrera: { nombre: string }; semestre: { nombre: string }; paralelo: { nombre: string }; materia: { nombre: string } };
-  aula: { nombre: string };
-  docente: { docente: string };
+  periodo: Periodo;
+  materia: Detalle_Materia;
+  aula: Aula;
+  docente: Docente;
   inicio: string;
   fin: string;
   dia: string;
@@ -34,7 +77,7 @@ interface DetalleHorario {
   laboratorista?: { laboratorista: string } | null;
 }
 
-const porBloque = () => {
+const PorBloque = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -54,6 +97,8 @@ const porBloque = () => {
 
   const formatearFecha = (fecha: string): string => {
     const date = new Date(fecha);
+    date.setDate(date.getDate() + 1); // Sumar un día
+
     const dias = [
       "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"
     ];
@@ -78,6 +123,7 @@ const porBloque = () => {
             Authorization: `Bearer ${session?.user?.token}`,
           }
         });
+        console.log("Datos de edificios:", carreraResponse.data);
         setEdificio(carreraResponse.data);
 
         const laboratoristaResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/laboratoristas/buscar`, { laboratorista }, {
@@ -86,6 +132,7 @@ const porBloque = () => {
             Authorization: `Bearer ${session?.user?.token}`,
           },
         });
+        console.log("Datos de laboratoristas:", laboratoristaResponse.data);
         setLaboratoristas(laboratoristaResponse.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
@@ -103,6 +150,12 @@ const porBloque = () => {
     e.preventDefault();
     setLoading(true);
 
+    if (!selectedFecha) {
+      console.error("No se ha seleccionado una fecha.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/detalle-horarios/buscarE`, { edificio: selectedEdificio }, {
         headers: {
@@ -112,40 +165,45 @@ const porBloque = () => {
       });
 
       if (response.data) {
-        if (!selectedFecha) {
-          console.error("No se ha seleccionado una fecha.");
-          return;
-        }
-
         const fechaFormateada = formatearFecha(selectedFecha);
+        console.log("Fecha formateada:", fechaFormateada);
 
         const selectedDate = new Date(selectedFecha);
-        const dayOfWeekMap = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const dayOfWeekMap = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo',];
         const selectedDay = dayOfWeekMap[selectedDate.getDay()];
+        console.log("Día seleccionado:", selectedDay);
 
         const filteredHorarios = response.data.filter((detalles: DetalleHorario) => {
-          return detalles.dia === selectedDay;
+          return detalles.dia.trim() === selectedDay.trim();
         });
 
         const updatedHorarios = filteredHorarios.map((detalles: DetalleHorario) => {
           detalles.fecha = fechaFormateada;
 
-          // Formatear las horas de inicio y fin a HH:mm
           const formatTime = (timeString: string) => {
             const [hours, minutes] = timeString.split(':');
-            return `${hours}:${minutes}`;
+            return `${hours}H${minutes}`;
           };
 
           detalles.inicio = formatTime(detalles.inicio);
           detalles.fin = formatTime(detalles.fin);
 
-          // Asignar el laboratorista según la hora de inicio
           const horaInicio = parseInt(detalles.inicio.split(':')[0], 10);
+
+          let laboratoristaAsignado = null;
+
           if (horaInicio >= 14) {
-            detalles.laboratorista = laboratoristas.find(l => l.laboratorista === selectedLaboratoristaTarde) || null;
+            laboratoristaAsignado = laboratoristas.find(l => l.laboratorista === selectedLaboratoristaTarde) || null;
           } else {
-            detalles.laboratorista = laboratoristas.find(l => l.laboratorista === selectedLaboratoristaMañana) || null;
+            laboratoristaAsignado = laboratoristas.find(l => l.laboratorista === selectedLaboratoristaMañana) || null;
           }
+
+          console.log("Laboratorista asignado:", laboratoristaAsignado);
+
+          detalles.laboratorista = laboratoristaAsignado;
+
+          console.log("Detalles del horario después de asignar laboratorista:", detalles);
+
           return detalles;
         });
 
@@ -160,6 +218,7 @@ const porBloque = () => {
   };
 
   const handleEdificioChange = async (selected: string) => {
+    console.log("Edificio seleccionado:", selected);
     setSelectedEdificio(selected);
 
     const edificioSeleccionado = edificios.find(e => e.nombre === selected);
@@ -171,6 +230,7 @@ const porBloque = () => {
             Authorization: `Bearer ${session?.user?.token}`,
           }
         });
+        console.log("Laboratoristas para el edificio:", response.data);
         setLaboratoristas(response.data);
       } catch (error) {
         console.error("Error al obtener los laboratoristas:", error);
@@ -179,15 +239,32 @@ const porBloque = () => {
   };
 
   const handleLaboratoristaMañanaChange = (selected: string) => {
+    console.log("Laboratorista mañana seleccionado:", selected);
     setSelectedLaboratoristaMañana(selected);
   };
 
   const handleLaboratoristaTardeChange = (selected: string) => {
+    console.log("Laboratorista tarde seleccionado:", selected);
     setSelectedLaboratoristaTarde(selected);
   };
 
-  const handleFechaChange = (value: CalendarDate | CalendarDateTime | ZonedDateTime) => {
-    setSelectedFecha(value.toString());
+  const handleFechaChange = (value: CalendarDate | CalendarDateTime | ZonedDateTime | null) => {
+    if (value) {
+      if (value instanceof CalendarDate) {
+        const date = new Date(value.year, value.month - 1, value.day);
+        const dateString = date.toISOString().split('T')[0];
+        console.log("Fecha seleccionada (formato yyyy-MM-dd):", dateString);
+        setSelectedFecha(dateString);
+
+        const dayOfWeekMap = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const selectedDay = dayOfWeekMap[date.getDay()];
+        console.log("Día seleccionado:", selectedDay);
+      } else {
+        console.error("El valor seleccionado no es una instancia de CalendarDate.");
+      }
+    } else {
+      console.error("No se seleccionó una fecha.");
+    }
   };
 
   const handleCancel = () => {
@@ -217,7 +294,7 @@ const porBloque = () => {
                   const selectedValue = selected ? selected.toString() : '';
                   handleEdificioChange(selectedValue);
                 }}
-                required
+                isRequired
               >
                 {edificios.map((edificio) => (
                   <AutocompleteItem key={edificio.nombre} value={edificio.nombre}>
@@ -245,10 +322,10 @@ const porBloque = () => {
                   handleLaboratoristaMañanaChange(selectedValue);
                 }}
                 value={selectedLaboratoristaMañana || ''}
-                required
+                isRequired
               >
                 {laboratoristas.map((laboratorista) => (
-                  <AutocompleteItem key={laboratorista.cedula} value={laboratorista.laboratorista}>
+                  <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
                     {laboratorista.laboratorista}
                   </AutocompleteItem>
                 ))}
@@ -264,7 +341,7 @@ const porBloque = () => {
                   handleLaboratoristaTardeChange(selectedValue);
                 }}
                 value={selectedLaboratoristaTarde || ''}
-                required
+                isRequired
               >
                 {laboratoristas.map((laboratorista) => (
                   <AutocompleteItem key={laboratorista.laboratorista} value={laboratorista.laboratorista}>
@@ -315,4 +392,4 @@ const porBloque = () => {
   );
 };
 
-export default porBloque;
+export default PorBloque;

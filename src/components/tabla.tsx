@@ -21,17 +21,17 @@ import '@/styles/tabla.scss'; // Asegúrate de importar tus estilos CSS
 interface TablaProps<T> {
   columns: { uid: string; name: string; sortable?: boolean; }[];
   data: T[];
-  onEdit: (row: T) => void;
+  onEdit?: (row: T) => void;
   onDelete: (row: T) => void;
-  onAddNew: () => void;
+  onAddNew?: () => void;
 }
 
 const Tabla = <T extends { id: number }>({
   columns,
   data,
-  onEdit,
+  onEdit = () => { },
   onDelete,
-  onAddNew,
+  onAddNew = () => { },
 }: TablaProps<T>) => {
   const [filterValue, setFilterValue] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(7);
@@ -85,13 +85,17 @@ const Tabla = <T extends { id: number }>({
   const renderCell = useCallback((item: T, columnKey: React.Key) => {
     const columnKeyStr = String(columnKey);
     const keys = columnKeyStr.split('.');
-  
+
     // Reduce el objeto item para acceder a la propiedad anidada
     const cellValue = keys.reduce((obj, key) => {
-      // Usa 'as' para afirmar que el objeto tiene esta clave
       return obj?.[key as keyof typeof obj];
-    }, item as any);  // 'any' para evitar problemas de tipado dinámico
-  
+    }, item as any);
+
+    const handleDeleteClick = (row: T) => {
+      setSelectedRow(row);
+      onOpen();  // Abre el modal
+    };
+
     switch (columnKey) {
       case "n":
         return items.indexOf(item) + 1 + (page - 1) * rowsPerPage;
@@ -125,12 +129,7 @@ const Tabla = <T extends { id: number }>({
       default:
         return String(cellValue || '');
     }
-  }, [onEdit, items, page, rowsPerPage]);
-  
-  const handleDeleteClick = (row: T) => {
-    setSelectedRow(row);
-    onOpen();  // Abre el modal
-  };
+  }, [onEdit, items, page, rowsPerPage, onOpen]);
 
   const handleConfirmDelete = () => {
     if (selectedRow) {
@@ -213,7 +212,7 @@ const Tabla = <T extends { id: number }>({
         </div>
       </div>
     );
-  }, [filteredItems.length, page, pages]);
+  }, [filteredItems.length, page, pages, onNextPage, onPreviousPage]);
 
   return (
     <div className="table-container">

@@ -16,7 +16,7 @@ interface Semestre {
     deleted_at?: string | null;
 }
 
-const semestresForm = () => {
+const SemestresForm = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -42,7 +42,7 @@ const semestresForm = () => {
             };
             obtenerSemestre();
         }
-    }, [id, isEditMode]);
+    }, [id, isEditMode, session?.user?.token]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -111,4 +111,4 @@ const semestresForm = () => {
     )
 }
 
-export default semestresForm
+export default SemestresForm

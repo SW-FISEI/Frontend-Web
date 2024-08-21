@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { SIDENAV_ITEMS } from '@/constants';
 import { SideNavItem } from '@/types';
@@ -24,7 +25,7 @@ const SideNav = () => {
             <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
                 <div className="encabezadoSidebar">
                     <Link href="/admin/laboratoristas/dashboard" className="botonLogo">
-                        <img className="logoSidebar" src="/logo.png" width={80} height={80} alt="Logo" />
+                        <Image className="logoSidebar" src="/logo.png" width={80} height={80} alt="Logo" />
                         <p className="fisei">Sistema de Horarios</p>
                     </Link>
                 </div>
@@ -48,6 +49,7 @@ const SideNav = () => {
 };
 
 export default SideNav;
+
 const MenuItem = ({ item }: { item: SideNavItem }) => {
     const pathname = usePathname();
     const [subMenuOpen, setSubMenuOpen] = useState(false);
@@ -102,4 +104,3 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
         </div>
     );
 };
-

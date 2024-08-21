@@ -17,7 +17,7 @@ interface Materia {
     deleted_at?: string | null;
 }
 
-const materiasForm = () => {
+const MateriasForm = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -43,7 +43,7 @@ const materiasForm = () => {
             };
             obtenerMateria();
         }
-    }, [id, isEditMode]);
+    }, [id, isEditMode, session?.user?.token]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -125,4 +125,4 @@ const materiasForm = () => {
     )
 }
 
-export default materiasForm
+export default MateriasForm

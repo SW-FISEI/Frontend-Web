@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Periodo {
   id: number;
@@ -25,12 +25,12 @@ const columnas = [
   { uid: "actions", name: "Acciones" },
 ];
 
-const periodos = () => {
+const Periodos = () => {
   const { data: session } = useSession();
   const [periodo, setPeriodo] = useState<Periodo[]>([]);
   const router = useRouter();
 
-  const obtenerPeriodo = async (nombre: string = "") => {
+  const obtenerPeriodo = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/periodos/buscar`, { nombre },
         {
@@ -44,13 +44,13 @@ const periodos = () => {
     } catch (error) {
       console.error('Error al obtener carreras:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerPeriodo("");
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerPeriodo]);
 
   const handleAñadir = () => {
     router.push('/admin/administracion-horarios/periodos/periodos-form');
@@ -94,4 +94,4 @@ const periodos = () => {
   )
 }
 
-export default periodos
+export default Periodos
