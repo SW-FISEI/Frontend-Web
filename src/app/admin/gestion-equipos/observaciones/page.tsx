@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Edificio {
     id: number;
@@ -15,13 +15,18 @@ interface Edificio {
 interface Piso {
     id: number;
     nombre: string;
+}
+
+interface DetallePiso {
+    id: number;
+    piso: Piso;
     edificio: Edificio;
 }
 
 interface Aula {
     id: number;
     nombre: string;
-    piso: Piso;
+    detalle_piso: DetallePiso;
 }
 
 interface Maquina {
@@ -40,17 +45,17 @@ const columnas = [
     { uid: "descripcion", name: "Descripcion", sortable: true },
     { uid: "maquina.nombre", name: "Maquina", sortable: true },
     { uid: "maquina.aula.nombre", name: "Aula", sortable: true },
-    { uid: "maquina.aula.piso.nombre", name: "Piso", sortable: true },
-    { uid: "maquina.aula.piso.edificio.nombre", name: "Edificio", sortable: true },
+    { uid: "maquina.aula.detalle_piso.piso.nombre", name: "Piso", sortable: true },
+    { uid: "maquina.aula.detalle_piso.edificio.nombre", name: "Edificio", sortable: true },
     { uid: "actions", name: "Acciones", sortable: true },
 ];
 
-const observaciones = () => {
+const Observaciones = () => {
     const { data: session } = useSession();
     const [observacion, setObservacion] = useState<Observacion[]>([]);
     const router = useRouter();
 
-    const obtenerObservaciones = async (descripcion: string = "") => {
+    const obtenerObservaciones = useCallback(async (descripcion: string = "") => {
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/observaciones/buscar`, { descripcion },
                 {
@@ -64,13 +69,13 @@ const observaciones = () => {
         } catch (error) {
             console.error('Error al obtener observaciones:', error);
         }
-    };
+    }, [session?.user?.token]);
 
     useEffect(() => {
         if (session?.user?.token) {
             obtenerObservaciones();
         }
-    }, [session]);
+    }, [session?.user?.token, obtenerObservaciones]);
 
     const eliminarObservacion = async (id: number) => {
         try {
@@ -88,7 +93,7 @@ const observaciones = () => {
         }
     };
 
-    const handleEliminar = (row: Maquina) => {
+    const handleEliminar = (row: Observacion) => {
         eliminarObservacion(row.id)
     }
     return (
@@ -103,4 +108,4 @@ const observaciones = () => {
     )
 }
 
-export default observaciones
+export default Observaciones

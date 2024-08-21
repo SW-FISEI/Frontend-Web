@@ -6,7 +6,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Edificio {
   id: number;
@@ -45,12 +45,12 @@ const columnas = [
   { uid: "actions", name: "Acciones", sortable: true },
 ];
 
-const maquinas = () => {
+const Maquinas = () => {
   const { data: session } = useSession();
   const [maquina, setMaquina] = useState<Maquina[]>([]);
   const router = useRouter();
 
-  const obtenerMaquinas = async (nombre: string = "") => {
+  const obtenerMaquinas = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maquinas/buscarM`, { nombre },
         {
@@ -64,13 +64,13 @@ const maquinas = () => {
     } catch (error) {
       console.error('Error al obtener maquinas:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerMaquinas("");
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerMaquinas]);
 
   const handleAñadir = () => {
     router.push('/admin/gestion-equipos/maquinas/maquinas-form');
@@ -113,4 +113,4 @@ const maquinas = () => {
   )
 }
 
-export default maquinas
+export default Maquinas

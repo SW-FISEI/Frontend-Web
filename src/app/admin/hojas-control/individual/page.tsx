@@ -9,7 +9,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import '@/styles/formulario.scss';
-import { tree } from 'next/dist/build/templates/app-page';
 
 interface Carrera {
   id: number;
@@ -46,7 +45,7 @@ interface Laboratorista {
   laboratorista: string;
 }
 
-const individual = () => {
+const Individual = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -182,11 +181,15 @@ const individual = () => {
   };
 
   const handleInicioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedInicio(e.target.value);
+    const time = e.target.value;
+    const formattedTime = time.replace(':', 'H');
+    setSelectedInicio(formattedTime);
   };
 
   const handleFinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFin(e.target.value);
+    const time = e.target.value;
+    const formattedTime = time.replace(':', 'H');
+    setSelectedFin(formattedTime);
   };
 
   const handlePeriodoChange = () => {
@@ -216,8 +219,9 @@ const individual = () => {
       <div className="contenedorFormulario">
         {!showPDF ? (
           <form onSubmit={handleSubmit}>
-            <div>
-              <p>Fecha actual: {fecha}</p>
+            <div className='inline-block'>
+              <p className='font-bold inline-block mr-2'>Fecha actual:</p>
+              <p className='inline-block'> {fecha}</p>
             </div>
             <div>
               <Autocomplete
@@ -228,7 +232,6 @@ const individual = () => {
                   const selectedValue = selected ? selected.toString() : '';
                   handleCarreraChange(selectedValue);
                 }}
-                isRequired
               >
                 {carreras.map(carrera => (
                   <AutocompleteItem key={carrera.nombre} value={carrera.nombre}>
@@ -247,7 +250,6 @@ const individual = () => {
                     const selectedValue = selected ? selected.toString() : '';
                     handleSemestreChange(selectedValue);
                   }}
-                  isRequired
                 >
                   {semestres.map(semestre => (
                     <AutocompleteItem key={semestre.nombre} value={semestre.nombre}>
@@ -265,7 +267,6 @@ const individual = () => {
                     const selectedValue = selected ? selected.toString() : '';
                     handleDocenteChange(selectedValue);
                   }}
-                  isRequired
                 >
                   {docentes.map(docente => (
                     <AutocompleteItem key={docente.docente} value={docente.docente}>
@@ -285,7 +286,6 @@ const individual = () => {
                     const selectedValue = selected ? selected.toString() : '';
                     handleMateriaChange(selectedValue);
                   }}
-                  isRequired
                 >
                   {materias.map(materia => (
                     <AutocompleteItem key={materia.nombre} value={materia.nombre}>
@@ -303,7 +303,6 @@ const individual = () => {
                     const selectedValue = selected ? selected.toString() : '';
                     handleParaleloChange(selectedValue);
                   }}
-                  isRequired
                 >
                   {paralelos.map(paralelo => (
                     <AutocompleteItem key={paralelo.nombre} value={paralelo.nombre}>
@@ -321,7 +320,6 @@ const individual = () => {
                   label="Inicio"
                   name="inicio"
                   onChange={handleInicioChange}
-                  required
                 />
               </div>
               <div>
@@ -331,7 +329,6 @@ const individual = () => {
                   label="Fin"
                   name="fin"
                   onChange={handleFinChange}
-                  required
                 />
               </div>
             </div>
@@ -345,7 +342,6 @@ const individual = () => {
                     const selectedValue = selected ? selected.toString() : '';
                     handleAulaChange(selectedValue);
                   }}
-                  isRequired
                 >
                   {aulas.map(aula => (
                     <AutocompleteItem key={aula.nombre} value={aula.nombre}>
@@ -410,4 +406,4 @@ const individual = () => {
   );
 };
 
-export default individual;
+export default Individual;

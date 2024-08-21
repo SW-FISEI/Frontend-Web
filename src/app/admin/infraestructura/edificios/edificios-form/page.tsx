@@ -14,7 +14,7 @@ interface Edificios {
 }
 
 
-const edificiosForm = () => {
+const EdificiosForm = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,7 +40,7 @@ const edificiosForm = () => {
       };
       obtenerEdificios();
     }
-  }, [id, isEditMode]);
+  }, [id, isEditMode, session?.user?.token]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -85,15 +85,15 @@ const edificiosForm = () => {
       <TituloPagina title="Edificios" subtitle={isEditMode ? 'Editar edificio' : 'Agregar edificio'} />
       <div className="contenedorFormulario">
         <form onSubmit={handleSubmit}>
-        <div>
-            <Input 
-              variant="faded" 
-              type="text" 
-              label="Nombre" 
+          <div>
+            <Input
+              variant="faded"
+              type="text"
+              label="Nombre"
               name="nombre"
               value={formData.nombre}
               onChange={handleInputChange}
-              required 
+              required
             />
           </div>
           <div className="botonFormulario">
@@ -101,7 +101,7 @@ const edificiosForm = () => {
             <Button color="primary" type="submit">
               {isEditMode ? 'Actualizar' : 'Agregar'}
             </Button>
-            
+
           </div>
         </form>
       </div>
@@ -109,4 +109,4 @@ const edificiosForm = () => {
   )
 }
 
-export default edificiosForm
+export default EdificiosForm
