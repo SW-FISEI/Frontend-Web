@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import '@/styles/formulario.scss';
+import toast from 'react-hot-toast';
 
 interface Semestre {
     id?: number;
@@ -63,6 +64,7 @@ const SemestresForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se actualizó correctamente');
             } else {
                 // Crear nueva carrera
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/semestres`, formData, {
@@ -71,10 +73,21 @@ const SemestresForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se creó correctamente');
             }
             router.push('/admin/administracion-academica/semestres');
         } catch (error) {
             console.error('Error al guardar el semestre:', error);
+            if (axios.isAxiosError(error) && error.response) {
+                const { data } = error.response;
+                if (Array.isArray(data.message)) {
+                    data.message.forEach((errMsg: string) => toast.error(errMsg));
+                } else {
+                    toast.error(`Error: ${data.message || 'Error al guardar el semestre'}`);
+                }
+            } else {
+                toast.error('Error al guardar el semestre');
+            }
         }
     };
 

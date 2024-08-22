@@ -7,6 +7,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 import '@/styles/formulario.scss';
+import toast from 'react-hot-toast';
 
 interface Laboratorista {
     cedula: string;
@@ -30,7 +31,7 @@ const LaboratoristasForm = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const cedula = searchParams.get('cedula'); // Obteniendo la cédula desde la URL
+    const cedula = searchParams.get('cedula');
     const [laboratorista, setLaboratorista] = useState<Laboratorista>({
         cedula: '',
         laboratorista: '',
@@ -157,6 +158,7 @@ const LaboratoristasForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se actualizó correctamente');
             } else {
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/laboratoristas`, laboratoristaDatos, {
                     headers: {
@@ -164,10 +166,21 @@ const LaboratoristasForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se creó correctamente');
             }
             router.push('/admin/gestion-personal/laboratoristas');
         } catch (error) {
             console.error('Error al guardar el laboratorista:', error);
+            if (axios.isAxiosError(error) && error.response) {
+                const { data } = error.response;
+                if (Array.isArray(data.message)) {
+                    data.message.forEach((errMsg: string) => toast.error(errMsg));
+                } else {
+                    toast.error(`Error: ${data.message || 'Error al guardar el laboratorista'}`);
+                }
+            } else {
+                toast.error('Error al guardar el laboratorista');
+            }
         }
     };
 

@@ -7,12 +7,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import '@/styles/formulario.scss';
+import toast from 'react-hot-toast';
 
 interface Docente {
     id?: number;
     cedula: any;
     docente: string;
-    titulo?: Titulo | null; // Asegúrate de que el título puede ser null
+    titulo?: Titulo | null;
 }
 
 interface Titulo {
@@ -48,7 +49,6 @@ const DocentesForm = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Obtener los títulos
                 await obtenerTitulos();
 
                 if (isEditMode) {
@@ -109,7 +109,7 @@ const DocentesForm = () => {
             const docenteDatos = {
                 cedula: docente.cedula,
                 docente: docente.docente,
-                titulo: docente.titulo ? docente.titulo.id : null,  // Asegura que el título sea null si no se selecciona
+                titulo: docente.titulo ? docente.titulo.id : null,
             };
 
             if (isEditMode) {
@@ -119,6 +119,7 @@ const DocentesForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se actualizó correctamente');
             } else {
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/docentes`, docenteDatos, {
                     headers: {
@@ -126,13 +127,19 @@ const DocentesForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se creó correctamente');
             }
             router.push('/admin/gestion-personal/docentes');
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('Error al guardar el docente:', error.response?.data);
+            if (axios.isAxiosError(error) && error.response) {
+                const { data } = error.response;
+                if (Array.isArray(data.message)) {
+                    data.message.forEach((errMsg: string) => toast.error(errMsg));
+                } else {
+                    toast.error(`Error: ${data.message || 'Error al guardar el docente'}`);
+                }
             } else {
-                console.error('Error inesperado:', error);
+                toast.error('Error al guardar el docente');
             }
         }
     };

@@ -7,6 +7,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 interface Edificio {
     id: number;
@@ -310,6 +311,7 @@ const DetalleHorarioForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se actualizó correctamente');
             } else {
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/detalle-horarios`, detalleDatos, {
                     headers: {
@@ -317,10 +319,21 @@ const DetalleHorarioForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se creó correctamente');
             }
             router.push('/admin/administracion-horarios/horarios');
         } catch (error) {
             console.error('Error al guardar:', error);
+            if (axios.isAxiosError(error) && error.response) {
+                const { data } = error.response;
+                if (Array.isArray(data.message)) {
+                    data.message.forEach((errMsg: string) => toast.error(errMsg));
+                } else {
+                    toast.error(`Error: ${data.message || 'Error al guardar el horario'}`);
+                }
+            } else {
+                toast.error('Error al guardar el horario');
+            }
         }
     };
 

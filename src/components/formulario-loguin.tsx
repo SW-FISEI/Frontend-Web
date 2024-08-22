@@ -3,8 +3,9 @@
 import { signIn } from "next-auth/react";
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import Image from 'next/image'; // Importa el componente Image
+import Image from 'next/image';
 import '@/styles/formulario-loguin.scss';
+import toast from "react-hot-toast";
 
 export default function FormularioLoguin() {
     const [errors, setErrors] = useState<string[]>([]);
@@ -24,9 +25,11 @@ export default function FormularioLoguin() {
 
         if (responseNextAuth?.error) {
             setErrors(responseNextAuth.error.split(","));
+            toast.error("Error al iniciar sesión. Verifica tus credenciales.");
             return;
         }
 
+        toast.success("Inicio de sesión exitoso. Redirigiendo...");
         return router.push("/admin");
     }
 
@@ -36,8 +39,8 @@ export default function FormularioLoguin() {
                 <div className="logo">
                     <Image src="/logo.png" alt="Logo" width={150} height={50} /> {/* Usa Image en lugar de img */}
                 </div>
-                <h1>Bienvenido</h1>
-                <h2>Sistema De Horarios FISEI</h2>
+                <h1 className="uppercase font-semibold">Bienvenido</h1>
+                <h2 className="uppercase font-bold">Sistema De Horarios FISEI</h2>
             </div>
             <form onSubmit={handleForm} className="formularioLoguin">
                 <div className="contenedorIngreso">

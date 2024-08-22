@@ -7,6 +7,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
 import { Input, Button } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 interface Carrera {
   id?: number;
@@ -27,7 +28,7 @@ const CarrerasForm = () => {
       // Cargar los datos de la carrera si estamos en modo edición
       const obtenerCarrera = async () => {
         try {
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras/${id}`,{
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras/${id}`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${session?.user?.token}`,
@@ -62,18 +63,30 @@ const CarrerasForm = () => {
             Authorization: `Bearer ${session?.user?.token}`,
           },
         });
+        toast.success('Se actualizó correctamente');
       } else {
         // Crear nueva carrera
-        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras`, formData,{
+        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras`, formData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session?.user?.token}`,
           },
         });
+        toast.success('Se creó correctamente');
       }
       router.push('/admin/administracion-academica/carreras');
     } catch (error) {
       console.error('Error al guardar la carrera:', error);
+      if (axios.isAxiosError(error) && error.response) {
+        const { data } = error.response;
+        if (Array.isArray(data.message)) {
+          data.message.forEach((errMsg: string) => toast.error(errMsg));
+        } else {
+          toast.error(`Error: ${data.message || 'Error al guardar la carrera'}`);
+        }
+      } else {
+        toast.error('Error al guardar la carrera');
+      }
     }
   };
 
@@ -88,25 +101,25 @@ const CarrerasForm = () => {
       <div className="contenedorFormulario">
         <form onSubmit={handleSubmit}>
           <div>
-            <Input 
-              variant="faded" 
-              type="text" 
-              label="Nombre" 
+            <Input
+              variant="faded"
+              type="text"
+              label="Nombre"
               name="nombre"  // Agrega el nombre al input
               value={formData.nombre}
               onChange={handleInputChange}
-              required 
+              required
             />
           </div>
           <div>
-            <Input 
-              variant="faded" 
-              type="text" 
-              label="Descripción" 
+            <Input
+              variant="faded"
+              type="text"
+              label="Descripción"
               name="descripcion"
               value={formData.descripcion}
               onChange={handleInputChange}
-              required 
+              required
             />
           </div>
           <div className="botonFormulario">
@@ -114,7 +127,7 @@ const CarrerasForm = () => {
             <Button color="primary" type="submit">
               {isEditMode ? 'Actualizar' : 'Agregar'}
             </Button>
-            
+
           </div>
         </form>
       </div>
