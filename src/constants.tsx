@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import { SideNavItem } from './types';
 
 export const SIDENAV_ITEMS: SideNavItem[] = [
+  /*
   {
     title: 'Inicio',
     path: '#',
@@ -12,6 +13,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
       { title: 'Dashboard', icon: <Icon icon="lucide:layout-dashboard" width="24" height="24" />, path: '/admin/laboratoristas/dashboard' },
     ]
   },
+  */
   {
     title: 'Consultas',
     path: '#',
