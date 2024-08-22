@@ -262,7 +262,7 @@ const AdminHome = () => {
         <div className="contenedorTarjetasPrincipal">
           <Calendar
             aria-label="Date (Invalid on weekends)"
-            errorMessage={isInvalid ? "We are closed on weekends" : undefined}
+            errorMessage={isInvalid ? "Cerrado los fines de semana" : undefined}
             isInvalid={isInvalid}
             value={date}
             onChange={setDate}
