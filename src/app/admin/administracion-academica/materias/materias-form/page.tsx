@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import '@/styles/formulario.scss';
+import toast from 'react-hot-toast';
 
 interface Materia {
     id?: number;
@@ -54,7 +55,6 @@ const MateriasForm = () => {
         e.preventDefault();
         try {
             if (isEditMode) {
-                // Actualizar carrera existente
                 const carreraDatos = {
                     nombre: formData.nombre,
                     descripcion: formData.descripcion
@@ -65,18 +65,29 @@ const MateriasForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se actualizó correctamente');
             } else {
-                // Crear nueva carrera
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/materias`, formData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se creó correctamente');
             }
             router.push('/admin/administracion-academica/materias');
         } catch (error) {
             console.error('Error al guardar la materia:', error);
+            if (axios.isAxiosError(error) && error.response) {
+                const { data } = error.response;
+                if (Array.isArray(data.message)) {
+                    data.message.forEach((errMsg: string) => toast.error(errMsg));
+                } else {
+                    toast.error(`Error: ${data.message || 'Error al guardar la materia'}`);
+                }
+            } else {
+                toast.error('Error al guardar la materia');
+            }
         }
     };
 

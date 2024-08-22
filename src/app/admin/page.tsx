@@ -203,8 +203,12 @@ const AdminHome = () => {
       <div className="contenedorTarjetaPrincipal">
         <div className="encabezado">
           <div className="tituloEncabezado">
-            <h1>FISEI</h1>
-            <p>Facultad de ingeniería en sistemas, electrónica e industrial</p>
+            <h1 className="text-white font-bold drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]">
+              FISEI
+            </h1>
+            <p className="text-white font-semibold drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]">
+              Facultad de ingeniería en sistemas, electrónica e industrial
+            </p>
           </div>
           <div className="hora">
             <h2>
@@ -215,23 +219,23 @@ const AdminHome = () => {
         <div className="contenedorSubtarjetas">
           <div className="subtarjeta">
             <p className="numero">{totalCarreras}</p>
-            <p className="descripcion">Carreras</p>
+            <p className="descripcion font-medium">Carreras</p>
           </div>
           <div className="subtarjeta">
             <p className="numero">{totalMaterias}</p>
-            <p className="descripcion">Materias</p>
+            <p className="descripcion font-medium">Materias</p>
           </div>
           <div className="subtarjeta">
             <p className="numero">{totalDocentes}</p>
-            <p className="descripcion">Docentes</p>
+            <p className="descripcion font-medium">Docentes</p>
           </div>
           <div className="subtarjeta">
             <p className="numero">{totalLaboratoristas}</p>
-            <p className="descripcion">Laboratoristas</p>
+            <p className="descripcion font-medium">Laboratoristas</p>
           </div>
           <div className="subtarjeta">
             <p className="numero">{totalAulas}</p>
-            <p className="descripcion">Aulas</p>
+            <p className="descripcion font-medium">Aulas</p>
           </div>
         </div>
       </div>
@@ -298,7 +302,7 @@ const AdminHome = () => {
               />
               {horariosMostrados.map((horario, index) => (
                 <div key={index} className="contenedorHorario">
-                  <h2 className="nombreMateria">{horario.materia.materia.nombre}</h2>
+                  <h2 className="nombreMateria uppercase">{horario.materia.materia.nombre}</h2>
                   <p><strong>Docente:</strong> {horario.docente.docente}</p>
                   <p><strong>Aula:</strong> {horario.aula.nombre}</p>
                   <p><strong>Carrera:</strong> {horario.materia.carrera.nombre}</p>

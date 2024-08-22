@@ -7,6 +7,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 interface Edificio {
     id: number;
@@ -138,6 +139,7 @@ const MaquinaForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se actualizó correctamente');
             } else {
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maquinas`, maquinaDatos, {
                     headers: {
@@ -145,13 +147,19 @@ const MaquinaForm = () => {
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se creó correctamente');
             }
             router.push('/admin/gestion-equipos/maquinas');
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('Error al guardar la maquina:', error.response?.data);
+            if (axios.isAxiosError(error) && error.response) {
+                const { data } = error.response;
+                if (Array.isArray(data.message)) {
+                    data.message.forEach((errMsg: string) => toast.error(errMsg));
+                } else {
+                    toast.error(`Error: ${data.message || 'Error al guardar la maquina'}`);
+                }
             } else {
-                console.error('Error inesperado:', error);
+                toast.error('Error al guardar la maquina');
             }
         }
     };

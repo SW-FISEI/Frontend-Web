@@ -7,6 +7,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress, Textarea } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 interface Edificio {
     id: number;
@@ -228,12 +229,12 @@ const PisoForm = () => {
                 setAula(prevAula => ({
                     ...prevAula,
                     detalle_piso: {
-                        id: detallePisoResponse.data.id,  // Almacena el ID en el objeto detalle_piso
+                        id: detallePisoResponse.data.id,
                         piso: {
                             id: selectedPiso.id,
                             nombre: selectedPiso.nombre
                         },
-                        edificio: prevAula.detalle_piso.edificio  // Mantiene el edificio seleccionado
+                        edificio: prevAula.detalle_piso.edificio
                     }
                 }));
             }
@@ -241,41 +242,48 @@ const PisoForm = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Previene el comportamiento por defecto del formulario
+        e.preventDefault();
 
         try {
-            // Desestructuramos el aula pero mantenemos el detalle_piso aparte para manipularlo después
             const { id, detalle_piso, ...restoAulaData } = aula;
 
-            // Creamos un nuevo objeto aulaData que incluye el id del detalle_piso
             const aulaData = {
                 ...restoAulaData,
-                detalle_piso: detalle_piso.id  // Asignamos solo el ID del detalle_piso
+                detalle_piso: detalle_piso.id
             };
 
             console.log('Datos enviados:', aulaData);
 
             if (isEditMode) {
-                // Actualizar el aula existente
                 await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas/${id}`, aulaData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se actualizó correctamente');
             } else {
-                // Crear una nueva aula
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas`, aulaData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
+                toast.success('Se creó correctamente');
             }
-
             router.push('/admin/infraestructura/aulas');
         } catch (error: any) {
             console.error('Error al guardar el aula:', error.response?.data || error.message);
+            if (axios.isAxiosError(error) && error.response) {
+                const { data } = error.response;
+                if (Array.isArray(data.message)) {
+                    data.message.forEach((errMsg: string) => toast.error(errMsg));
+                } else {
+                    toast.error(`Error: ${data.message || 'Error al guardar el aula'}`);
+                }
+            } else {
+                toast.error('Error al guardar el aula');
+            }
         }
     };
 
