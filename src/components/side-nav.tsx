@@ -23,7 +23,7 @@ const SideNav = () => {
             </button>
             <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
                 <div className="encabezadoSidebar">
-                    <Link href="/admin/laboratoristas/dashboard" className="botonLogo">
+                    <Link href="/admin" className="botonLogo">
                         <img className="logoSidebar" src="/logo.png" width={80} height={80} alt="Logo" />
                         <p className="fisei">Sistema de Horarios</p>
                     </Link>
