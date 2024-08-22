@@ -5,7 +5,7 @@ import Tabla from '@/components/tabla';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Laboratorista {
   cedula: number;
@@ -38,7 +38,7 @@ const Laboratoristas = () => {
   const [laboratoristas, setLaboratoristas] = useState<Laboratorista[]>([]);
   const router = useRouter();
 
-  const obtenerLaboratoristas = async (nombre: string = "") => {
+  const obtenerLaboratoristas = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/laboratoristas/buscar`, { nombre },
         {
@@ -52,13 +52,13 @@ const Laboratoristas = () => {
     } catch (error) {
       console.error('Error al obtener laboratoristas:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerLaboratoristas();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerLaboratoristas]);
 
   const handleAñadir = () => {
     router.push('/admin/gestion-personal/laboratoristas/laboratoristas-form');
@@ -67,7 +67,7 @@ const Laboratoristas = () => {
   const handleEdit = (row: Laboratorista) => {
     router.push(`/admin/gestion-personal/laboratoristas/laboratoristas-form?cedula=${row.cedula}`);
   };
-  
+
   const handleEliminar = (row: Laboratorista) => {
     eliminarLaboratorista(row.cedula);
   };

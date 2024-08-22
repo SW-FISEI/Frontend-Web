@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Piso {
   id: number;
@@ -17,12 +17,12 @@ const columnas = [
   { uid: "actions", name: "Acciones" },
 ];
 
-const pisos = () => {
+const Pisos = () => {
   const { data: session } = useSession();
   const [piso, setPiso] = useState<Piso[]>([]);
   const router = useRouter();
 
-  const obtenerPisos = async (nombre: string = "") => {
+  const obtenerPisos = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/buscar`, { nombre }, {
         headers: {
@@ -34,13 +34,13 @@ const pisos = () => {
     } catch (error) {
       console.error('Error al obtener pisos:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerPisos("");
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerPisos]);
 
   const handleAñadir = () => {
     router.push('/admin/infraestructura/pisos/pisos-form');
@@ -84,4 +84,4 @@ const pisos = () => {
   )
 }
 
-export default pisos
+export default Pisos

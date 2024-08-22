@@ -1,35 +1,45 @@
 import React, { useState } from 'react';
 import { DatePicker, DatePickerProps, Button } from '@nextui-org/react';
-import { CalendarDate, CalendarDateTime, parseDate, ZonedDateTime } from '@internationalized/date';
-import '@/styles/selector-fecha.scss'
+import { CalendarDate, CalendarDateTime, ZonedDateTime, DateValue } from '@internationalized/date';
+import '@/styles/selector-fecha.scss';
 
-interface SelectorFechaProps extends DatePickerProps {
-    onChange?: (value: CalendarDate | CalendarDateTime | ZonedDateTime) => void;
+interface SelectorFechaProps extends Omit<DatePickerProps, 'onChange' | 'placeholderValue'> {
+    onChange?: (value: CalendarDate | CalendarDateTime | ZonedDateTime | null) => void;
 }
 
 const SelectorFecha: React.FC<SelectorFechaProps> = (props) => {
     const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
 
     const handleTodayClick = () => {
-        const today = parseDate(new Date().toISOString().split('T')[0]);
-        setSelectedDate(today);
+        const today = new Date();
+        const calendarDate = new CalendarDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        setSelectedDate(calendarDate);
         if (props.onChange) {
-            props.onChange(today);
+            props.onChange(calendarDate);
         }
     };
 
-    const handleDateChange = (value: CalendarDate | CalendarDateTime | ZonedDateTime) => {
-        setSelectedDate(value as CalendarDate); // Casting to CalendarDate since we expect a CalendarDate
-        if (props.onChange) {
-            props.onChange(value);
+    const handleDateChange = (value: DateValue | null) => {
+        if (value) {
+            setSelectedDate(value instanceof CalendarDate ? value : null);
+            if (props.onChange) {
+                props.onChange(value);
+            }
+        } else {
+            setSelectedDate(null);
+            if (props.onChange) {
+                props.onChange(null);
+            }
         }
     };
+
+    const placeholderDate = new CalendarDate(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
 
     return (
         <DatePicker
             className='selectorFecha'
             {...props}
-            value={selectedDate}
+            value={selectedDate || undefined}  // Handle `null` case
             onChange={handleDateChange}
             CalendarBottomContent={
                 <Button
@@ -42,7 +52,7 @@ const SelectorFecha: React.FC<SelectorFechaProps> = (props) => {
                     Hoy
                 </Button>
             }
-            placeholderValue={parseDate(new Date().toISOString().split('T')[0])}
+            placeholderValue={placeholderDate}
         />
     );
 };

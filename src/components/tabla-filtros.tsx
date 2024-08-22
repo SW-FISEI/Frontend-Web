@@ -119,18 +119,23 @@ const TablaConFiltros = <T extends { id: number }>({
     });
   }, [sortDescriptor, items]);
 
-  const handleFilterChange = (columnUid: string, selectedKeys: Set<string>) => {
+  const handleFilterChange = useCallback((columnUid: string, selectedKeys: Set<string>) => {
     setColumnFilters((prev) => ({
       ...prev,
       [columnUid]: selectedKeys,
     }));
     setPage(1);
-  };
+  }, []);
 
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setColumnFilters({});
     setPage(1);
-  };
+  }, []);
+
+  const handleDeleteClick = useCallback((row: T) => {
+    setSelectedRow(row);
+    onOpen();
+  }, [onOpen]);
 
   const renderCell = useCallback((item: T, columnKey: React.Key) => {
     const columnKeyStr = String(columnKey);
@@ -173,20 +178,15 @@ const TablaConFiltros = <T extends { id: number }>({
       default:
         return String(cellValue || '');
     }
-  }, [onEdit, items, page, rowsPerPage]);
+  }, [onEdit, items, page, rowsPerPage, handleDeleteClick]);
 
-  const handleDeleteClick = (row: T) => {
-    setSelectedRow(row);
-    onOpen();
-  };
-
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = useCallback(() => {
     if (selectedRow) {
       onDelete(selectedRow);
       setSelectedRow(null);
       onClose();
     }
-  };
+  }, [selectedRow, onDelete, onClose]);
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -252,16 +252,16 @@ const TablaConFiltros = <T extends { id: number }>({
           onChange={setPage}
         />
         <div className="pagination-controls">
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+          <Button isDisabled={page === 1} size="sm" variant="flat" onPress={onPreviousPage}>
             Previous
           </Button>
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+          <Button isDisabled={page === pages} size="sm" variant="flat" onPress={onNextPage}>
             Next
           </Button>
         </div>
       </div>
     );
-  }, [filteredItems.length, page, pages]);
+  }, [filteredItems.length, page, pages, onNextPage, onPreviousPage]);
 
   return (
     <div className="table-container">
@@ -314,9 +314,6 @@ const TablaConFiltros = <T extends { id: number }>({
           {columns.map(column => (
             column.filterable && dynamicFilterOptions[column.uid] && column.uid !== "actions" && (
               <div key={column.uid} className="filtro-columna">
-                {/* 
-                <label>{column.name}</label>
-                */}
                 <Dropdown className="filtro">
                   <DropdownTrigger className="filtroDropdown">
                     <Button endContent={<Icon icon="lucide:chevron-down" />} variant="flat">

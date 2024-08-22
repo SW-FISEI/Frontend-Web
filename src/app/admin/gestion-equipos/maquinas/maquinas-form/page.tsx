@@ -43,8 +43,6 @@ const MaquinaForm = () => {
     const id = searchParams.get('id');
     const [maquina, setMaquina] = useState<Maquina>({ nombre: '', aula: { id: 0, nombre: '', detalle_piso: { id: 0, piso: { id: 0, nombre: '' }, edificio: { id: 0, nombre: '' } } } });
     const [aula, setAula] = useState<Aula[]>([]);
-    const [piso, setPiso] = useState<Piso[]>([]);
-    const [edificio, setEdificio] = useState<Edificio[]>([]);
     const [loading, setLoading] = useState(true);
     const isEditMode = !!id;
 
@@ -188,7 +186,7 @@ const MaquinaForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleAulaChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {aula.map((aula) => (
                                 <AutocompleteItem

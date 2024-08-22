@@ -8,9 +8,26 @@ import '@/styles/formulario.scss';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import { useSession } from 'next-auth/react';
 
+interface Edificio {
+    id: number;
+    nombre: string;
+}
+
+interface Piso {
+    id: number;
+    nombre: string;
+}
+
+interface DetallePiso {
+    id: number;
+    piso: Piso;
+    edificio: Edificio;
+}
+
 interface Aula {
     id: number;
     nombre: string;
+    detalle_piso: DetallePiso;
 }
 
 interface Docente {
@@ -71,7 +88,12 @@ const DetalleHorarioForm = () => {
         inicio: '',
         fin: '',
         dia: '',
-        aula: { id: 0, nombre: '' },
+        aula: {
+            id: 0, nombre: '', detalle_piso: {
+                id: 0, piso: { id: 0, nombre: '' }, edificio
+                    : { id: 0, nombre: '' }
+            }
+        },
         detalle_materia: { id: 0, carrera: { id: 0, nombre: '' }, semestre: { id: 0, nombre: '' }, materia: { id: 0, nombre: '' }, paralelo: { id: 0, nombre: '' } },
         docente: { cedula: '', docente: '' },
         periodo: { id: 0, nombre: '' }
@@ -147,6 +169,17 @@ const DetalleHorarioForm = () => {
                         aula: {
                             id: detalleResponse.data.aula.id,
                             nombre: detalleResponse.data.aula.nombre,
+                            detalle_piso: {
+                                id: detalleResponse.data.aula.detalle_piso.id,
+                                piso: {
+                                    id: detalleResponse.data.aula.detalle_piso.piso.id,
+                                    nombre: detalleResponse.data.aula.detalle_piso.piso.nombre,
+                                },
+                                edificio: {
+                                    id: detalleResponse.data.aula.detalle_piso.edificio.id,
+                                    nombre: detalleResponse.data.aula.detalle_piso.edificio.nombre,
+                                },
+                            },
                         },
                         detalle_materia: {
                             id: detalleResponse.data.materia.id,
@@ -214,14 +247,18 @@ const DetalleHorarioForm = () => {
     };
 
     const handleAulaChange = (selected: string) => {
-        const selectedAula = aula.find(p => p.nombre === selected);
+        const selectedAula = aula.find(p => p.id.toString() === selected);
         if (selectedAula) {
             setDetalle(prevState => ({
                 ...prevState,
                 aula: selectedAula,
             }));
         }
-    }
+    };
+
+    const handleSelectAula = (selectedKey: string) => {
+        handleAulaChange(selectedKey);
+    };
 
     const handleMateriaChange = (selectedId: string) => {
         const selectedDetalleMateria = detalle_materia.find(dm => dm.id.toString() === selectedId);
@@ -306,7 +343,7 @@ const DetalleHorarioForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handlePeriodoChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {periodo.map(periodo => (
                                 <AutocompleteItem key={periodo.nombre} value={periodo.nombre}>
@@ -318,18 +355,18 @@ const DetalleHorarioForm = () => {
                     <div>
                         <Autocomplete
                             variant="faded"
-                            label="Aula"
+                            label="Edificio, Piso y Aula"
                             name="aula"
-                            selectedKey={detalle.aula.nombre}
+                            selectedKey={detalle.aula.id ? detalle.aula.id.toString() : ''}
                             onSelectionChange={(selected) => {
                                 const selectedValue = selected ? selected.toString() : '';
-                                handleAulaChange(selectedValue);
+                                handleSelectAula(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {aula.map(aula => (
-                                <AutocompleteItem key={aula.nombre} value={aula.nombre}>
-                                    {aula.nombre}
+                                <AutocompleteItem key={aula.id} value={aula.id.toString()}>
+                                    {`${aula.detalle_piso.edificio.nombre} - ${aula.detalle_piso.piso.nombre} - ${aula.nombre}`}
                                 </AutocompleteItem>
                             ))}
                         </Autocomplete>
@@ -346,7 +383,7 @@ const DetalleHorarioForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleSelectChange('dia', selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             <AutocompleteItem key={'Lunes'} value={'Lunes'} textValue="Lunes">
                                 Lunes
@@ -404,7 +441,7 @@ const DetalleHorarioForm = () => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleDocenteChange(selectedValue);
                                 }}
-                                required
+                                isRequired
                             >
                                 {docente.map(docente => (
                                     <AutocompleteItem key={docente.docente} value={docente.docente}>
@@ -423,7 +460,7 @@ const DetalleHorarioForm = () => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleMateriaChange(selectedValue);
                                 }}
-                                required
+                                isRequired
                             >
                                 {detalle_materia.map(detalle => (
                                     <AutocompleteItem

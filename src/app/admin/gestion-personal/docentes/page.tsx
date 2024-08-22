@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Docente {
   cedula: number;
@@ -31,7 +31,7 @@ const Docentes = () => {
   const [docentes, setDocentes] = useState<Docente[]>([]);
   const router = useRouter();
 
-  const obtenerDocentes = async (nombre: string = "") => {
+  const obtenerDocentes = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/docentes/buscar`, { nombre },
         {
@@ -45,13 +45,13 @@ const Docentes = () => {
     } catch (error) {
       console.error('Error al obtener docentes:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerDocentes();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerDocentes]);
 
   const handleAñadir = () => {
     router.push('/admin/gestion-personal/docentes/docentes-form');
@@ -60,7 +60,7 @@ const Docentes = () => {
   const handleEdit = (row: Docente) => {
     router.push(`/admin/gestion-personal/docentes/docentes-form?cedula=${row.cedula}`);
   };
-  
+
   const handleEliminar = (row: Docente) => {
     eliminarDocente(row.cedula);
   };

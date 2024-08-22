@@ -6,7 +6,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Edificio {
   id: number;
@@ -47,12 +47,12 @@ const columnas = [
   { uid: "actions", name: "Acciones" },
 ];
 
-const aulas = () => {
+const Aulas = () => {
   const { data: session } = useSession();
   const [aula, setAula] = useState<Aula[]>([]);
   const router = useRouter();
 
-  const obtenerAula = async (nombre: string = "") => {
+  const obtenerAula = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas/buscar`, { nombre }, {
         headers: {
@@ -64,13 +64,13 @@ const aulas = () => {
     } catch (error) {
       console.error('Error al obtener pisos:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerAula("");
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerAula]);
 
   const handleAñadir = () => {
     router.push('/admin/infraestructura/aulas/aulas-form');
@@ -111,4 +111,4 @@ const aulas = () => {
   )
 }
 
-export default aulas
+export default Aulas

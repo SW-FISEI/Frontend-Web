@@ -5,7 +5,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Materia {
   id: number;
@@ -22,14 +22,14 @@ const columns = [
   { uid: "actions", name: "Actions" }
 ];
 
-const materias = () => {
+const Materias = () => {
   const { data: session } = useSession();
   const [data, setData] = useState<Materia[]>([]);
   const router = useRouter();
 
-  const obtenerMaterias = async (nombre:string = "") => {
+  const obtenerMaterias = useCallback(async (nombre: string = "") => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/materias/buscar`,{nombre}, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/materias/buscar`, { nombre }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.user?.token}`,
@@ -39,13 +39,13 @@ const materias = () => {
     } catch (error) {
       console.error('Error al obtener materias:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerMaterias();
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerMaterias]);
 
   const handleAdd = () => {
     router.push('/admin/administracion-academica/materias/materias-form');
@@ -89,4 +89,4 @@ const materias = () => {
   )
 }
 
-export default materias
+export default Materias

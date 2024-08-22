@@ -244,20 +244,27 @@ const PisoForm = () => {
         e.preventDefault(); // Previene el comportamiento por defecto del formulario
 
         try {
-            // Prepara los datos eliminando el objeto detalle_piso y guardando solo su id como un número simple
+            // Desestructuramos el aula pero mantenemos el detalle_piso aparte para manipularlo después
+            const { id, detalle_piso, ...restoAulaData } = aula;
+
+            // Creamos un nuevo objeto aulaData que incluye el id del detalle_piso
             const aulaData = {
-                ...aula,
-                detalle_piso: aula.detalle_piso.id // Solo guarda el id como un número
+                ...restoAulaData,
+                detalle_piso: detalle_piso.id  // Asignamos solo el ID del detalle_piso
             };
 
+            console.log('Datos enviados:', aulaData);
+
             if (isEditMode) {
-                await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas/${id}`, aulaData, {
+                // Actualizar el aula existente
+                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas/${id}`, aulaData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${session?.user?.token}`,
                     },
                 });
             } else {
+                // Crear una nueva aula
                 await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas`, aulaData, {
                     headers: {
                         "Content-Type": "application/json",
@@ -267,8 +274,8 @@ const PisoForm = () => {
             }
 
             router.push('/admin/infraestructura/aulas');
-        } catch (error) {
-            console.error('Error al guardar el aula:', error);
+        } catch (error: any) {
+            console.error('Error al guardar el aula:', error.response?.data || error.message);
         }
     };
 
@@ -333,7 +340,7 @@ const PisoForm = () => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleSelectChange('proyector', selectedValue);
                                 }}
-                                required
+                                isRequired
                             >
                                 <AutocompleteItem key={'Si'} value={'Si'} textValue="Si">
                                     Si
@@ -355,7 +362,7 @@ const PisoForm = () => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleSelectChange('aire', selectedValue);
                                 }}
-                                required
+                                isRequired
                             >
                                 <AutocompleteItem key={'Si'} value={'Si'} textValue="Si">
                                     Si
@@ -387,7 +394,7 @@ const PisoForm = () => {
                             name="detalle_piso.edificio"
                             selectedKey={aula.detalle_piso.edificio.nombre}
                             onSelectionChange={(selected) => handleEdificioChange(selected ? selected.toString() : '')}
-                            required
+                            isRequired
                         >
                             {edificio.map(e => (
                                 <AutocompleteItem key={e.nombre} value={e.nombre}>
@@ -404,7 +411,7 @@ const PisoForm = () => {
                             selectedKey={aula.detalle_piso.piso.nombre}
                             onSelectionChange={(selected) => handlePisoChange(selected ? selected.toString() : '')}
                             disabled={!isEdificioSelected}
-                            required
+                            isRequired
                         >
                             {filteredPisos.map(p => (
                                 <AutocompleteItem key={p.nombre} value={p.nombre}>
