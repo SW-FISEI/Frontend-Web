@@ -25,7 +25,7 @@ const SideNav = () => {
             <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
                 <div className="encabezadoSidebar">
                     <Link href="/admin" className="botonLogo">
-                        <img className="logoSidebar" src="/logo.png" width={80} height={80} alt="Logo" />
+                        <Image className="logoSidebar" src="/logo.png" width={80} height={80} alt="Logo" />
                         <p className="fisei">Sistema de Horarios</p>
                     </Link>
                 </div>
@@ -71,7 +71,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                     >
                         <div className="textoOpcionMenu">
                             {item.icon}
-                            <span className="menu-item-title">{item.title}</span>
+                            <strong><span className="menu-item-title">{item.title}</span></strong>
                         </div>
                         <div className={`${subMenuOpen ? 'rotate-180' : ''} flex`}>
                             <Icon icon="lucide:chevron-down" width="24" height="24" />

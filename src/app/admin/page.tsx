@@ -5,7 +5,7 @@ import '@/styles/home.scss';
 import { Button, Calendar, CircularProgress, DateValue, Image, Input, ScrollShadow } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import ClockLive from 'react-live-clock';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import 'react-clock/dist/Clock.css';
 import React from "react";
 import { today, getLocalTimeZone, isWeekend } from "@internationalized/date";
@@ -28,41 +28,27 @@ const AdminHome = () => {
   const [totalLaboratoristas, setTotalLaboratoristas] = useState<number>(0);
   const [totalAulas, setTotalAulas] = useState<number>(0);
 
-  useEffect(() => {
-    obtenerDetalleHorario();
-    obtenerCarreras();
-    obtenerMaterias();
-    obtenerDocentes();
-    obtenerLaboratoristas();
-    obtenerAula();
-  }, []);
-
-  // Relog Analogo
-  const [time, setTime] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   // Calendario
   let [date, setDate] = React.useState<DateValue>(today(getLocalTimeZone()));
   let { locale } = useLocale();
   let isInvalid = isWeekend(date, locale);
+
+  // Relog Analogo
+  const [time, setTime] = useState(new Date());
+
+  const filtrarHorariosPorDia = useCallback((dia: string) => {
+    const horarios = detalleHorario.filter((horario) => horario.dia.toLowerCase() === dia.toLowerCase());
+    setHorariosFiltrados(horarios);
+  }, [detalleHorario]);
 
   useEffect(() => {
     if (date) {
       const selectedDay = new Date(date.year, date.month - 1, date.day).toLocaleDateString('es-ES', { weekday: 'long' });
       filtrarHorariosPorDia(selectedDay);
     }
-  }, [date]);
+  }, [date, filtrarHorariosPorDia]);
 
-  const filtrarHorariosPorDia = (dia: string) => {
-    const horarios = detalleHorario.filter((horario) => horario.dia.toLowerCase() === dia.toLowerCase());
-    setHorariosFiltrados(horarios);
-  };
-
-  const obtenerDetalleHorario = async (nombre: string = "") => {
+  const obtenerDetalleHorario = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/detalle-horarios/buscarA`, { nombre }, {
         headers: {
@@ -74,10 +60,10 @@ const AdminHome = () => {
     } catch (error) {
       console.error('Error al obtener:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   //Total Carreras
-  const obtenerCarreras = async (nombre: string = "") => {
+  const obtenerCarreras = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carreras/buscar`, { nombre }, {
         headers: {
@@ -89,10 +75,10 @@ const AdminHome = () => {
     } catch (error) {
       console.error('Error al obtener carreras:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   //Total Materias
-  const obtenerMaterias = async (nombre: string = "") => {
+  const obtenerMaterias = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/materias/buscar`, { nombre }, {
         headers: {
@@ -104,11 +90,11 @@ const AdminHome = () => {
     } catch (error) {
       console.error('Error al obtener materias:', error);
     }
-  };
+  }, [session?.user?.token]);
 
 
   //Total Docentes
-  const obtenerDocentes = async (nombre: string = "") => {
+  const obtenerDocentes = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/docentes/buscar`, { nombre },
         {
@@ -122,11 +108,11 @@ const AdminHome = () => {
     } catch (error) {
       console.error('Error al obtener docentes:', error);
     }
-  };
+  }, [session?.user?.token]);
 
 
   //Total Laboratoristas
-  const obtenerLaboratoristas = async (nombre: string = "") => {
+  const obtenerLaboratoristas = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/laboratoristas/buscar`, { nombre },
         {
@@ -140,11 +126,11 @@ const AdminHome = () => {
     } catch (error) {
       console.error('Error al obtener laboratoristas:', error);
     }
-  };
+  }, [session?.user?.token]);
 
 
   //Total Aulas
-  const obtenerAula = async (nombre: string = "") => {
+  const obtenerAula = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/aulas/buscar`, { nombre }, {
         headers: {
@@ -156,7 +142,7 @@ const AdminHome = () => {
     } catch (error) {
       console.error('Error al obtener aulas:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   const filtrarPorBusqueda = (horarios: any[], term: string) => {
     return horarios.filter((horario) =>
@@ -180,6 +166,29 @@ const AdminHome = () => {
   const navigateTo = (path: string) => {
     router.push(path);
   };
+
+  useEffect(() => {
+    if (session?.user?.token) {
+      obtenerDetalleHorario();
+      obtenerCarreras();
+      obtenerMaterias();
+      obtenerDocentes();
+      obtenerLaboratoristas();
+      obtenerAula();
+    }
+  }, [session?.user?.token, obtenerAula, obtenerCarreras, obtenerDetalleHorario, obtenerDocentes, obtenerLaboratoristas, obtenerMaterias]);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, [session?.user?.token, obtenerAula, obtenerCarreras, obtenerDetalleHorario, obtenerDocentes, obtenerLaboratoristas, obtenerMaterias]);
+
+  useEffect(() => {
+    if (date) {
+      const selectedDay = new Date(date.year, date.month - 1, date.day).toLocaleDateString('es-ES', { weekday: 'long' });
+      filtrarHorariosPorDia(selectedDay);
+    }
+  }, [session?.user?.token, date, filtrarHorariosPorDia]);
 
   if (status === "loading") {
     return (
