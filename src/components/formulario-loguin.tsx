@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from 'next/image'; // Importa el componente Image
 import '@/styles/formulario-loguin.scss';
 
 export default function FormularioLoguin() {
@@ -33,7 +34,7 @@ export default function FormularioLoguin() {
         <div className="contenedorFormLoguin">
             <div className="encabezado">
                 <div className="logo">
-                    <img src="/logo.png" alt="Logo" />
+                    <Image src="/logo.png" alt="Logo" width={150} height={50} /> {/* Usa Image en lugar de img */}
                 </div>
                 <h1>Bienvenido</h1>
                 <h2>Sistema De Horarios FISEI</h2>

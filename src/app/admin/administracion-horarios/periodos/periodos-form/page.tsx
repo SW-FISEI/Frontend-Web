@@ -144,6 +144,7 @@ const PeriodoForm = () => {
                                 placeholder="Seleccione un mes"
                                 className="max-w-full"
                                 selectedKey={periodo.inicioMes}
+                                isRequired
                                 onSelectionChange={(selected) => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleSelectChange('inicioMes', selectedValue);
@@ -165,6 +166,7 @@ const PeriodoForm = () => {
                                 placeholder="Seleccione un mes"
                                 className="max-w-full"
                                 selectedKey={periodo.finMes}
+                                isRequired
                                 onSelectionChange={(selected) => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleSelectChange('finMes', selectedValue);
@@ -188,6 +190,7 @@ const PeriodoForm = () => {
                                 placeholder="Seleccione un año"
                                 className="max-w-full"
                                 selectedKey={periodo.inicioAño || ''}
+                                isRequired
                                 onSelectionChange={(selected) => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleSelectChange('inicioAño', selectedValue);
@@ -207,6 +210,7 @@ const PeriodoForm = () => {
                                 placeholder="Seleccione un año"
                                 className="max-w-full"
                                 selectedKey={periodo.finAño || ''}
+                                isRequired
                                 onSelectionChange={(selected) => {
                                     const selectedValue = selected ? selected.toString() : '';
                                     handleSelectChange('finAño', selectedValue);

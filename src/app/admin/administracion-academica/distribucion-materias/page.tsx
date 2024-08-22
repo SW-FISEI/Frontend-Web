@@ -1,12 +1,11 @@
-"use client"
+"use client";
 
-import Tabla from '@/components/tabla';
+import TablaConFiltros from '@/components/tabla-filtros';
 import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import TablaConFiltros from '@/components/tabla-filtros';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Carrera {
   id: number;
@@ -46,12 +45,12 @@ const columnas = [
   { uid: "actions", name: "Acciones" },
 ]
 
-const administracionAcademica = () => {
+const AdministracionAcademica = () => {
   const { data: session } = useSession();
   const [detalle_materia, setDetalleMateria] = useState<Detalle_Materia[]>([]);
   const router = useRouter();
 
-  const obtenerDetalleMateria = async (nombre: string = "") => {
+  const obtenerDetalleMateria = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/detalle-materias/buscar`, { nombre }, {
         headers: {
@@ -63,13 +62,13 @@ const administracionAcademica = () => {
     } catch (error) {
       console.error('Error al obtener pisos:', error);
     }
-  }
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerDetalleMateria("");
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerDetalleMateria]);
 
   const handleAñadir = () => {
     router.push('/admin/administracion-academica/distribucion-materias/distribucion-materias-form');
@@ -111,4 +110,4 @@ const administracionAcademica = () => {
   )
 }
 
-export default administracionAcademica
+export default AdministracionAcademica;

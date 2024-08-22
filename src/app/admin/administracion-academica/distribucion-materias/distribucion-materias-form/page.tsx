@@ -134,11 +134,11 @@ const DetalleMateriaForm = () => {
 
     if (loading) {
         return (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <CircularProgress label="Cargando..." />
-          </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress label="Cargando..." />
+            </div>
         );
-      }
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -227,7 +227,7 @@ const DetalleMateriaForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleCarreraChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {carrera.map(carrera => (
                                 <AutocompleteItem key={carrera.nombre} value={carrera.nombre}>
@@ -246,7 +246,7 @@ const DetalleMateriaForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleSemestreChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {semestre.map(semestre => (
                                 <AutocompleteItem key={semestre.nombre} value={semestre.nombre}>
@@ -265,7 +265,7 @@ const DetalleMateriaForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleMateriaChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {materia.map(materia => (
                                 <AutocompleteItem key={materia.nombre} value={materia.nombre}>
@@ -284,7 +284,7 @@ const DetalleMateriaForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleParaleloChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {paralelo.map(paralelo => (
                                 <AutocompleteItem key={paralelo.nombre} value={paralelo.nombre}>

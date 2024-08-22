@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -59,7 +59,7 @@ const Consultas = () => {
   const [detalle_horario, setDetalleHorario] = useState<Detalle_Horario[]>([]);
   const router = useRouter();
 
-  const obtenerDetalleHorario = async (nombre: string = "") => {
+  const obtenerDetalleHorario = useCallback(async (nombre: string = "") => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/detalle-horarios/buscarA`, { nombre }, {
         headers: {
@@ -71,13 +71,13 @@ const Consultas = () => {
     } catch (error) {
       console.error('Error al obtener:', error);
     }
-  };
+  }, [session?.user?.token]);
 
   useEffect(() => {
     if (session?.user?.token) {
       obtenerDetalleHorario("");
     }
-  }, [session]);
+  }, [session?.user?.token, obtenerDetalleHorario]);
 
   const handleAñadir = () => {
   };

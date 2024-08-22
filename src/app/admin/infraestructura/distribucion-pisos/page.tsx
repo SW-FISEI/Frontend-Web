@@ -6,7 +6,7 @@ import TituloPagina from '@/components/titulo-pagina';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Edificio {
     id: number;
@@ -35,7 +35,7 @@ const DestribucionPisos = () => {
     const [detallePiso, setDetallePiso] = useState<DetallePiso[]>([]);
     const router = useRouter();
 
-    const obtenerDetallePisos = async () => {
+    const obtenerDetallePisos = useCallback(async () => {
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/detalle-pisos`, {
                 headers: {
@@ -47,13 +47,13 @@ const DestribucionPisos = () => {
         } catch (error) {
             console.error('Error al obtener pisos:', error);
         }
-    };
+    }, [session?.user?.token]);
 
     useEffect(() => {
         if (session?.user?.token) {
             obtenerDetallePisos();
         }
-    }, [session]);
+    }, [session?.user?.token, obtenerDetallePisos]);
 
     const handleAñadir = () => {
         router.push('/admin/infraestructura/distribucion-pisos/distribucion-pisos-form');
@@ -65,7 +65,7 @@ const DestribucionPisos = () => {
 
     const eliminarDetallePiso = async (id: number) => {
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pisos/${id}`,
+            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/detalle-pisos/${id}`,
                 {
                     headers: {
                         "Content-Type": "application/json",

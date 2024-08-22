@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import TituloPagina from '@/components/titulo-pagina';
@@ -42,7 +42,7 @@ const LaboratoristasForm = () => {
     const [loading, setLoading] = useState(true);
     const isEditMode = !!cedula;
 
-    const obtenerTitulos = async (nombre: string = "") => {
+    const obtenerTitulos = useCallback(async (nombre: string = "") => {
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/titulos/buscarT`, { nombre }, {
                 headers: {
@@ -54,9 +54,9 @@ const LaboratoristasForm = () => {
         } catch (error) {
             console.error("Error al obtener los títulos:", error);
         }
-    };
+    }, [session?.user?.token]);
 
-    const obtenerEdificios = async (nombre: string = "") => {
+    const obtenerEdificios = useCallback(async (nombre: string = "") => {
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/edificios/buscar`, { nombre }, {
                 headers: {
@@ -68,14 +68,14 @@ const LaboratoristasForm = () => {
         } catch (error) {
             console.error("Error al obtener los edificios:", error);
         }
-    };
+    }, [session?.user?.token]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 await obtenerTitulos();
                 await obtenerEdificios();
-    
+
                 if (isEditMode) {
                     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/laboratoristas/${cedula}`, {
                         headers: {
@@ -83,9 +83,9 @@ const LaboratoristasForm = () => {
                             Authorization: `Bearer ${session?.user?.token}`,
                         },
                     });
-    
+
                     const data = response.data[0]; // Accede al primer elemento del array
-    
+
                     setLaboratorista({
                         cedula: data.cedula,
                         laboratorista: data.laboratorista,
@@ -105,12 +105,11 @@ const LaboratoristasForm = () => {
                 console.error('Error al obtener datos:', error);
             }
         };
-    
+
         if (session?.user?.token) {
             fetchData();
         }
-    }, [cedula, isEditMode, session?.user?.token]);
-    
+    }, [cedula, isEditMode, session?.user?.token, obtenerEdificios, obtenerTitulos]);
 
     if (loading) {
         return (
@@ -122,7 +121,9 @@ const LaboratoristasForm = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setLaboratorista({ ...laboratorista, [name]: value });
+        if (name !== 'cedula' || !isEditMode) { // Evita actualizar el campo 'cedula' si es modo edición
+            setLaboratorista({ ...laboratorista, [name]: value });
+        }
     };
 
     const handleTituloChange = (selected: string) => {
@@ -187,6 +188,7 @@ const LaboratoristasForm = () => {
                             value={laboratorista.cedula}
                             onChange={handleInputChange}
                             required
+                            disabled={isEditMode}
                         />
                     </div>
                     <div>
@@ -199,7 +201,7 @@ const LaboratoristasForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleTituloChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {titulos.map(titulo => (
                                 <AutocompleteItem key={titulo.nombre} value={titulo.nombre}>
@@ -229,7 +231,7 @@ const LaboratoristasForm = () => {
                                 const selectedValue = selected ? selected.toString() : '';
                                 handleEdificioChange(selectedValue);
                             }}
-                            required
+                            isRequired
                         >
                             {edificios.map(edificio => (
                                 <AutocompleteItem key={edificio.nombre} value={edificio.nombre}>

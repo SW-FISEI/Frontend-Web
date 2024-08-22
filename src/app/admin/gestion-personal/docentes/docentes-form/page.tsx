@@ -3,7 +3,7 @@
 import TituloPagina from '@/components/titulo-pagina';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Input, Button, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 import '@/styles/formulario.scss';
@@ -12,7 +12,7 @@ interface Docente {
     id?: number;
     cedula: any;
     docente: string;
-    titulo: Titulo;
+    titulo?: Titulo | null; // Asegúrate de que el título puede ser null
 }
 
 interface Titulo {
@@ -26,12 +26,12 @@ const DocentesForm = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get('cedula');
-    const [docente, setDocente] = useState<Docente>({ cedula: '', docente: '', titulo: { id: 0, nombre: '', abreviacion: '' } });
+    const [docente, setDocente] = useState<Docente>({ cedula: '', docente: '', titulo: null });
     const [titulos, setTitulos] = useState<Titulo[]>([]);
     const [loading, setLoading] = useState(true);
     const isEditMode = !!id;
 
-    const obtenerTitulos = async (nombre: string = "") => {
+    const obtenerTitulos = useCallback(async (nombre: string = "") => {
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/titulos/buscarT`, { nombre }, {
                 headers: {
@@ -43,7 +43,7 @@ const DocentesForm = () => {
         } catch (error) {
             console.error("Error al obtener los títulos:", error);
         }
-    };
+    }, [session?.user?.token]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -71,7 +71,7 @@ const DocentesForm = () => {
                                 nombre: docenteData.titulo.nombre,
                                 abreviacion: docenteData.titulo.abreviacion,
                             }
-                            : { id: 0, nombre: '', abreviacion: '' }, // Maneja el caso donde título es null
+                            : null, // Maneja el caso donde título es null
                     });
                 }
                 setLoading(false);
@@ -83,7 +83,7 @@ const DocentesForm = () => {
         if (session?.user?.token) {
             fetchData();
         }
-    }, [id, isEditMode, session?.user?.token]);
+    }, [id, isEditMode, session?.user?.token, obtenerTitulos]);
 
     if (loading) {
         return (
@@ -99,10 +99,8 @@ const DocentesForm = () => {
     };
 
     const handleTituloChange = (selected: string | null) => {
-        const selectedTitulo = titulos.find(t => t.nombre === selected);
-        if (selectedTitulo) {
-            setDocente({ ...docente, titulo: selectedTitulo });
-        }
+        const selectedTitulo = titulos.find(t => t.nombre === selected) || null;
+        setDocente({ ...docente, titulo: selectedTitulo });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -111,7 +109,7 @@ const DocentesForm = () => {
             const docenteDatos = {
                 cedula: docente.cedula,
                 docente: docente.docente,
-                titulo: docente.titulo.id !== 0 ? docente.titulo.id : null,  // Aquí se asegura que el título sea null si no se selecciona
+                titulo: docente.titulo ? docente.titulo.id : null,  // Asegura que el título sea null si no se selecciona
             };
 
             if (isEditMode) {
@@ -156,12 +154,13 @@ const DocentesForm = () => {
                             value={docente.cedula}
                             onChange={handleInputChange}
                             required
+                            disabled={isEditMode}
                         />
                     </div>
                     <div>
                         <Autocomplete
                             variant="faded"
-                            label="Titulo"
+                            label="Título"
                             name="titulo"
                             selectedKey={docente.titulo?.nombre || null}
                             onSelectionChange={(selected) => {
